@@ -1,0 +1,25 @@
+{
+  "name": "gak",
+  "version": "0.0.0",
+  "homepage": "https://github.com/CrossLead/gak",
+  "authors": [
+    "McChrystal Group"
+  ],
+  "description": "Graph Analysis Kit for NodeJS",
+  "main": "index.js",
+  "keywords": [
+    "graph",
+    "network",
+    "analysis",
+    "cluster",
+    "link"
+  ],
+  "license": "Apache 2.0",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
