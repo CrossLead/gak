@@ -10,3 +10,7 @@ Reading Material:
   - (Enron analysis) http://research.cs.queensu.ca/~skill/proceedings/yener.pdf
   - (Generalized HITS) http://www.cs.berkeley.edu/~jfc/papers/05/SIAM-DM/siam-linkana05.pdf
   - (Louvain Modularity) http://arxiv.org/pdf/0803.0476v2.pdf
+
+Test Datasets:
+  - Enron email https://www.cs.cmu.edu/~./enron/
+  
