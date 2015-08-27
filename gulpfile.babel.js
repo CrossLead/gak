@@ -15,7 +15,7 @@ gulp.task('build', () => {
   let gak = browserify('./index.js', { debug: true, standalone : 'gak' })
         .transform(babelify)
         .bundle()
-        .on('error', err => { console.error(err); this.emit('end'); });
+        .on('error', function(err) { console.error(err); this.emit('end'); });
 
   gak
     .pipe(source('gak.js'))
