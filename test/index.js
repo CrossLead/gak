@@ -1,6 +1,5 @@
-import gak from '../';
+import gak from '../src/';
 import pkg from '../package.json';
-import pmongo from 'promised-mongo';
 import { expect } from 'chai';
 
 describe('Graph Analysis Kit', () => {

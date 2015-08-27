@@ -1,11 +1,14 @@
 import Node from './classes/Node';
 import Graph from './classes/Graph';
-import pkg from '../package.json';
+import { version } from '../package.json';
 
 const gak = {
+
+  // top level properties
   Node,
   Graph,
-  version : pkg.version
+  version
+
 };
 
 export default gak;
