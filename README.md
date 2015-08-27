@@ -1,5 +1,8 @@
 ## _gak_ (Graph Analysis ToolKit for NodeJS)
 
+[![Build Status](https://travis-ci.org/CrossLead/gak.svg?branch=master)](https://travis-ci.org/CrossLead/gak)
+[![Dependency Status](https://david-dm.org/crosslead/gak.svg)](https://david-dm.org/crosslead/gak)
+
 Alorithm TODO:
   - Louvain Modularity for community detection
   - Weighted / Generalized HITS for node ranking
