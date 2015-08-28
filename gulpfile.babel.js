@@ -11,6 +11,7 @@ import { argv }     from 'yargs';
 import source       from 'vinyl-source-stream';
 import buffer       from 'vinyl-buffer';
 import asyncHelpers from 'async';
+import eslint       from 'gulp-eslint';
 
 const src = './src/**/*.js',
       test =  './test/index.js';
@@ -85,6 +86,18 @@ gulp.task('browserify', () => {
   ]);
 
 
+});
+
+
+
+/*
+ * Linting
+ */
+gulp.task('eslint', function() {
+  return gulp
+    .src(['src/**/*.js', 'test/**/*.js'])
+    .pipe(eslint('.eslintrc'))
+    .pipe(eslint.format());
 });
 
 
