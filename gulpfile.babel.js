@@ -10,7 +10,15 @@ import babelify     from 'babelify';
 import { argv }     from 'yargs';
 import source       from 'vinyl-source-stream';
 import buffer       from 'vinyl-buffer';
-import async        from 'async';
+import asyncHelpers from 'async';
+
+const src = './src/**/*.js',
+      test =  './test/index.js';
+
+/*
+ * Watch task for dev
+ */
+gulp.task('watch', () => gulp.watch([src, test], ['compile', 'test']));
 
 
 /*
@@ -23,12 +31,12 @@ gulp.task('build', ['compile', 'browserify']);
 /*
  * Compile the code for commonJs/Node usage
  */
-gulp.task('compile', callback => {
+gulp.task('compile', () => {
 
-  async.parallel([
+  return asyncHelpers.parallel([
 
     cb => gulp
-      .src("./src/**/*.js")
+      .src(src)
       .pipe(sourcemaps.init())
       .pipe(babel())
       .pipe(sourcemaps.write("."))
@@ -40,7 +48,7 @@ gulp.task('compile', callback => {
       .pipe(gulp.dest("./dist"))
       .on('end', cb)
 
-  ], callback);
+  ]);
 
 });
 
@@ -49,16 +57,16 @@ gulp.task('compile', callback => {
 /*
  * Create browserify build (exposing global if no module system)
  */
-gulp.task('browserify', callback => {
+gulp.task('browserify', () => {
 
-  let gak = browserify('./src/', { debug: true, standalone : 'gak' })
+  const gak = browserify('./src/', { debug: true, standalone : 'gak' })
         .transform(babelify)
         .bundle()
         .on('error', function(err) { console.error(err); this.emit('end'); });
 
-  let dest = gulp.dest('./dist/browser/');
+  const dest = gulp.dest('./dist/browser/');
 
-  async.parallel([
+  return asyncHelpers.parallel([
       cb => gak
         .pipe(source('gak.js'))
         .pipe(buffer())
@@ -74,7 +82,7 @@ gulp.task('browserify', callback => {
         .pipe(dest)
         .on('end', cb)
 
-  ], callback);
+  ]);
 
 
 });
@@ -86,7 +94,7 @@ gulp.task('browserify', callback => {
  */
 gulp.task('test', () => {
 
-  gulp.src(['test/index.js'], { read: false })
+  return gulp.src(['test/index.js'], { read: false })
       .pipe(mocha({
         reporter: 'spec',
         grep: argv.grep

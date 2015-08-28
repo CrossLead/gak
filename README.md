@@ -15,4 +15,4 @@ Reading Material:
   - (Louvain Modularity) http://arxiv.org/pdf/0803.0476v2.pdf
 
 Test Datasets:
-  - Enron email https://www.cs.cmu.edu/~./enron/
+  - [Enron email corpus](http://bailando.sims.berkeley.edu/enron_email.html) Provides MySQL dump, see this gist for a script to update to newer syntax (~5.8) https://gist.github.com/bsouthga/b64bc850c348ada571c1
