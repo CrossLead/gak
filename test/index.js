@@ -18,7 +18,7 @@ describe('Graph Analysis Kit', () => {
   describe('EventRank', () => {
 
     it('Decay function should return expected values given parameters', done => {
-
+      done();
     });
 
   })
