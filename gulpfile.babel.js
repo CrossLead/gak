@@ -103,9 +103,9 @@ gulp.task('eslint', function() {
 
 
 /*
- * Run tests
+ * Run linting and tests
  */
-gulp.task('test', () => {
+gulp.task('test', ['eslint'], () => {
 
   return gulp.src(['test/index.js'], { read: false })
       .pipe(mocha({
@@ -114,3 +114,11 @@ gulp.task('test', () => {
       }));
 
 });
+
+
+
+
+/*
+ * Vanilla gulp
+ */
+gulp.task('default', ['test']);

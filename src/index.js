@@ -1,7 +1,7 @@
 import { version } from '../package.json';
 import EventRank from './classes/EventRank';
 
-const gak = {
+export default {
 
   // top level properties
   version,
@@ -9,6 +9,4 @@ const gak = {
   // Classes
   EventRank
 
-};
-
-export default gak;
+}
