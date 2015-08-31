@@ -79,7 +79,7 @@ gulp.task('browserify', () => {
       cb => gak
         .pipe(source('gak.min.js'))
         .pipe(buffer())
-        .pipe(uglify())
+        .pipe(uglify({mangle : true}))
         .pipe(dest)
         .on('end', cb)
 

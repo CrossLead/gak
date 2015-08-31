@@ -1,13 +1,13 @@
-import Node from './classes/Node';
-import Graph from './classes/Graph';
 import { version } from '../package.json';
+import EventRank from './classes/EventRank';
 
 const gak = {
 
   // top level properties
-  Node,
-  Graph,
-  version
+  version,
+
+  // Classes
+  EventRank
 
 };
 

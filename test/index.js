@@ -2,6 +2,8 @@ import gak from '../src/';
 import pkg from '../package.json';
 import { expect } from 'chai';
 
+
+
 describe('Graph Analysis Kit', () => {
 
   describe('Simple initial checks', () => {
@@ -12,5 +14,13 @@ describe('Graph Analysis Kit', () => {
     });
 
   });
+
+  describe('EventRank', () => {
+
+    it('Decay function should return expected values given parameters', done => {
+
+    });
+
+  })
 
 });

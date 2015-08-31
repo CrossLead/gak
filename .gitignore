@@ -1,4 +1,4 @@
 node_modules/*
 papers/*
 dist/*
-test/enron/maildir/*
+test/enron/*
