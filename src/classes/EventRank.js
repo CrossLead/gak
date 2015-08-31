@@ -55,7 +55,7 @@ export default class EventRank {
     const { from : sender, to } = event;
     const recipients = new Set(Array.isArray(to) ? to : [to]);
     const isParticipent = c => c === sender || recipients.has(c);
-    const nP =
+    const nP = recipients.size + 1;
 
     let Tn, ∑R;
 
