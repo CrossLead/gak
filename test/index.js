@@ -1,10 +1,12 @@
+import _ from 'lodash';
 import { expect } from 'chai';
 import pkg from '../package.json';
 import { EventRank, version } from '../src/';
 import { assert } from '../src/util/';
 
+
 const { abs } = Math;
-const diff = (x, y) => abs(x - y);
+const expectVeryClose = x => y => expect(abs(x - y)).to.be.below(10e-8);
 
 
 describe('Graph Analysis Kit', () => {
@@ -41,7 +43,7 @@ describe('Graph Analysis Kit', () => {
             expectedOutput = 0.5207411;
 
       expect(EventRank.g).to.exist;
-      expect(diff(EventRank.g(Δts, G), expectedOutput)).to.be.below(10e-8);
+      expectVeryClose(EventRank.g(Δts, G))(expectedOutput);
       done();
     });
 
@@ -52,7 +54,37 @@ describe('Graph Analysis Kit', () => {
             expectedOutput = 0.3149802;
 
       expect(EventRank.h).to.exist;
-      expect(diff(EventRank.h(Δtr, H), expectedOutput)).to.be.below(10e-8);
+      expectVeryClose(EventRank.h(Δtr, H))(expectedOutput);
+      done();
+    });
+
+    it('Serializing event rank should produce pojo that can be loaded back into EventRank', done => {
+      const correspondents = ['a', 'b', 'c'];
+      const e = new EventRank({ correspondents });
+      const pojo = e.serialize();
+      const json = JSON.stringify(pojo);
+      const alt = new EventRank(JSON.parse(json));
+      const altJson = JSON.stringify(alt.serialize());
+      expect(altJson).to.equal(json);
+      done();
+    });
+
+
+    it('Starting with no ranks, and not iterating, should produce ranks = |C|', done => {
+      const correspondents = ['a', 'b', 'c'];
+      const e = new EventRank({ correspondents });
+      const { ranks } = e.serialize();
+
+      expect(ranks).to.exist;
+
+      const values = _(ranks)
+        .values()
+        .map(x => x[0].value)
+        .value();
+
+      values.forEach(expectVeryClose(1/3));
+      const sum = values.reduce((o, v) => o + v, 0);
+      expectVeryClose(sum)(1);
       done();
     });
 

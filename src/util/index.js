@@ -6,6 +6,6 @@
  */
 export function assert(bool, message) {
   if (!bool) {
-    throw new Error(message);
+    throw new Error('Assertion failed: ' + message);
   }
 }
