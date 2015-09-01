@@ -7,6 +7,24 @@
  * PDF: http://www.datalab.uci.edu/papers/linkkdd05-02.pdf
  */
 
+
+/* TODO:
+
+  1. Get working model from array of formatted events
+
+  2. Enhancements
+    - Formatting method
+    - allow progressive adding of events
+    - collapse array of events in time range into single time period
+    - keep track of time conversion
+
+  3. Efficiency
+    - Lazily update non participent scores
+
+*/
+
+
+
 import { assert } from '../util/';
 
 // local references for math utils
@@ -62,6 +80,7 @@ export default class EventRank {
    */
   constructor(opts) {
 
+    // default options
     const {
       G=5,
       H=5,
@@ -71,6 +90,7 @@ export default class EventRank {
       events,
     } = opts;
 
+    // get ranks if passed
     let { ranks } = opts;
 
     // start ranks for all = |C| if not present
@@ -133,11 +153,7 @@ export default class EventRank {
    */
   step(event, time=(event.time || this.time)) {
 
-    //
-    // TODO:
-    //  [ ] allow arrays of events, need to be processed at same time
-    //  [ ] compute time differentialsc
-    //
+
 
     // unpack model weight parameters + ranks + correspondents
     const { G, H, f, ranks, correspondents } = this;
