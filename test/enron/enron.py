@@ -1,3 +1,9 @@
+#
+# Script to generate csv of email events for testing from enron email corpus.
+# To reproduce, download the full dataset from here https://www.cs.cmu.edu/~./enron/
+# and unzip into the same directory as this file
+#
+
 import re
 import csv
 from glob import glob
