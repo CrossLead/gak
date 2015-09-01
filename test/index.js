@@ -65,6 +65,7 @@ describe('Graph Analysis Kit', () => {
       const json = JSON.stringify(pojo);
       const alt = new EventRank(JSON.parse(json));
       const altJson = JSON.stringify(alt.serialize());
+      expect(json).to.equal(e.toJson());
       expect(altJson).to.equal(json);
       done();
     });

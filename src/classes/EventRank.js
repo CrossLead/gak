@@ -2,7 +2,7 @@
  * EventRank implementation
  *
  * Model adapted from "EventRank: A Framework for Ranking Time-Varying Networks"
- * (O’Madadhain & Smyth, 2005)
+ * (O’Madadhain & Smyth, 2005), utilizes 'Reply Model' of potential weights
  *
  * PDF: http://www.datalab.uci.edu/papers/linkkdd05-02.pdf
  */
@@ -112,25 +112,38 @@ export default class EventRank {
   }
 
 
+
+  /**
+   * Return json string of serialized EventRank
+   *
+   * @return {String} JSON representation of EventRank
+   */
+  toJson() {
+    return JSON.stringify(this.serialize());
+  }
+
+
+
   /**
    * Calculate new ranks given an additional event
    *
-   * @param  {Object | Array} event : { to, from, time }
+   * @param  {Object | Array<Object>} event : { to, from, time }
+   * @param  {Number} time (optional)
    * @return {EventRank} this : return self for chaining
    */
-  step(event) {
+  step(event, time=(event.time || this.time)) {
 
     //
     // TODO:
     //  [ ] allow arrays of events, need to be processed at same time
-    //  [ ] compute time differentials
+    //  [ ] compute time differentialsc
     //
 
     // unpack model weight parameters + ranks + correspondents
     const { G, H, f, ranks, correspondents } = this;
 
     // unpack event, create set of participants
-    const { time, to, from : sender } = event;
+    const { to, from : sender } = event;
     const recipients = new Set(Array.isArray(to) ? to : [to]);
     const isParticipent = c => c === sender || recipients.has(c);
 
