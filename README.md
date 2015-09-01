@@ -15,4 +15,4 @@ Reading Material:
   - (Louvain Modularity) http://arxiv.org/pdf/0803.0476v2.pdf
 
 Test Datasets:
-  - [Enron email corpus](http://bailando.sims.berkeley.edu/enron_email.html) Provides MySQL dump, see this gist for a script to update to newer syntax (~5.8) https://gist.github.com/bsouthga/b64bc850c348ada571c1
+  - *Enron email corpus*: Download the full dataset from https://www.cs.cmu.edu/~./enron/ (I got the May 7, 2015 Version of dataset). Move the tarball into `test/enron/`, unzip, and run `enron.py` to create a test csv dataset.
