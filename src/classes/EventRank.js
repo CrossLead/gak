@@ -25,7 +25,7 @@
 
 
 
-import { assert } from '../util/';
+import { assert, ensureArray } from '../util/';
 
 // local references for math utils
 const { PI: π, tanh, pow } = Math;
@@ -70,6 +70,15 @@ export default class EventRank {
   static g = g;
   static h = h;
 
+  static getCorrespondents(data) {
+    const outSet = new Set();
+    data.forEach(event => {
+      outSet.add(event.from);
+      outSet.add(...ensureArray(event.to));
+    });
+    return [...outSet];
+  }
+
 
   /**
    * Construct EventRank object
@@ -82,19 +91,24 @@ export default class EventRank {
 
     // default options
     const {
-      G=5,
-      H=5,
+      G=1,
+      H=1,
       f=0.3,
+      model='baseline',
       time=0,
-      correspondents,
-      events,
+      correspondanceMatrix={},
+      events=[],
     } = opts;
 
     // get ranks if passed
-    let { ranks } = opts;
+    let { ranks, correspondents } = opts;
+
+    if (!correspondents && events) {
+      correspondents = EventRank.getCorrespondents(events);
+    }
 
     // start ranks for all = |C| if not present
-    if (!ranks) {
+    if (!ranks && correspondents) {
       const value = 1 / correspondents.length;
       ranks = correspondents.reduce((o, c) => {
         o[c] = [ { value, time } ];
@@ -102,11 +116,13 @@ export default class EventRank {
       }, {});
     }
 
+
     // add properties
     Object.assign(this, {
-      G, H, f,
+      G, H, f, model,
       time,
       correspondents,
+      correspondanceMatrix,
       events,
       ranks
     });
@@ -138,8 +154,18 @@ export default class EventRank {
    *
    * @return {String} JSON representation of EventRank
    */
-  toJson() {
-    return JSON.stringify(this.serialize());
+  toJson(pretty) {
+    const args = [this.serialize()];
+    if (pretty) {
+      args.push(...[null, 2])
+    }
+    return JSON.stringify(...args);
+  }
+
+
+  log() {
+    console.log(this.ranks);
+    return this;
   }
 
 
@@ -151,29 +177,56 @@ export default class EventRank {
    * @param  {Number} time (optional)
    * @return {EventRank} this : return self for chaining
    */
-  step(event, time=(event.time || this.time)) {
-
-
+  step(event) {
 
     // unpack model weight parameters + ranks + correspondents
-    const { G, H, f, ranks, correspondents } = this;
+    const {
+      G, H, f,
+      ranks,
+      correspondents,
+      correspondanceMatrix : CM,
+      model
+    } = this;
 
     // unpack event, create set of participants
-    const { to, from : sender } = event;
-    const recipients = new Set(Array.isArray(to) ? to : [to]);
+    const { to, from : sender, time } = event;
+    const recipientArray = ensureArray(to);
+    const recipients = new Set(recipientArray);
     const isParticipent = c => c === sender || recipients.has(c);
 
     // counts of participants + respondents
     const nP = recipients.size + 1;
     const nC = correspondents.length;
 
-    // time differentials
-    const Δts = 1,
-          Δtr = 1;
+    // time differentials (for reply model)
+    let Δts, Δtr;
+    if (model === 'reply') {
+
+      // Last time an email was sent by this sender
+      const lagSender = CM[sender] = CM[sender] || {};
+      Δts = time - (lagSender.sent || 0);
+      lagSender.sent = time;
+
+      // Most recent time any of the recipients recieved an email from the sender
+      let trMin = 0, trSender;
+      recipientArray.forEach(recipient => {
+        const correspondence = CM[recipient] = CM[recipient] || {};
+        const tr = correspondence.recieved = correspondence.recieved || {};
+        if ((trSender = tr[sender]) && trSender > trMin) {
+          trMin = trSender;
+        }
+        // update most recient recieved time
+        tr[sender] = time;
+      });
+      Δtr = time - trMin;
+
+      assert(Δts > 0, 'Δts must not be negative: Δts = ' + Δts);
+      assert(Δtr > 0, 'Δtr must not be negative: Δtr = ' + Δtr);
+    }
 
 
     // first pass for potential totals
-    let Tn, ΣR;
+    let Tn = 0, ΣR = 0;
     for (let i = 0; i < nC; i++) {
       const c      = correspondents[i],
             cRanks = ranks[c],
@@ -187,12 +240,14 @@ export default class EventRank {
     }
 
     // potential transfer weight
-    const α = f * Tn * g(Δts, G) * h(Δtr, H);
+    let α;
+    if (model === 'reply') {
+      α = f * Tn * g(Δts, G) * h(Δtr, H);
+    } else {
+      α = f * Tn
+    }
 
-    // assert bounds of parameters
-    assert(Δts > 0, 'Δts must not be negative');
-    assert(Δtr > 0, 'Δtr must not be negative');
-    assert(α <= 1 && α >= 0, 'α must be in (0, 1)');
+    assert(α <= 1 && α >= 0, 'α must be in (0, 1): α = ' + α);
 
     // sum of additive inverse of ranks of participants
     const ΣRbar = nP - ΣR;

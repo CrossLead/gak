@@ -9,3 +9,7 @@ export function assert(bool, message) {
     throw new Error('Assertion failed: ' + message);
   }
 }
+
+export function ensureArray(value) {
+  return Array.isArray(value) ? value : [value];
+}

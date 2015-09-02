@@ -3,8 +3,6 @@ import uglify       from 'gulp-uglify';
 import sourcemaps   from 'gulp-sourcemaps';
 import mocha        from 'gulp-mocha';
 import babel        from 'gulp-babel';
-import concat       from 'gulp-concat';
-import fs           from 'fs';
 import browserify   from 'browserify';
 import babelify     from 'babelify';
 import { argv }     from 'yargs';
@@ -19,7 +17,7 @@ const src = './src/**/*.js',
 /*
  * Watch task for dev
  */
-gulp.task('watch', () => gulp.watch([src, test], ['compile', 'test']));
+gulp.task('watch', () => gulp.watch([src, test], ['test']));
 
 
 /*
@@ -40,13 +38,13 @@ gulp.task('compile', () => {
       .src(src)
       .pipe(sourcemaps.init())
       .pipe(babel())
-      .pipe(sourcemaps.write("."))
-      .pipe(gulp.dest("./dist/node/"))
+      .pipe(sourcemaps.write('.'))
+      .pipe(gulp.dest('./dist/node/'))
       .on('end', cb),
 
     cb => gulp
-      .src("./package.json")
-      .pipe(gulp.dest("./dist"))
+      .src('./package.json')
+      .pipe(gulp.dest('./dist'))
       .on('end', cb)
 
   ]);
@@ -68,7 +66,7 @@ gulp.task('browserify', () => {
   const dest = gulp.dest('./dist/browser/');
 
   return asyncHelpers.parallel([
-      cb => gak
+    cb => gak
         .pipe(source('gak.js'))
         .pipe(buffer())
         .pipe(sourcemaps.init({ loadMaps: true }))
@@ -76,7 +74,7 @@ gulp.task('browserify', () => {
         .pipe(dest)
         .on('end', cb),
 
-      cb => gak
+    cb => gak
         .pipe(source('gak.min.js'))
         .pipe(buffer())
         .pipe(uglify({mangle : true}))
@@ -105,7 +103,7 @@ gulp.task('eslint', function() {
 /*
  * Run linting and tests
  */
-gulp.task('test', ['eslint'], () => {
+gulp.task('test', () => {
 
   return gulp.src(['test/index.js'], { read: false })
       .pipe(mocha({

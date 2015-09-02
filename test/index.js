@@ -6,7 +6,36 @@ import { assert } from '../src/util/';
 
 
 const { abs } = Math;
-const expectVeryClose = x => y => expect(abs(x - y)).to.be.below(10e-8);
+const expectVeryClose = (x, message) => y => expect(abs(x - y), message).to.be.below(10e-8);
+const sum = (args) => args.reduce(((a, b) => a + b), 0);
+
+
+// helper functions / variables for making test data
+const a = 'a',
+      b = 'b',
+      c = 'c',
+      d = 'd',
+      e = 'e',
+      event = (from, to, time) => ({to, from, time});
+
+const makeTestEvents = () => [
+  event(b, c, 1),
+  event(b, c, 2),
+  event(b, c, 3),
+  event(b, c, 4),
+  event(d, b, 5),
+  event(e, b, 6),
+  event(b, a, 7),
+  event(d, b, 8),
+  event(e, b, 9),
+  event(b, a, 10),
+  event(d, b, 11),
+  event(e, b, 12),
+  event(b, a, 13),
+  event(d, b, 14),
+  event(e, b, 15),
+  event(b, a, 16)
+];
 
 
 describe('Graph Analysis Kit', () => {
@@ -84,10 +113,44 @@ describe('Graph Analysis Kit', () => {
         .value();
 
       values.forEach(expectVeryClose(1/3));
-      const sum = values.reduce((o, v) => o + v, 0);
-      expectVeryClose(sum)(1);
+      expectVeryClose(sum(values), 'values should sum to one')(1);
       done();
     });
+
+
+    it('Calculates expected ranks for test data', done => {
+
+      const G = 0.1;
+      const H = 0.1;
+      const f = 0.3;
+      const model = 'reply';
+      const events = makeTestEvents();
+      const correspondents = EventRank.getCorrespondents(events);
+      const getRankValues = er => _(er.ranks).values().map(x => x[0].value).value();
+
+      // initialize EventRank Object
+      const R = new EventRank({ G, H, f, correspondents, model });
+
+      // starting ranks should automatically be calculated for t=0
+      const startRanks = getRankValues(R);
+      const [first, ...rest] = startRanks;
+      expectVeryClose(sum(startRanks), 'start ranks should sum to one')(1);
+      rest.forEach(value => expect(value, 'start ranks should all be equal').to.equal(first));
+
+      // test one iteration of events
+      const firstEvent = events.shift();
+      expect(firstEvent.from).to.equal(b);
+      expect(firstEvent.to).to.equal(c);
+      R.step(firstEvent)
+      const firstStepRanks = getRankValues(R);
+      expectVeryClose(sum(firstStepRanks), 'After one iteration, ranks should still sum to one')(1);
+
+      R.log()
+
+      done();
+    });
+
+
 
 
   });
