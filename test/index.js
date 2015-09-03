@@ -109,7 +109,7 @@ describe('Graph Analysis Kit', () => {
 
       const values = _(ranks)
         .values()
-        .map(x => x[0].value)
+        .pluck('value')
         .value();
 
       values.forEach(expectVeryClose(1/3));
@@ -128,7 +128,7 @@ describe('Graph Analysis Kit', () => {
       const correspondents = EventRank.getCorrespondents(events);
       const getRankValues = er => _(er.ranks)
         .values()
-        .map(x => _.last(x).value)
+        .pluck('value')
         .value();
 
       // initialize EventRank Object
@@ -153,7 +153,7 @@ describe('Graph Analysis Kit', () => {
         'After one iteration, ranks should still sum to one'
       )(1);
 
-      const lastRanks = [a, b, c, d, e].reduce((o, x) => (o[x] = _.last(R.ranks[x]), o), {});
+      const lastRanks = [a, b, c, d, e].reduce((o, x) => (o[x] = R.ranks[x], o), {});
 
       const { value : bValue } = lastRanks.b;
       const { value : cValue } = lastRanks.c;

@@ -21,7 +21,7 @@
 */
 
 
-import { assert, ensureArray, last } from '../util/';
+import { assert, ensureArray } from '../util/';
 
 // local references for math utils
 const { PI: π, tanh, pow } = Math;
@@ -77,7 +77,7 @@ export default class EventRank {
   static startRanks(correspondents) {
     const value = 1 / correspondents.length,
           time = 0;
-    return correspondents.reduce((o, c) => (o[c] = [{ value, time }], o), {});
+    return correspondents.reduce((o, c) => (o[c] = { value, time }, o), {});
   }
 
   /**
@@ -195,6 +195,31 @@ export default class EventRank {
   }
 
   /**
+   * Ranks of individuals who were not participants in the previous event
+   * need to be updated, apply a non-participant rank adjustment
+   * for each period:
+   *      d ∉ P_i :    R_i(d) = R_i-1(d) * (1 - (α_i / Tn_i))
+   */
+  catchUp(participant) {
+    const { correspondanceMatrix: CM, ranks, Vα } = this;
+    const iα = Vα.length,
+          rank = ranks[participant];
+
+    let i = CM[participant].lastUpdate || 0,
+        value = rank.value;
+
+    while(i < iα) {
+      const αLag = Vα[i++];
+      value *= (1 - αLag.value);
+      rank.value = value
+      rank.time = αLag.time;
+    }
+
+    // update index of last update
+    CM[participant].lastUpdate = iα;
+  }
+
+  /**
    * Calculate new ranks given an additional event
    *
    * @param  {Object | Array<Object>} event : { to, from, time }
@@ -212,39 +237,18 @@ export default class EventRank {
       Vα
     } = this;
 
-    const iα = Vα.length;
-
     // unpack event, create set of participants
     const { to, from : sender, time } = event;
-
-
-    const recipientArray = ensureArray(to);
-    const recipients = new Set(recipientArray);
+    const recipients = new Set(ensureArray(to));
+    recipients.delete(sender); // if the sender sends themself an email...
+    const recipientArray = Array.from(recipients);
 
     // counts of participants + total correspondents
     const nP = recipients.size + 1;
 
-
-    /**
-     * Ranks of individuals who were not participants in the previous event
-     * need to be updated, apply a non-participant rank adjustment
-     * for each period:
-     *      d ∉ P_i :    R_i(d) = R_i-1(d) * (1 - (α_i / Tn_i))
-     */
-    const catchUp = participant => {
-      let i = CM[participant].lastUpdate || 0,
-          value = last(ranks[participant]).value;
-
-      while(i < iα) {
-        const αLag = Vα[i++];
-        value *= (1 - αLag.value);
-        ranks[participant].push({ value, time : αLag.time });
-      }
-    }
-
     // catch up recipients with lazy ranks
-    catchUp(sender);
-    recipientArray.forEach(catchUp)
+    this.catchUp(sender);
+    recipientArray.forEach(::this.catchUp)
 
     // time differentials (for reply model)
     let Δts, Δtr;
@@ -272,19 +276,21 @@ export default class EventRank {
       assert(Δtr >= 0, 'Δtr must not be negative: Δtr = ' + Δtr);
     }
 
-    // get last ranks of participants
-    const lastRanks = {};
 
     // start sum with sender rank
-    let ΣR = (lastRanks[sender] = last(ranks[sender])).value;
-    const lastTimeSender = lastRanks[sender].time;
+    let ΣR = ranks[sender].value;
+    const lastTimeSender = ranks[sender].time;
     recipientArray.forEach(recipient => {
-      ΣR += (lastRanks[recipient] = last(ranks[recipient])).value;
+      ΣR += ranks[recipient].value;
       assert(
-        lastRanks[recipient].time === lastTimeSender,
+        ranks[recipient].time === lastTimeSender,
         'Last event time should be equal for all participants'
       );
     });
+
+    if (ΣR > 1) {
+      console.log('\n', ranks);
+    }
 
     assert(ΣR <= 1 && ΣR >= 0, 'ΣR must be in (0, 1): ΣR = ' + ΣR);
 
@@ -308,8 +314,8 @@ export default class EventRank {
     const iαNew = Vα.length;
 
     const updateParticipant = participant => {
-
-      let value = lastRanks[participant].value;
+      const rank = ranks[participant];
+      let value = rank.value;
 
       // update participant rank for this period
       value += α * ((1 - value) / ΣRbar);
@@ -318,7 +324,8 @@ export default class EventRank {
       CM[participant].lastUpdate = iαNew;
 
       // push new rank with given time
-      ranks[participant].push({ value, time });
+      rank.value = value;
+      rank.time = time;
     }
 
     // update all participants
@@ -330,32 +337,7 @@ export default class EventRank {
 
   // compute lazily evaluated ranks for non participants
   done() {
-
-    const {
-      correspondents,
-      correspondanceMatrix : CM,
-      Vα,
-      ranks
-    } = this;
-
-    const iα = Vα.length;
-
-    correspondents.forEach(c => {
-
-      let i = CM[c].lastUpdate || 0,
-          value = last(ranks[c]).value;
-
-      // apply past values of α / Tn to "catch up" previous non participants
-      while(i < iα) {
-        const αLag = Vα[i++];
-        value *= (1 - αLag.value);
-        ranks[c].push({ value, time : αLag.time });
-      }
-
-      // update index of last update
-      CM[c].lastUpdate = iα;
-    })
-
+    this.correspondents.forEach(::this.catchUp);
     return this;
   }
 

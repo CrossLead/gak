@@ -32,7 +32,7 @@ fastCsv
     events.push(splitFrom(data));
   })
   .on('end', function(){
-    var R = new EventRank({ events: events });
+    var R = new EventRank({ events: events, model : 'reply' });
 
     var bar = new ProgressBar(
       '(:current/:total events processed) [:bar] :percent (:etas remaining)',
@@ -40,8 +40,10 @@ fastCsv
     );
 
     console.log('computing ranks...')
+
     events.forEach(function(event) {
       bar.tick();
       R.step(event);
     })
+    R.done();
   });
