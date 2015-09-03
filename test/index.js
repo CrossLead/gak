@@ -126,7 +126,10 @@ describe('Graph Analysis Kit', () => {
       const model = 'baseline';
       const events = makeTestEvents();
       const correspondents = EventRank.getCorrespondents(events);
-      const getRankValues = er => _(er.ranks).values().map(x => _.last(x).value).value();
+      const getRankValues = er => _(er.ranks)
+        .values()
+        .map(x => _.last(x).value)
+        .value();
 
       // initialize EventRank Object
       const R = new EventRank({ G, H, f, correspondents, model });
@@ -135,7 +138,8 @@ describe('Graph Analysis Kit', () => {
       const startRanks = getRankValues(R);
       const [first, ...rest] = startRanks;
       expectVeryClose(sum(startRanks), 'start ranks should sum to one')(1);
-      rest.forEach(value => expect(value, 'start ranks should all be equal').to.equal(first));
+      rest.forEach(value => expect(value, 'start ranks should all be equal')
+        .to.equal(first));
 
       // test one iteration of events
       const firstEvent = events.shift();
@@ -144,17 +148,23 @@ describe('Graph Analysis Kit', () => {
       R.step(firstEvent).done();
       const stepOneRanks = getRankValues(R);
 
-      expectVeryClose(sum(stepOneRanks), 'After one iteration, ranks should still sum to one')(1);
+      expectVeryClose(
+        sum(stepOneRanks),
+        'After one iteration, ranks should still sum to one'
+      )(1);
 
       const lastRanks = [a, b, c, d, e].reduce((o, x) => (o[x] = _.last(R.ranks[x]), o), {});
 
       const { value : bValue } = lastRanks.b;
       const { value : cValue } = lastRanks.c;
 
-      expect(bValue, 'd ∈ P_i should have same rank on first round').to.equal(cValue);
+      expect(bValue, 'd ∈ P_i should have same rank on first round')
+        .to.equal(cValue);
+
       [a, d, e].forEach(x => {
         const { value } = lastRanks[x];
-        expect(value, 'R(d ∉ P_i) should be lower than R(d ∈ P_i)').to.be.below(bValue);
+        expect(value, 'R(d ∉ P_i) should be lower than R(d ∈ P_i)')
+          .to.be.below(bValue);
       });
 
       // events.map(::R.step);

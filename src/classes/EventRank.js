@@ -18,9 +18,6 @@
     - collapse array of events in time range into single time period
     - keep track of time conversion
 
-  3. Efficiency
-    - Lazily update non participent scores
-
 */
 
 
@@ -219,6 +216,8 @@ export default class EventRank {
 
     // unpack event, create set of participants
     const { to, from : sender, time } = event;
+
+
     const recipientArray = ensureArray(to);
     const recipients = new Set(recipientArray);
 
@@ -331,13 +330,15 @@ export default class EventRank {
 
   // compute lazily evaluated ranks for non participants
   done() {
+
     const {
       correspondents,
       correspondanceMatrix : CM,
-      iα,
       Vα,
       ranks
     } = this;
+
+    const iα = Vα.length;
 
     correspondents.forEach(c => {
 
