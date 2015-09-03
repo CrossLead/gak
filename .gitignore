@@ -3,3 +3,4 @@ papers/*
 dist/*
 test/enron/*
 !test/enron/enron.*
+!test/enron/enron_emails.csv

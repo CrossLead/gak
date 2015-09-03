@@ -27,7 +27,7 @@ var toCsv = function(data, filename, callback) {
 
 var events = [];
 fastCsv
-  .fromStream(fs.createReadStream('./enron_emails.csv'), {headers : true, object: true})
+  .fromStream(fs.createReadStream('./test/enron/enron_emails.csv'), {headers : true, object: true})
   .on('data', function(data){
     events.push(splitFrom(data));
   })
@@ -40,10 +40,12 @@ fastCsv
     );
 
     console.log('computing ranks...')
-
     events.forEach(function(event) {
       bar.tick();
       R.step(event);
     })
+
+    console.log('catching up non participants...');
     R.done();
+    console.log('done!')
   });

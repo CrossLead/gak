@@ -11,13 +11,16 @@ import buffer       from 'vinyl-buffer';
 import asyncHelpers from 'async';
 import eslint       from 'gulp-eslint';
 
+
 const src = './src/**/*.js',
       test =  './test/index.js';
+
 
 /*
  * Watch task for dev
  */
 gulp.task('watch', () => gulp.watch([src, test], ['test']));
+
 
 
 /*
