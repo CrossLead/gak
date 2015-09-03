@@ -8,13 +8,15 @@ import re
 import csv
 from glob import glob
 from os import listdir
+from dateutil.parser import parse
+
 
 def rx(s):
   return re.compile(s, re.M)
 
 regexes = {
-  "id"      : rx(r"Message-ID:(?:\s<(?P<id>.*)>)?"),
-  "date"       : rx(r"Date: (.*)"),
+  "id"         : rx(r"Message-ID:(?:\s<(?P<id>.*)>)?"),
+  "time"       : rx(r"Date: (.*)"),
   "sender"     : rx(r"From: (.*)"),
   "recipients" : rx(r"To: ((?:.|(?:\n|\r\n?)\s)*)"),
   "cc"         : rx(r"Cc: ((?:.|(?:\n|\r\n?)\s)*)"),
@@ -22,7 +24,7 @@ regexes = {
 }
 
 newline = rx(r"(?:\n|\r\n?)")
-
+emailRx = rx(r"^\S+@\S+\.\S+$")
 
 def process(file):
   with open(file) as intext:
@@ -37,12 +39,11 @@ def process(file):
     R = set()
     for rType in ['recipients', 'bcc', 'cc']:
       if rType in record:
-        R |= { r.strip() for r in record[rType].split(',') }
+        R |= { r.strip() for r in record[rType].replace(';', ',').split(',') if emailRx.search(r.strip()) }
 
     return {
-      'id': record['id'],
       'from': record['sender'],
-      'date': record['date'],
+      'time': int(parse(record['time']).strftime('%s')),
       'to': ",".join(R)
     }
 
@@ -52,12 +53,18 @@ if __name__ == '__main__':
   with open('./enron_emails.csv', 'w') as csvfile:
 
     root = './maildir'
-    writer = csv.DictWriter(csvfile, fieldnames=['id', 'to', 'from', 'date'])
+    writer = csv.DictWriter(csvfile, fieldnames=['to', 'from', 'time'])
     writer.writeheader()
+
+    rows = []
 
     for dirname in listdir(root):
       print('Processing {}...'.format(dirname))
-      writer.writerows(
-        process(f)
-        for f in glob("{}/{}/sent/*".format(root, dirname))
-      )
+      for f in glob("{}/{}/sent/*".format(root, dirname)):
+        record = process(f)
+        if (record['to'] and record['from'] and record['time']):
+          rows.append(record)
+
+
+
+    writer.writerows(sorted(rows, lambda x, y: x['time'] - y['time']))

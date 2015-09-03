@@ -120,13 +120,13 @@ describe('Graph Analysis Kit', () => {
 
     it('Calculates expected ranks for test data', done => {
 
-      const G = 0.1;
-      const H = 0.1;
-      const f = 0.3;
-      const model = 'reply';
+      const G = 1; // recharge time
+      const H = 0.3; // message half life
+      const f = 0.02;
+      const model = 'baseline';
       const events = makeTestEvents();
       const correspondents = EventRank.getCorrespondents(events);
-      const getRankValues = er => _(er.ranks).values().map(x => x[0].value).value();
+      const getRankValues = er => _(er.ranks).values().map(x => _.last(x).value).value();
 
       // initialize EventRank Object
       const R = new EventRank({ G, H, f, correspondents, model });
@@ -141,11 +141,25 @@ describe('Graph Analysis Kit', () => {
       const firstEvent = events.shift();
       expect(firstEvent.from).to.equal(b);
       expect(firstEvent.to).to.equal(c);
-      R.step(firstEvent)
-      const firstStepRanks = getRankValues(R);
-      expectVeryClose(sum(firstStepRanks), 'After one iteration, ranks should still sum to one')(1);
+      R.step(firstEvent).done();
+      const stepOneRanks = getRankValues(R);
 
-      R.log()
+      expectVeryClose(sum(stepOneRanks), 'After one iteration, ranks should still sum to one')(1);
+
+      const lastRanks = [a, b, c, d, e].reduce((o, x) => (o[x] = _.last(R.ranks[x]), o), {});
+
+      const { value : bValue } = lastRanks.b;
+      const { value : cValue } = lastRanks.c;
+
+      expect(bValue, 'd ∈ P_i should have same rank on first round').to.equal(cValue);
+      [a, d, e].forEach(x => {
+        const { value } = lastRanks[x];
+        expect(value, 'R(d ∉ P_i) should be lower than R(d ∈ P_i)').to.be.below(bValue);
+      });
+
+      // events.map(::R.step);
+      //
+      // R.done().log();
 
       done();
     });

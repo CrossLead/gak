@@ -24,12 +24,11 @@
 */
 
 
-
-import { assert, ensureArray } from '../util/';
+import { assert, ensureArray, last } from '../util/';
 
 // local references for math utils
 const { PI: π, tanh, pow } = Math;
-
+const oneDay = 24*60*60*1000;
 
 /**
  * Decay function for influence on potential of event sent by sender s ∈ P_i
@@ -58,7 +57,6 @@ function h(Δtr, H) {
 }
 
 
-
 /**
  * Event Rank instance
  *
@@ -74,11 +72,16 @@ export default class EventRank {
     const outSet = new Set();
     data.forEach(event => {
       outSet.add(event.from);
-      outSet.add(...ensureArray(event.to));
+      ensureArray(event.to).forEach(::outSet.add)
     });
-    return [...outSet];
+    return Array.from(outSet);
   }
 
+  static startRanks(correspondents) {
+    const value = 1 / correspondents.length,
+          time = 0;
+    return correspondents.reduce((o, c) => (o[c] = [{ value, time }], o), {});
+  }
 
   /**
    * Construct EventRank object
@@ -91,17 +94,16 @@ export default class EventRank {
 
     // default options
     const {
-      G=1,
-      H=1,
+      G=oneDay,
+      H=oneDay,
       f=0.3,
       model='baseline',
       time=0,
-      correspondanceMatrix={},
       events=[],
     } = opts;
 
     // get ranks if passed
-    let { ranks, correspondents } = opts;
+    let { ranks, correspondents, correspondanceMatrix } = opts;
 
     if (!correspondents && events) {
       correspondents = EventRank.getCorrespondents(events);
@@ -109,11 +111,11 @@ export default class EventRank {
 
     // start ranks for all = |C| if not present
     if (!ranks && correspondents) {
-      const value = 1 / correspondents.length;
-      ranks = correspondents.reduce((o, c) => {
-        o[c] = [ { value, time } ];
-        return o;
-      }, {});
+      ranks = EventRank.startRanks(correspondents);
+    }
+
+    if (!correspondanceMatrix) {
+      correspondanceMatrix = correspondents.reduce((o, c) => (o[c] = {}, o), {});
     }
 
 
@@ -124,7 +126,8 @@ export default class EventRank {
       correspondents,
       correspondanceMatrix,
       events,
-      ranks
+      ranks,
+      Vα : []
     });
   }
 
@@ -163,12 +166,36 @@ export default class EventRank {
   }
 
 
+  toMatrix() {
+    const { ranks, correspondents } = this;
+    const out = [];
+    correspondents.forEach(name => {
+      const record = { name };
+      ranks[name].forEach(rank => {
+        record[rank.time] = rank.value;
+      });
+      out.push(record);
+    })
+    return out;
+  }
+
+
   log() {
     console.log(this.ranks);
     return this;
   }
 
 
+  reset() {
+    this.ranks = EventRank.startRanks(this.correspondents);
+    return this;
+  }
+
+
+  compute() {
+    this.reset().events.map(::this.step);
+    return this;
+  }
 
   /**
    * Calculate new ranks given an additional event
@@ -183,34 +210,56 @@ export default class EventRank {
     const {
       G, H, f,
       ranks,
-      correspondents,
       correspondanceMatrix : CM,
-      model
+      model,
+      Vα
     } = this;
+
+    const iα = Vα.length;
 
     // unpack event, create set of participants
     const { to, from : sender, time } = event;
     const recipientArray = ensureArray(to);
     const recipients = new Set(recipientArray);
-    const isParticipent = c => c === sender || recipients.has(c);
 
-    // counts of participants + respondents
+    // counts of participants + total correspondents
     const nP = recipients.size + 1;
-    const nC = correspondents.length;
+
+
+    /**
+     * Ranks of individuals who were not participants in the previous event
+     * need to be updated, apply a non-participant rank adjustment
+     * for each period:
+     *      d ∉ P_i :    R_i(d) = R_i-1(d) * (1 - (α_i / Tn_i))
+     */
+    const catchUp = participant => {
+      let i = CM[participant].lastUpdate || 0,
+          value = last(ranks[participant]).value;
+
+      while(i < iα) {
+        const αLag = Vα[i++];
+        value *= (1 - αLag.value);
+        ranks[participant].push({ value, time : αLag.time });
+      }
+    }
+
+    // catch up recipients with lazy ranks
+    catchUp(sender);
+    recipientArray.forEach(catchUp)
 
     // time differentials (for reply model)
     let Δts, Δtr;
     if (model === 'reply') {
 
       // Last time an email was sent by this sender
-      const lagSender = CM[sender] = CM[sender] || {};
+      const lagSender = CM[sender];
       Δts = time - (lagSender.sent || 0);
       lagSender.sent = time;
 
       // Most recent time any of the recipients recieved an email from the sender
       let trMin = 0, trSender;
       recipientArray.forEach(recipient => {
-        const correspondence = CM[recipient] = CM[recipient] || {};
+        const correspondence = CM[recipient];
         const tr = correspondence.recieved = correspondence.recieved || {};
         if ((trSender = tr[sender]) && trSender > trMin) {
           trMin = trSender;
@@ -220,31 +269,35 @@ export default class EventRank {
       });
       Δtr = time - trMin;
 
-      assert(Δts > 0, 'Δts must not be negative: Δts = ' + Δts);
-      assert(Δtr > 0, 'Δtr must not be negative: Δtr = ' + Δtr);
+      assert(Δts >= 0, 'Δts must not be negative: Δts = ' + Δts);
+      assert(Δtr >= 0, 'Δtr must not be negative: Δtr = ' + Δtr);
     }
 
+    // get last ranks of participants
+    const lastRanks = {};
 
-    // first pass for potential totals
-    let Tn = 0, ΣR = 0;
-    for (let i = 0; i < nC; i++) {
-      const c      = correspondents[i],
-            cRanks = ranks[c],
-            Rold   = cRanks[cRanks.length - 1];
+    // start sum with sender rank
+    let ΣR = (lastRanks[sender] = last(ranks[sender])).value;
+    const lastTimeSender = lastRanks[sender].time;
+    recipientArray.forEach(recipient => {
+      ΣR += (lastRanks[recipient] = last(ranks[recipient])).value;
+      assert(
+        lastRanks[recipient].time === lastTimeSender,
+        'Last event time should be equal for all participants'
+      );
+    });
 
-      if (isParticipent(c)) {
-        ΣR += Rold.value;
-      } else {
-        Tn += Rold.value;
-      }
-    }
+    assert(ΣR <= 1 && ΣR >= 0, 'ΣR must be in (0, 1): ΣR = ' + ΣR);
+
+    // current total of non participants is one minus participent potential
+    const Tn = 1 - ΣR;
 
     // potential transfer weight
     let α;
     if (model === 'reply') {
-      α = f * Tn * g(Δts, G) * h(Δtr, H);
+      Vα.push({ value : (α = f * Tn * g(Δts, G) * h(Δtr, H)) / Tn, time });
     } else {
-      α = f * Tn
+      Vα.push({ value: (α = f * Tn) / Tn, time });
     }
 
     assert(α <= 1 && α >= 0, 'α must be in (0, 1): α = ' + α);
@@ -252,24 +305,55 @@ export default class EventRank {
     // sum of additive inverse of ranks of participants
     const ΣRbar = nP - ΣR;
 
-    // second pass for rank computation
-    for (let i = 0; i < nC; i++) {
-      const c      = correspondents[i],
-            cRanks = ranks[c],
-            Rold   = cRanks[cRanks.length - 1];
+    // store last index of alpha
+    const iαNew = Vα.length;
 
-      // mutable reference to value
-      let value = Rold.value;
+    const updateParticipant = participant => {
 
-      if (isParticipent(c)) {
-        value = value + α * ((1 - value) / ΣRbar)
-      } else {
-        value = value * (1 - (α / Tn));
-      }
+      let value = lastRanks[participant].value;
+
+      // update participant rank for this period
+      value += α * ((1 - value) / ΣRbar);
+
+      // update index of last update
+      CM[participant].lastUpdate = iαNew;
 
       // push new rank with given time
-      cRanks.push({ value, time });
+      ranks[participant].push({ value, time });
     }
+
+    // update all participants
+    updateParticipant(sender);
+    recipientArray.forEach(updateParticipant);
+
+    return this;
+  }
+
+  // compute lazily evaluated ranks for non participants
+  done() {
+    const {
+      correspondents,
+      correspondanceMatrix : CM,
+      iα,
+      Vα,
+      ranks
+    } = this;
+
+    correspondents.forEach(c => {
+
+      let i = CM[c].lastUpdate || 0,
+          value = last(ranks[c]).value;
+
+      // apply past values of α / Tn to "catch up" previous non participants
+      while(i < iα) {
+        const αLag = Vα[i++];
+        value *= (1 - αLag.value);
+        ranks[c].push({ value, time : αLag.time });
+      }
+
+      // update index of last update
+      CM[c].lastUpdate = iα;
+    })
 
     return this;
   }

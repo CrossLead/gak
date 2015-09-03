@@ -13,3 +13,7 @@ export function assert(bool, message) {
 export function ensureArray(value) {
   return Array.isArray(value) ? value : [value];
 }
+
+export function last(arr) {
+  return arr[arr.length - 1];
+}
