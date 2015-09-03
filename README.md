@@ -7,8 +7,7 @@
 
 Alorithm TODO:
   - EventRank (in progress...)
-  - Louvain Modularity for community detection
-  - PageRank
+  - ECODE (Event based COmmunity DEtection)
 
 Test Datasets:
   - *Enron email corpus*: Download the full dataset from https://www.cs.cmu.edu/~./enron/ (I got the May 7, 2015 Version of dataset). Move the tarball into `test/enron/`, unzip, and run `enron.py` to create a test csv dataset.
