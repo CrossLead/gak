@@ -4,11 +4,11 @@ import pkg from '../package.json';
 import { EventRank, version } from '../src/';
 import { assert } from '../src/util/';
 
-
 const { abs } = Math;
-const expectVeryClose = (x, message) => y => expect(abs(x - y), message).to.be.below(10e-8);
+const expectVeryClose = (x, message) => {
+  return y => expect(abs(x - y), message).to.be.below(10e-8)
+};
 const sum = (args) => args.reduce(((a, b) => a + b), 0);
-
 
 // helper functions / variables for making test data
 const a = 'a',
@@ -145,7 +145,8 @@ describe('Graph Analysis Kit', () => {
       const firstEvent = events.shift();
       expect(firstEvent.from).to.equal(b);
       expect(firstEvent.to).to.equal(c);
-      R.step(firstEvent).done();
+      R.step(firstEvent);
+      R.done();
       const stepOneRanks = getRankValues(R);
 
       expectVeryClose(
@@ -153,7 +154,8 @@ describe('Graph Analysis Kit', () => {
         'After one iteration, ranks should still sum to one'
       )(1);
 
-      const lastRanks = [a, b, c, d, e].reduce((o, x) => (o[x] = R.ranks[x], o), {});
+      const lastRanks = [a, b, c, d, e]
+        .reduce((o, x) => (o[x] = R.ranks[x], o), {});
 
       const { value : bValue } = lastRanks.b;
       const { value : cValue } = lastRanks.c;
@@ -167,15 +169,14 @@ describe('Graph Analysis Kit', () => {
           .to.be.below(bValue);
       });
 
-      // events.map(::R.step);
-      //
-      // R.done().log();
+      events.map(::R.step);
+      R.done();
+
+      expect(R.ranks.a.value, 'R(a) > R(c)')
+        .to.be.above(R.ranks.c.value);
 
       done();
     });
-
-
-
 
   });
 
