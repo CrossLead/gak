@@ -8,9 +8,16 @@
 
 ### Installation
 
+#### npm
 ```shell
 npm install --save gak
 ```
+
+#### bower
+```shell
+bower install --save gak
+```
+
 
 Alorithm TODO:
   - EventRank (in progress...)

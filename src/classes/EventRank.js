@@ -26,6 +26,7 @@ import { assert, ensureArray } from '../util/';
 // local references for math utils
 const { PI: π, tanh, pow } = Math;
 const oneDay = 24*60*60*1000;
+const modelTypes = new Set(['baseline', 'reply']);
 
 /**
  * Decay function for influence on potential of event sent by sender s ∈ P_i
@@ -98,6 +99,8 @@ export default class EventRank {
       time=0,
       events=[],
     } = opts;
+
+    assert(modelTypes.has(model), 'Unexpected model type: ' + model);
 
     // get ranks if passed
     let { ranks, correspondents, correspondanceMatrix } = opts;
@@ -205,13 +208,11 @@ export default class EventRank {
     const iα = Vα.length,
           rank = ranks[participant];
 
-    let i = CM[participant].lastUpdate || 0,
-        value = rank.value;
+    let i = CM[participant].lastUpdate || 0;
 
     while(i < iα) {
       const αLag = Vα[i++];
-      value *= (1 - αLag.value);
-      rank.value = value
+      rank.value *= (1 - αLag.value);
       rank.time = αLag.time;
     }
 

@@ -6,7 +6,7 @@
     "McChrystal Group"
   ],
   "description": "Graph Analysis Kit for NodeJS",
-  "main": "index.js",
+  "main": "dist/browser/gak.js",
   "keywords": [
     "graph",
     "network",
@@ -16,9 +16,9 @@
   ],
   "license": "Apache 2.0",
   "ignore": [
-    "**/.*",
     "node_modules",
     "bower_components",
+    "src",
     "test",
     "tests"
   ]
