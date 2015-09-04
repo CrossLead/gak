@@ -2,6 +2,8 @@ node_modules/*
 bower_components/*
 papers/*
 dist/*
+!dist/browser/gak.js
+!dist/browser/gak.min.js
 test/enron/*
 !test/enron/enron.*
 !test/enron/enron_emails.csv
