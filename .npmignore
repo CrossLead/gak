@@ -2,6 +2,4 @@ node_modules/*
 papers/*
 dist/*
 !dist/node/*
-test/enron/*
-!test/enron/enron.*
-!test/enron/enron_emails.csv
+test/*
