@@ -1,9 +1,10 @@
 ## _gak_ (Graph Analysis ToolKit for NodeJS)
 
+[![npm version](https://badge.fury.io/js/gak.svg)](http://badge.fury.io/js/gak)
 [![Build Status](https://travis-ci.org/CrossLead/gak.svg?branch=master)](https://travis-ci.org/CrossLead/gak)
 [![Dependency Status](https://david-dm.org/crosslead/gak.svg)](https://david-dm.org/crosslead/gak)
 
-*Very Very Alpha, beware!*
+### *Very Very Alpha, beware!*
 
 ### Installation
 
