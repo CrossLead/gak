@@ -8,16 +8,51 @@
 
 ### Installation
 
-#### npm
+##### npm
 ```shell
 npm install --save gak
 ```
 
-#### bower
+##### bower
 ```shell
 bower install --save gak
 ```
 
+### Usage
+
+##### EventRank
+
+To calculate EventRanks of `correspondents` involved in a series of `events` sorted by time...
+
+```javascript
+
+import { EventRank } from 'gak';
+
+/**
+ * Events should be an Array of objects of the form...
+ *    { time: <Number>, to: <String|Array<String>>, from: <String> }
+ * sorted by the time property.
+ *
+ * NOTE: default parameters assume time is in unix timestamp format
+ */
+ const events = [ /* Add events here... */ ];
+
+ R = new EventRank({ events });
+
+ for (let event of events) {
+   // add event information to ranks
+   R.step(event);
+ }
+
+ // finish rank calculation by computing lazy ranks
+ R.done();
+
+ console.log(R.ranks); // => { ranks... }
+```
+
+
+
+### Notes
 
 Alorithm TODO:
   - EventRank (in progress...)
