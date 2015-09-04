@@ -37,9 +37,9 @@ import { EventRank } from 'gak';
  */
  const events = [ /* Add events here... */ ];
 
- R = new EventRank({ events });
+ const R = new EventRank({ events });
 
- for (let event of events) {
+ for (const event of events) {
    // add event information to ranks
    R.step(event);
  }
