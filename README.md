@@ -5,6 +5,12 @@
 
 *Very Very Alpha, beware!*
 
+### Installation
+
+```shell
+npm install --save gak
+```
+
 Alorithm TODO:
   - EventRank (in progress...)
   - ECODE (Event based COmmunity DEtection)
