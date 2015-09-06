@@ -6,5 +6,5 @@ dist/*
 !dist/browser/gak.min.js
 !dist/browser/gak.js.map
 test/enron/*
+test/enron/*.csv
 !test/enron/enron.*
-!test/enron/enron_emails.csv
