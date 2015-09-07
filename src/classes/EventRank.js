@@ -6,13 +6,6 @@
  *
  * PDF: http://www.datalab.uci.edu/papers/linkkdd05-02.pdf
  */
-
-
-/* TODO:
-
-  Enhancements
-    - allow progressive adding of events
-*/
 import { assert, ensureArray } from '../util/';
 
 
