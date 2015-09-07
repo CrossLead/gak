@@ -112,7 +112,7 @@ export default class EventRank {
      });
      const times = Object.keys(hash);
      times.sort();
-     return times.map(time => ({time, events: hash[time]}))
+     return times.map(time => ({time: parseInt(time, 10), events: hash[time]}))
    }
 
 
