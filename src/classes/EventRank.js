@@ -10,23 +10,18 @@
 
 /* TODO:
 
-  1. Get working model from array of formatted events
-
-  2. Enhancements
-    - Formatting method
+  Enhancements
     - allow progressive adding of events
-    - collapse array of events in time range into single time period
-    - keep track of time conversion
-
 */
-
-
 import { assert, ensureArray } from '../util/';
 
-// local references for math utils
+
+
 const { PI: π, tanh, pow } = Math;
 const oneDay = 24*60*60*1000;
 const modelTypes = new Set(['baseline', 'reply']);
+
+
 
 /**
  * Decay function for influence on potential of event sent by sender s ∈ P_i
@@ -172,6 +167,7 @@ export default class EventRank {
   /**
    * Json string of serialized EventRank
    *
+   * @param {Boolean} pretty print formatted Json
    * @return {String} JSON representation of EventRank
    */
   toJson(pretty) {
@@ -238,7 +234,7 @@ export default class EventRank {
   /**
    * Get ranks of given ids at current period
    *
-   * @param {Array<String> | string} comb. of str and array<str> of ids
+   * @param {Array<String> | String} combination of str and array<str> of ids
    * @return {Array<Object>} ranks of (ids) at current period
    */
   get(...ids) {
@@ -295,9 +291,8 @@ export default class EventRank {
   /**
    * Calculate new ranks given an additional event
    *
-   * @param  {Object | Array<Object>} event : { to, from, time }
-   * @param  {Number} time (optional)
-   * @return {EventRank} this : return self for chaining
+   * @param  {Object} event to add
+   * @return {EventRank} return self for chaining
    */
   step(event) {
 
@@ -313,7 +308,11 @@ export default class EventRank {
     // unpack event, create set of participants
     const { to, from : sender, time } = event;
     const recipients = new Set(ensureArray(to));
-    recipients.delete(sender); // if the sender sends themself an email...
+
+    // if the sender sends themself an email...
+    recipients.delete(sender);
+
+    // get array from recipient set
     const recipientArray = Array.from(recipients);
 
     // counts of participants + total correspondents
@@ -328,34 +327,50 @@ export default class EventRank {
     if (model === 'reply') {
 
       // Last time an email was sent by this sender
+      // default to infinite time if no recorded emails sent by sender
       const lagSender = CM[sender];
       Δts = time - (lagSender.sent || -Infinity);
 
-
+      // record current time as most recent send event by sender
       lagSender.sent = time;
 
-      // Most recent time any of the recipients recieved an email from the sender
-      let trMin = -Infinity, trRecipient;
+      // Find the most recent time a message was recieved by the sender
+      // from any of P_i, start at infinity (if no messages
+      // recieved by sender from any of P_i)
+      let trMin = -Infinity,
+          trRecipient;
+
       recipientArray.forEach(recipient => {
         const tr = lagSender.recieved = lagSender.recieved || {};
+
         if ((trRecipient = tr[recipient]) && trRecipient > trMin) {
           trMin = trRecipient;
         }
+
         // update most recient recieved time
         tr[recipient] = time;
       });
+
+      // time difference (recipient) is
+      // between now and minimum determined time above
       Δtr = time - trMin;
 
+      // assert that time differentials are not negative
+      // (can't send/recieve messages in the future!)
       assert(Δts >= 0, 'Δts must not be negative: Δts = ' + Δts, event);
       assert(Δtr >= 0, 'Δtr must not be negative: Δtr = ' + Δtr, event);
     }
 
+    // time of last rank compuation of sender
+    const lastTimeSender = ranks[sender].time;
 
     // start sum with sender rank
     let ΣR = ranks[sender].value;
-    const lastTimeSender = ranks[sender].time;
+
+    // build up sum of all participant ranks
     recipientArray.forEach(recipient => {
       ΣR += ranks[recipient].value;
+      // safety check to ensure that all of P_i is on same time period
       assert(
         ranks[recipient].time === lastTimeSender,
         'Last event time should be equal for all participants',
@@ -363,10 +378,7 @@ export default class EventRank {
       );
     });
 
-    if (ΣR > 1) {
-      console.log('\n', ranks);
-    }
-
+    // Safety check to ensure that the sum should be within (0, 1)
     assert(ΣR <= 1 && ΣR >= 0, 'ΣR must be in (0, 1): ΣR = ' + ΣR, event);
 
     // current total of non participants is one minus participent potential
@@ -375,11 +387,18 @@ export default class EventRank {
     // potential transfer weight
     let α;
     if (model === 'reply') {
-      Vα.push({ value : (α = f * Tn * g(Δts, G) * h(Δtr, H)) / Tn, time });
+      // reply model includes time weighting functions
+      Vα.push({
+        value : (
+          α = f * Tn * g(Δts, G) * h(Δtr, H) // calculate α for below
+        ) / Tn, // save α / Tn for non-participants
+        time // save time of α calculation
+      });
     } else {
       Vα.push({ value: (α = f * Tn) / Tn, time });
     }
 
+    // safety check for bounds of α
     assert(α <= 1 && α >= 0, 'α must be in (0, 1): α = ' + α, event);
 
     // sum of additive inverse of ranks of participants
