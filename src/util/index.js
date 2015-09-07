@@ -8,7 +8,7 @@
  * @param  {Boolean} bool: Bool that must be true
  * @return {undefined}
  */
-function assert(bool, message, event) {
+export function assert(bool, message, event) {
   if (!bool) {
     gakError('Assertion failed: ' + message, event);
   }
@@ -21,7 +21,7 @@ function assert(bool, message, event) {
  * @param  {Any} Object to be wrapped
  * @return {Array<Any>} array of object
  */
-function ensureArray(value) {
+export function ensureArray(value) {
   return Array.isArray(value) ? value : [value];
 }
 
@@ -32,7 +32,7 @@ function ensureArray(value) {
  * @param  {Array<Any>} Array of items
  * @return {Any} Last element of given array
  */
-function last(arr) {
+export function last(arr) {
   return arr[arr.length - 1];
 }
 
@@ -44,7 +44,7 @@ function last(arr) {
  * @param  {Object} (optional) Event object
  * @return {undefined}
  */
-function gakError(message, event) {
+export function gakError(message, event) {
   message = `gak.js | ${message}`;
   if (event) {
     const pretty = JSON.stringify(event, null, 2);
@@ -52,11 +52,3 @@ function gakError(message, event) {
   }
   throw new Error(message);
 }
-
-
-export default {
-  assert,
-  gakError,
-  last,
-  ensureArray
-};
