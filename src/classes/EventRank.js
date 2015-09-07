@@ -346,7 +346,8 @@ export default class EventRank {
 
     let timeUpdates;
     if (isBucket) {
-      timeUpdates = this.timeUpdates = this.timeUpdates || {recieved: {}};
+      timeUpdates = this.timeUpdates = this.timeUpdates || {};
+      timeUpdates[sender] = timeUpdates[sender] || {recieved: {}};
     } else {
       delete this.timeUpdates;
     }
