@@ -92,6 +92,31 @@ export default class EventRank {
   }
 
 
+
+  /**
+   * Collapse times into buckets
+   *
+   * @static
+   * @param {Array<Object>} Array of events to bucket
+   * @return {Array<Object>} Array of objects with properties "events" and "time"
+   */
+   static bucket(events) {
+     const hash = {};
+     let bucket;
+     events.forEach(event => {
+       if (bucket = hash[event.time]) {
+         bucket.push(event);
+       } else {
+         hash[event.time] = [event];
+       }
+     });
+     const times = Object.keys(hash);
+     times.sort();
+     return times.map(time => ({time, events: hash[time]}))
+   }
+
+
+
   /**
    * Construct EventRank object
    *
@@ -291,10 +316,24 @@ export default class EventRank {
   /**
    * Calculate new ranks given an additional event
    *
-   * @param  {Object} event to add
+   * @param  {Object | Array<Object>} event to add
+   * @param  {String} (optional) bucketMode option (capture | apply)
    * @return {EventRank} return self for chaining
    */
-  step(event) {
+  step(event, bucket) {
+
+    if (event.events) {
+      const n = event.events.length - 1;
+      event.events.forEach((e, index) => {
+        this.step(e, index !== n);
+      });
+      return this;
+    }
+
+    // check if bucket parameter is exactly true
+    const capture = bucket === 'capture';
+    const apply = bucket === 'apply';
+    const isBucket = capture || apply;
 
     // unpack model weight parameters + ranks + correspondents
     const {
@@ -304,6 +343,14 @@ export default class EventRank {
       model,
       Vα
     } = this;
+
+    let timeUpdates;
+    if (isBucket) {
+      timeUpdates = this.timeUpdates = this.timeUpdates || {recieved: {}};
+    } else {
+      delete this.timeUpdates;
+    }
+
 
     // unpack event, create set of participants
     const { to, from : sender, time } = event;
@@ -332,7 +379,11 @@ export default class EventRank {
       Δts = time - (lagSender.sent || -Infinity);
 
       // record current time as most recent send event by sender
-      lagSender.sent = time;
+      if (isBucket) {
+        timeUpdates[sender].sent = time;
+      } else {
+        lagSender.sent = time;
+      }
 
       // Find the most recent time a message was recieved by the sender
       // from any of P_i, start at infinity (if no messages
@@ -347,8 +398,14 @@ export default class EventRank {
           trMin = trRecipient;
         }
 
-        // update most recient recieved time
-        tr[recipient] = time;
+        // if processing bucket, don't apply time updates
+        // until all events in bucket have been processed
+        if (isBucket) {
+          timeUpdates[sender].recieved[recipient] = time;
+        } else {
+          tr[recipient] = time;
+        }
+
       });
 
       // time difference (recipient) is
@@ -425,6 +482,19 @@ export default class EventRank {
     // update all participants
     updateParticipant(sender);
     recipientArray.forEach(updateParticipant);
+
+    // apply time updates for bucket of events
+    if (apply) {
+      for (const id in timeUpdates) {
+        const up = timeUpdates[id];
+        const cmS = CM[id];
+        cmS.sent = up.sent;
+        for (const rid in up.recieved) {
+          cmS.recieved[rid] = up.recieved[rid];
+        }
+      }
+      delete this.timeUpdates;
+    }
 
     return this;
   }
