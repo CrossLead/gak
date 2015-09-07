@@ -18,7 +18,7 @@ import { assert, ensureArray } from '../util/';
 
 
 const { PI: π, tanh, pow } = Math;
-const oneDay = 24*60*60*1000;
+const oneDay = 24*60*60; // one day in seconds
 const modelTypes = new Set(['baseline', 'reply']);
 
 
