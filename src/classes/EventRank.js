@@ -81,6 +81,9 @@ export default class EventRank {
 
   /**
    * Compute starting ranks of given correspondents
+   * @example
+   * const ranks = EventRank.startRanks(['a', 'b', 'c'])
+   * // => {a: {value: 0.3333333333, time: 0}, ...}
    *
    * @static
    * @return {Array<Object>} starting ranks = 1 / |C|
