@@ -2,7 +2,7 @@ import _ from 'lodash';
 import { expect } from 'chai';
 import pkg from '../package.json';
 import { EventRank, version } from '../src/';
-import { assert } from '../src/util/';
+import { assert, last, gakError, ensureArray } from '../src/util/';
 
 const { abs } = Math;
 const expectVeryClose = (x, message) => {
@@ -59,6 +59,25 @@ describe('Graph Analysis Kit', () => {
       expect(() => assert(true, 'no error')).to.not.throw(Error);
       done();
     });
+
+    it('last function should produce last element of array', done => {
+      expect(last).to.exist;
+      expect(last([1,2,3]), 'should select last element').to.equal(3);
+      expect(last([]), 'should produce undefined for empty array').to.equal(undefined);
+      done();
+    });
+
+    it('gakError should throw error', done => {
+      expect(() => gakError('test')).to.throw(Error);
+      done();
+    });
+
+    it('ensureArray should wrap object with array if necessary', done => {
+      expect(ensureArray(1), 'should wrap with array').to.be.an.instanceof(Array);
+      expect(ensureArray([1]), 'passing array should succeed').to.be.an.instanceof(Array);
+      expect(ensureArray([1])[0], 'should not wrap if already array').to.equal(1);
+      done();
+    })
 
   });
 

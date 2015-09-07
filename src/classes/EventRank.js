@@ -116,7 +116,15 @@ export default class EventRank {
   /**
    * Construct EventRank object
    *
-   * @param  {Object} opts : weight parameters, correspondent set,
+   * @property {Object} ranks computed ranks so far
+   * @property {Array} correspondents list of ids invoved in events
+   * @property {Array} events list events associated with ranking algorithm
+   * @property {Object} correspondanceMatrix tracks send/recive times
+   * @property {String} model model type = 'baseline' || 'reply'
+   * @property {Number} G sender recharge parameter (reply model)
+   * @property {Number} H reply halflife parameter (reply model)
+   * @property {Number} f potential flow fraction
+   * @param  {Object} opts weight parameters, correspondent set,
    *                         events (expected to be sorted by time)
    * @return {EventRank}
    */
@@ -229,8 +237,9 @@ export default class EventRank {
    * @return {EventRank} this : return self for chaining
    */
   compute() {
-    this.reset().events.map(::this.step);
-    return this;
+    return this.reset()
+      .step(this.events)
+      .done();
   }
 
 
@@ -259,10 +268,8 @@ export default class EventRank {
    * @return {Array<Object>} ranks of (ids) at current period
    */
   get(...ids) {
-    // flatten ids
-    ids = [].concat(...ids)
     // catchup these individuals
-    ids.forEach(::this.catchUp);
+    this.catchUp(ids = [].concat(...ids))
     return ids.map(id => ({id, ...this.ranks[id]}));
   }
 
@@ -274,10 +281,21 @@ export default class EventRank {
    * for each period:
    *      d ∉ P_i :    R_i(d) = R_i-1(d) * (1 - (α_i / Tn_i))
    *
-   * @param  {String} id of participant to "catch up"
+   * @example
+   * const R = new EventRank({correspondents: ['a', 'b', 'c']});
+   * R.step({from: 'a', to: 'b', time: 1});
+   * R.catchUp('c') // catch c ranks to period 1
+   *
+   * @param  {String | Array<String>} id(s) of participant to "catch up"
    * @return {EventRank} this : return self for chaining
    */
   catchUp(participant) {
+
+    if (Array.isArray(participant)) {
+      participant.forEach(::this.catchUp);
+      return this;
+    }
+
     const { correspondanceMatrix: CM, ranks, Vα } = this;
     const iα = Vα.length,
           rank = ranks[participant];
@@ -303,8 +321,7 @@ export default class EventRank {
    * @return {EventRank} this : return self for chaining
    */
   done() {
-    this.correspondents.forEach(::this.catchUp);
-    return this;
+    return this.catchUp(this.correspondents);
   }
 
 
@@ -318,17 +335,24 @@ export default class EventRank {
    */
   step(event, bucket) {
 
+    // if event is acutally an array of events, step through all
+    if (Array.isArray(event)) {
+      event.forEach(::this.step);
+      return this;
+    }
+
+    // if event is an event bucket run through time bucket
     if (event.events) {
       const n = event.events.length - 1;
       event.events.forEach((e, index) => {
-        this.step(e, index !== n);
+        this.step(e, index !== n ? 'capture' : 'apply');
       });
       return this;
     }
 
-    // check if bucket parameter is exactly true
-    const capture = bucket === 'capture';
-    const apply = bucket === 'apply';
+    // capture or apply time updates for bucket
+    const capture  = bucket === 'capture';
+    const apply    = bucket === 'apply';
     const isBucket = capture || apply;
 
     // unpack model weight parameters + ranks + correspondents
@@ -364,7 +388,7 @@ export default class EventRank {
 
     // catch up recipients with lazy ranks
     this.catchUp(sender);
-    recipientArray.forEach(::this.catchUp)
+    this.catchUp(recipientArray);
 
     // time differentials (for reply model)
     let Δts, Δtr;
@@ -481,7 +505,7 @@ export default class EventRank {
     recipientArray.forEach(updateParticipant);
 
     // apply time updates for bucket of events
-    if (apply) {
+    if (apply && timeUpdates) {
       for (const id in timeUpdates) {
         const up = timeUpdates[id];
         const cmS = CM[id];
