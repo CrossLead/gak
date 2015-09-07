@@ -3,6 +3,8 @@ import uglify       from 'gulp-uglify';
 import sourcemaps   from 'gulp-sourcemaps';
 import mocha        from 'gulp-mocha';
 import babel        from 'gulp-babel';
+import run          from 'gulp-run';
+import ghPages      from 'gulp-gh-pages';
 import browserify   from 'browserify';
 import babelify     from 'babelify';
 import { argv }     from 'yargs';
@@ -117,6 +119,22 @@ gulp.task('test', () => {
 });
 
 
+/**
+ * Generate Documentation
+ */
+gulp.task('docs', cb => {
+  run('./node_modules/.bin/esdoc -c ./esdoc.json')
+    .exec(undefined, cb)
+})
+
+
+/**
+ * Deploy to github pages
+ */
+gulp.task('deploy', ['docs'], () => {
+  return gulp.src('./esdoc/**/*')
+      .pipe(ghPages())
+})
 
 
 /*

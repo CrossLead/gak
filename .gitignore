@@ -8,3 +8,5 @@ dist/*
 test/enron/*
 test/enron/*.csv
 !test/enron/enron.*
+esdoc/*
+.publish/*

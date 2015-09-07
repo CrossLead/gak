@@ -19,6 +19,10 @@ npm install --save gak
 bower install --save gak
 ```
 
+### Documentation
+
+See http://crosslead.github.io/gak for [esdoc](https://github.com/esdoc/esdoc) generated documentation.
+
 ### Usage
 
 ##### EventRank
