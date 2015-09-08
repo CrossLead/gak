@@ -12,11 +12,19 @@ import source       from 'vinyl-source-stream';
 import buffer       from 'vinyl-buffer';
 import asyncHelpers from 'async';
 import eslint       from 'gulp-eslint';
+import fs           from 'fs';
+import _            from 'lodash';
 
 
 const src = './src/**/*.js',
       test =  './test/index.js';
 
+const prun = cmd => {
+  const fn = () => new Promise((res, rej) => {
+    run(cmd).exec(undefined, err => { err ? rej(err) : res() });
+  });
+  fn.then = next => fn().then(next);
+};
 
 /*
  * Watch task for dev
@@ -91,12 +99,36 @@ gulp.task('browserify', () => {
 
 });
 
+/*
+ * Bump bower + npm versions
+ */
+gulp.task('bump', () => {
+
+  const bower = './bower.json';
+  const npm = './package.json';
+
+  const bump = fname => {
+    const pkg = require(fname);
+    const v = pkg.version;
+    const bits = v.split('.').map(x => parseInt(x, 10));
+
+    bits[2] += (argv.down ? -1 : 1);
+    pkg.version = bits.join('.');
+    console.log(
+      `Bumped ${argv.down ? 'down ': ''}${fname} to version ${pkg.version}`
+    );
+    return JSON.stringify(pkg, null, 2);
+  };
+
+  fs.writeFileSync(bower, bump(bower));
+  fs.writeFileSync(npm, bump(npm));
+});
 
 
 /*
  * Linting
  */
-gulp.task('eslint', function() {
+gulp.task('eslint', () => {
   return gulp
     .src(['src/**/*.js', 'test/**/*.js'])
     .pipe(eslint('.eslintrc'))
@@ -123,18 +155,32 @@ gulp.task('test', () => {
  * Generate Documentation
  */
 gulp.task('docs', cb => {
-  run('./node_modules/.bin/esdoc -c ./esdoc.json')
-    .exec(undefined, cb)
-})
+  prun('./node_modules/.bin/esdoc -c ./esdoc.json').then(cb)
+});
 
 
 /**
  * Deploy to github pages
  */
-gulp.task('deploy', ['docs'], () => {
+gulp.task('deploy-docs', ['docs'], () => {
   return gulp.src('./esdoc/**/*')
       .pipe(ghPages())
 })
+
+
+/*
+ * Compile and publish bower + npm packages
+ */
+gulp.task('publish', ['test', 'build'], cb => {
+
+  const version = require('./package.json').version;
+
+  prun(`git tag -a v${version} -m "Release version ${version}"`)
+    .then(prun('git push origin master --tags'))
+    .then(prun('npm publish ./'))
+    .then(cb);
+});
+
 
 
 /*

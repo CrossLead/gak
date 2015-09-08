@@ -1,14 +1,16 @@
 (function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.gak = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 module.exports = { "default": require("core-js/library/fn/array/from"), __esModule: true };
-},{"core-js/library/fn/array/from":9}],2:[function(require,module,exports){
+},{"core-js/library/fn/array/from":11}],2:[function(require,module,exports){
 module.exports = { "default": require("core-js/library/fn/math/tanh"), __esModule: true };
-},{"core-js/library/fn/math/tanh":10}],3:[function(require,module,exports){
+},{"core-js/library/fn/math/tanh":12}],3:[function(require,module,exports){
 module.exports = { "default": require("core-js/library/fn/object/assign"), __esModule: true };
-},{"core-js/library/fn/object/assign":11}],4:[function(require,module,exports){
+},{"core-js/library/fn/object/assign":13}],4:[function(require,module,exports){
 module.exports = { "default": require("core-js/library/fn/object/define-property"), __esModule: true };
-},{"core-js/library/fn/object/define-property":12}],5:[function(require,module,exports){
+},{"core-js/library/fn/object/define-property":14}],5:[function(require,module,exports){
+module.exports = { "default": require("core-js/library/fn/object/keys"), __esModule: true };
+},{"core-js/library/fn/object/keys":15}],6:[function(require,module,exports){
 module.exports = { "default": require("core-js/library/fn/set"), __esModule: true };
-},{"core-js/library/fn/set":13}],6:[function(require,module,exports){
+},{"core-js/library/fn/set":16}],7:[function(require,module,exports){
 "use strict";
 
 exports["default"] = function (instance, Constructor) {
@@ -18,7 +20,7 @@ exports["default"] = function (instance, Constructor) {
 };
 
 exports.__esModule = true;
-},{}],7:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 "use strict";
 
 var _Object$defineProperty = require("babel-runtime/core-js/object/define-property")["default"];
@@ -43,7 +45,27 @@ exports["default"] = (function () {
 })();
 
 exports.__esModule = true;
-},{"babel-runtime/core-js/object/define-property":4}],8:[function(require,module,exports){
+},{"babel-runtime/core-js/object/define-property":4}],9:[function(require,module,exports){
+"use strict";
+
+var _Object$assign = require("babel-runtime/core-js/object/assign")["default"];
+
+exports["default"] = _Object$assign || function (target) {
+  for (var i = 1; i < arguments.length; i++) {
+    var source = arguments[i];
+
+    for (var key in source) {
+      if (Object.prototype.hasOwnProperty.call(source, key)) {
+        target[key] = source[key];
+      }
+    }
+  }
+
+  return target;
+};
+
+exports.__esModule = true;
+},{"babel-runtime/core-js/object/assign":3}],10:[function(require,module,exports){
 "use strict";
 
 exports["default"] = function (obj) {
@@ -53,40 +75,43 @@ exports["default"] = function (obj) {
 };
 
 exports.__esModule = true;
-},{}],9:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 require('../../modules/es6.string.iterator');
 require('../../modules/es6.array.from');
 module.exports = require('../../modules/$.core').Array.from;
-},{"../../modules/$.core":22,"../../modules/es6.array.from":62,"../../modules/es6.string.iterator":68}],10:[function(require,module,exports){
+},{"../../modules/$.core":25,"../../modules/es6.array.from":66,"../../modules/es6.string.iterator":73}],12:[function(require,module,exports){
 require('../../modules/es6.math.tanh');
 module.exports = require('../../modules/$.core').Math.tanh;
-},{"../../modules/$.core":22,"../../modules/es6.math.tanh":64}],11:[function(require,module,exports){
+},{"../../modules/$.core":25,"../../modules/es6.math.tanh":68}],13:[function(require,module,exports){
 require('../../modules/es6.object.assign');
 module.exports = require('../../modules/$.core').Object.assign;
-},{"../../modules/$.core":22,"../../modules/es6.object.assign":65}],12:[function(require,module,exports){
+},{"../../modules/$.core":25,"../../modules/es6.object.assign":69}],14:[function(require,module,exports){
 var $ = require('../../modules/$');
 module.exports = function defineProperty(it, key, desc){
   return $.setDesc(it, key, desc);
 };
-},{"../../modules/$":43}],13:[function(require,module,exports){
+},{"../../modules/$":46}],15:[function(require,module,exports){
+require('../../modules/es6.object.keys');
+module.exports = require('../../modules/$.core').Object.keys;
+},{"../../modules/$.core":25,"../../modules/es6.object.keys":70}],16:[function(require,module,exports){
 require('../modules/es6.object.to-string');
 require('../modules/es6.string.iterator');
 require('../modules/web.dom.iterable');
 require('../modules/es6.set');
 require('../modules/es7.set.to-json');
 module.exports = require('../modules/$.core').Set;
-},{"../modules/$.core":22,"../modules/es6.object.to-string":66,"../modules/es6.set":67,"../modules/es6.string.iterator":68,"../modules/es7.set.to-json":69,"../modules/web.dom.iterable":70}],14:[function(require,module,exports){
+},{"../modules/$.core":25,"../modules/es6.object.to-string":71,"../modules/es6.set":72,"../modules/es6.string.iterator":73,"../modules/es7.set.to-json":74,"../modules/web.dom.iterable":75}],17:[function(require,module,exports){
 module.exports = function(it){
   if(typeof it != 'function')throw TypeError(it + ' is not a function!');
   return it;
 };
-},{}],15:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 var isObject = require('./$.is-object');
 module.exports = function(it){
   if(!isObject(it))throw TypeError(it + ' is not an object!');
   return it;
 };
-},{"./$.is-object":35}],16:[function(require,module,exports){
+},{"./$.is-object":38}],19:[function(require,module,exports){
 // 19.1.2.1 Object.assign(target, source, ...)
 var toObject = require('./$.to-object')
   , IObject  = require('./$.iobject')
@@ -107,7 +132,7 @@ module.exports = Object.assign || function assign(target, source){
   }
   return T;
 };
-},{"./$.enum-keys":26,"./$.iobject":33,"./$.to-object":57}],17:[function(require,module,exports){
+},{"./$.enum-keys":29,"./$.iobject":36,"./$.to-object":61}],20:[function(require,module,exports){
 // getting tag from 19.1.3.6 Object.prototype.toString()
 var cof = require('./$.cof')
   , TAG = require('./$.wks')('toStringTag')
@@ -124,13 +149,13 @@ module.exports = function(it){
     // ES3 arguments fallback
     : (B = cof(O)) == 'Object' && typeof O.callee == 'function' ? 'Arguments' : B;
 };
-},{"./$.cof":18,"./$.wks":60}],18:[function(require,module,exports){
+},{"./$.cof":21,"./$.wks":64}],21:[function(require,module,exports){
 var toString = {}.toString;
 
 module.exports = function(it){
   return toString.call(it).slice(8, -1);
 };
-},{}],19:[function(require,module,exports){
+},{}],22:[function(require,module,exports){
 'use strict';
 var $            = require('./$')
   , hide         = require('./$.hide')
@@ -289,7 +314,7 @@ module.exports = {
     species(require('./$.core')[NAME]); // for wrapper
   }
 };
-},{"./$":43,"./$.core":22,"./$.ctx":23,"./$.defined":25,"./$.for-of":29,"./$.has":31,"./$.hide":32,"./$.is-object":35,"./$.iter-define":39,"./$.iter-step":41,"./$.mix":45,"./$.species":49,"./$.strict-new":50,"./$.support-desc":52,"./$.uid":58}],20:[function(require,module,exports){
+},{"./$":46,"./$.core":25,"./$.ctx":26,"./$.defined":28,"./$.for-of":32,"./$.has":34,"./$.hide":35,"./$.is-object":38,"./$.iter-define":42,"./$.iter-step":44,"./$.mix":48,"./$.species":53,"./$.strict-new":54,"./$.support-desc":56,"./$.uid":62}],23:[function(require,module,exports){
 // https://github.com/DavidBruant/Map-Set.prototype.toJSON
 var forOf   = require('./$.for-of')
   , classof = require('./$.classof');
@@ -301,7 +326,7 @@ module.exports = function(NAME){
     return arr;
   };
 };
-},{"./$.classof":17,"./$.for-of":29}],21:[function(require,module,exports){
+},{"./$.classof":20,"./$.for-of":32}],24:[function(require,module,exports){
 'use strict';
 var $          = require('./$')
   , $def       = require('./$.def')
@@ -350,10 +375,10 @@ module.exports = function(NAME, wrapper, methods, common, IS_MAP, IS_WEAK){
 
   return C;
 };
-},{"./$":43,"./$.def":24,"./$.for-of":29,"./$.global":30,"./$.hide":32,"./$.iter-buggy":36,"./$.mix":45,"./$.strict-new":50,"./$.support-desc":52,"./$.tag":53}],22:[function(require,module,exports){
+},{"./$":46,"./$.def":27,"./$.for-of":32,"./$.global":33,"./$.hide":35,"./$.iter-buggy":39,"./$.mix":48,"./$.strict-new":54,"./$.support-desc":56,"./$.tag":57}],25:[function(require,module,exports){
 var core = module.exports = {};
 if(typeof __e == 'number')__e = core; // eslint-disable-line no-undef
-},{}],23:[function(require,module,exports){
+},{}],26:[function(require,module,exports){
 // optional / simple context binding
 var aFunction = require('./$.a-function');
 module.exports = function(fn, that, length){
@@ -373,7 +398,7 @@ module.exports = function(fn, that, length){
       return fn.apply(that, arguments);
     };
 };
-},{"./$.a-function":14}],24:[function(require,module,exports){
+},{"./$.a-function":17}],27:[function(require,module,exports){
 var global    = require('./$.global')
   , core      = require('./$.core')
   , PROTOTYPE = 'prototype';
@@ -421,13 +446,13 @@ $def.P = 8;  // proto
 $def.B = 16; // bind
 $def.W = 32; // wrap
 module.exports = $def;
-},{"./$.core":22,"./$.global":30}],25:[function(require,module,exports){
+},{"./$.core":25,"./$.global":33}],28:[function(require,module,exports){
 // 7.2.1 RequireObjectCoercible(argument)
 module.exports = function(it){
   if(it == undefined)throw TypeError("Can't call method on  " + it);
   return it;
 };
-},{}],26:[function(require,module,exports){
+},{}],29:[function(require,module,exports){
 // all enumerable object keys, includes symbols
 var $ = require('./$');
 module.exports = function(it){
@@ -442,12 +467,12 @@ module.exports = function(it){
   }
   return keys;
 };
-},{"./$":43}],27:[function(require,module,exports){
+},{"./$":46}],30:[function(require,module,exports){
 // 20.2.2.14 Math.expm1(x)
 module.exports = Math.expm1 || function expm1(x){
   return (x = +x) == 0 ? x : x > -1e-6 && x < 1e-6 ? x + x * x / 2 : Math.exp(x) - 1;
 };
-},{}],28:[function(require,module,exports){
+},{}],31:[function(require,module,exports){
 module.exports = function(exec){
   try {
     return !!exec();
@@ -455,7 +480,7 @@ module.exports = function(exec){
     return true;
   }
 };
-},{}],29:[function(require,module,exports){
+},{}],32:[function(require,module,exports){
 var ctx         = require('./$.ctx')
   , call        = require('./$.iter-call')
   , isArrayIter = require('./$.is-array-iter')
@@ -475,18 +500,18 @@ module.exports = function(iterable, entries, fn, that){
     call(iterator, f, step.value, entries);
   }
 };
-},{"./$.an-object":15,"./$.ctx":23,"./$.is-array-iter":34,"./$.iter-call":37,"./$.to-length":56,"./core.get-iterator-method":61}],30:[function(require,module,exports){
+},{"./$.an-object":18,"./$.ctx":26,"./$.is-array-iter":37,"./$.iter-call":40,"./$.to-length":60,"./core.get-iterator-method":65}],33:[function(require,module,exports){
 // https://github.com/zloirock/core-js/issues/86#issuecomment-115759028
 var UNDEFINED = 'undefined';
 var global = module.exports = typeof window != UNDEFINED && window.Math == Math
   ? window : typeof self != UNDEFINED && self.Math == Math ? self : Function('return this')();
 if(typeof __g == 'number')__g = global; // eslint-disable-line no-undef
-},{}],31:[function(require,module,exports){
+},{}],34:[function(require,module,exports){
 var hasOwnProperty = {}.hasOwnProperty;
 module.exports = function(it, key){
   return hasOwnProperty.call(it, key);
 };
-},{}],32:[function(require,module,exports){
+},{}],35:[function(require,module,exports){
 var $          = require('./$')
   , createDesc = require('./$.property-desc');
 module.exports = require('./$.support-desc') ? function(object, key, value){
@@ -495,28 +520,28 @@ module.exports = require('./$.support-desc') ? function(object, key, value){
   object[key] = value;
   return object;
 };
-},{"./$":43,"./$.property-desc":46,"./$.support-desc":52}],33:[function(require,module,exports){
+},{"./$":46,"./$.property-desc":50,"./$.support-desc":56}],36:[function(require,module,exports){
 // indexed object, fallback for non-array-like ES3 strings
 var cof = require('./$.cof');
 module.exports = 0 in Object('z') ? Object : function(it){
   return cof(it) == 'String' ? it.split('') : Object(it);
 };
-},{"./$.cof":18}],34:[function(require,module,exports){
+},{"./$.cof":21}],37:[function(require,module,exports){
 // check on default Array iterator
 var Iterators = require('./$.iterators')
   , ITERATOR  = require('./$.wks')('iterator');
 module.exports = function(it){
   return (Iterators.Array || Array.prototype[ITERATOR]) === it;
 };
-},{"./$.iterators":42,"./$.wks":60}],35:[function(require,module,exports){
+},{"./$.iterators":45,"./$.wks":64}],38:[function(require,module,exports){
 // http://jsperf.com/core-js-isobject
 module.exports = function(it){
   return it !== null && (typeof it == 'object' || typeof it == 'function');
 };
-},{}],36:[function(require,module,exports){
+},{}],39:[function(require,module,exports){
 // Safari has buggy iterators w/o `next`
 module.exports = 'keys' in [] && !('next' in [].keys());
-},{}],37:[function(require,module,exports){
+},{}],40:[function(require,module,exports){
 // call something on iterator step with safe closing on error
 var anObject = require('./$.an-object');
 module.exports = function(iterator, fn, value, entries){
@@ -529,7 +554,7 @@ module.exports = function(iterator, fn, value, entries){
     throw e;
   }
 };
-},{"./$.an-object":15}],38:[function(require,module,exports){
+},{"./$.an-object":18}],41:[function(require,module,exports){
 'use strict';
 var $ = require('./$')
   , IteratorPrototype = {};
@@ -541,7 +566,7 @@ module.exports = function(Constructor, NAME, next){
   Constructor.prototype = $.create(IteratorPrototype, {next: require('./$.property-desc')(1,next)});
   require('./$.tag')(Constructor, NAME + ' Iterator');
 };
-},{"./$":43,"./$.hide":32,"./$.property-desc":46,"./$.tag":53,"./$.wks":60}],39:[function(require,module,exports){
+},{"./$":46,"./$.hide":35,"./$.property-desc":50,"./$.tag":57,"./$.wks":64}],42:[function(require,module,exports){
 'use strict';
 var LIBRARY         = require('./$.library')
   , $def            = require('./$.def')
@@ -591,7 +616,7 @@ module.exports = function(Base, NAME, Constructor, next, DEFAULT, IS_SET, FORCE)
     } else $def($def.P + $def.F * require('./$.iter-buggy'), NAME, methods);
   }
 };
-},{"./$":43,"./$.def":24,"./$.has":31,"./$.hide":32,"./$.iter-buggy":36,"./$.iter-create":38,"./$.iterators":42,"./$.library":44,"./$.redef":47,"./$.tag":53,"./$.wks":60}],40:[function(require,module,exports){
+},{"./$":46,"./$.def":27,"./$.has":34,"./$.hide":35,"./$.iter-buggy":39,"./$.iter-create":41,"./$.iterators":45,"./$.library":47,"./$.redef":51,"./$.tag":57,"./$.wks":64}],43:[function(require,module,exports){
 var SYMBOL_ITERATOR = require('./$.wks')('iterator')
   , SAFE_CLOSING    = false;
 try {
@@ -611,13 +636,13 @@ module.exports = function(exec){
   } catch(e){ /* empty */ }
   return safe;
 };
-},{"./$.wks":60}],41:[function(require,module,exports){
+},{"./$.wks":64}],44:[function(require,module,exports){
 module.exports = function(done, value){
   return {value: value, done: !!done};
 };
-},{}],42:[function(require,module,exports){
+},{}],45:[function(require,module,exports){
 module.exports = {};
-},{}],43:[function(require,module,exports){
+},{}],46:[function(require,module,exports){
 var $Object = Object;
 module.exports = {
   create:     $Object.create,
@@ -631,15 +656,24 @@ module.exports = {
   getSymbols: $Object.getOwnPropertySymbols,
   each:       [].forEach
 };
-},{}],44:[function(require,module,exports){
+},{}],47:[function(require,module,exports){
 module.exports = true;
-},{}],45:[function(require,module,exports){
+},{}],48:[function(require,module,exports){
 var $redef = require('./$.redef');
 module.exports = function(target, src){
   for(var key in src)$redef(target, key, src[key]);
   return target;
 };
-},{"./$.redef":47}],46:[function(require,module,exports){
+},{"./$.redef":51}],49:[function(require,module,exports){
+// most Object methods by ES6 should accept primitives
+module.exports = function(KEY, exec){
+  var $def = require('./$.def')
+    , fn   = (require('./$.core').Object || {})[KEY] || Object[KEY]
+    , exp  = {};
+  exp[KEY] = exec(fn);
+  $def($def.S + $def.F * require('./$.fails')(function(){ fn(1); }), 'Object', exp);
+};
+},{"./$.core":25,"./$.def":27,"./$.fails":31}],50:[function(require,module,exports){
 module.exports = function(bitmap, value){
   return {
     enumerable  : !(bitmap & 1),
@@ -648,16 +682,16 @@ module.exports = function(bitmap, value){
     value       : value
   };
 };
-},{}],47:[function(require,module,exports){
+},{}],51:[function(require,module,exports){
 module.exports = require('./$.hide');
-},{"./$.hide":32}],48:[function(require,module,exports){
+},{"./$.hide":35}],52:[function(require,module,exports){
 var global = require('./$.global')
   , SHARED = '__core-js_shared__'
   , store  = global[SHARED] || (global[SHARED] = {});
 module.exports = function(key){
   return store[key] || (store[key] = {});
 };
-},{"./$.global":30}],49:[function(require,module,exports){
+},{"./$.global":33}],53:[function(require,module,exports){
 'use strict';
 var $       = require('./$')
   , SPECIES = require('./$.wks')('species');
@@ -667,12 +701,12 @@ module.exports = function(C){
     get: function(){ return this; }
   });
 };
-},{"./$":43,"./$.support-desc":52,"./$.wks":60}],50:[function(require,module,exports){
+},{"./$":46,"./$.support-desc":56,"./$.wks":64}],54:[function(require,module,exports){
 module.exports = function(it, Constructor, name){
   if(!(it instanceof Constructor))throw TypeError(name + ": use the 'new' operator!");
   return it;
 };
-},{}],51:[function(require,module,exports){
+},{}],55:[function(require,module,exports){
 // true  -> String#at
 // false -> String#codePointAt
 var toInteger = require('./$.to-integer')
@@ -691,12 +725,12 @@ module.exports = function(TO_STRING){
         : TO_STRING ? s.slice(i, i + 2) : (a - 0xd800 << 10) + (b - 0xdc00) + 0x10000;
   };
 };
-},{"./$.defined":25,"./$.to-integer":54}],52:[function(require,module,exports){
+},{"./$.defined":28,"./$.to-integer":58}],56:[function(require,module,exports){
 // Thank's IE8 for his funny defineProperty
 module.exports = !require('./$.fails')(function(){
   return Object.defineProperty({}, 'a', {get: function(){ return 7; }}).a != 7;
 });
-},{"./$.fails":28}],53:[function(require,module,exports){
+},{"./$.fails":31}],57:[function(require,module,exports){
 var has  = require('./$.has')
   , hide = require('./$.hide')
   , TAG  = require('./$.wks')('toStringTag');
@@ -704,56 +738,56 @@ var has  = require('./$.has')
 module.exports = function(it, tag, stat){
   if(it && !has(it = stat ? it : it.prototype, TAG))hide(it, TAG, tag);
 };
-},{"./$.has":31,"./$.hide":32,"./$.wks":60}],54:[function(require,module,exports){
+},{"./$.has":34,"./$.hide":35,"./$.wks":64}],58:[function(require,module,exports){
 // 7.1.4 ToInteger
 var ceil  = Math.ceil
   , floor = Math.floor;
 module.exports = function(it){
   return isNaN(it = +it) ? 0 : (it > 0 ? floor : ceil)(it);
 };
-},{}],55:[function(require,module,exports){
+},{}],59:[function(require,module,exports){
 // to indexed object, toObject with fallback for non-array-like ES3 strings
 var IObject = require('./$.iobject')
   , defined = require('./$.defined');
 module.exports = function(it){
   return IObject(defined(it));
 };
-},{"./$.defined":25,"./$.iobject":33}],56:[function(require,module,exports){
+},{"./$.defined":28,"./$.iobject":36}],60:[function(require,module,exports){
 // 7.1.15 ToLength
 var toInteger = require('./$.to-integer')
   , min       = Math.min;
 module.exports = function(it){
   return it > 0 ? min(toInteger(it), 0x1fffffffffffff) : 0; // pow(2, 53) - 1 == 9007199254740991
 };
-},{"./$.to-integer":54}],57:[function(require,module,exports){
+},{"./$.to-integer":58}],61:[function(require,module,exports){
 // 7.1.13 ToObject(argument)
 var defined = require('./$.defined');
 module.exports = function(it){
   return Object(defined(it));
 };
-},{"./$.defined":25}],58:[function(require,module,exports){
+},{"./$.defined":28}],62:[function(require,module,exports){
 var id = 0
   , px = Math.random();
 module.exports = function(key){
   return 'Symbol('.concat(key === undefined ? '' : key, ')_', (++id + px).toString(36));
 };
-},{}],59:[function(require,module,exports){
+},{}],63:[function(require,module,exports){
 module.exports = function(){ /* empty */ };
-},{}],60:[function(require,module,exports){
+},{}],64:[function(require,module,exports){
 var store  = require('./$.shared')('wks')
   , Symbol = require('./$.global').Symbol;
 module.exports = function(name){
   return store[name] || (store[name] =
     Symbol && Symbol[name] || (Symbol || require('./$.uid'))('Symbol.' + name));
 };
-},{"./$.global":30,"./$.shared":48,"./$.uid":58}],61:[function(require,module,exports){
+},{"./$.global":33,"./$.shared":52,"./$.uid":62}],65:[function(require,module,exports){
 var classof   = require('./$.classof')
   , ITERATOR  = require('./$.wks')('iterator')
   , Iterators = require('./$.iterators');
 module.exports = require('./$.core').getIteratorMethod = function(it){
   if(it != undefined)return it[ITERATOR] || it['@@iterator'] || Iterators[classof(it)];
 };
-},{"./$.classof":17,"./$.core":22,"./$.iterators":42,"./$.wks":60}],62:[function(require,module,exports){
+},{"./$.classof":20,"./$.core":25,"./$.iterators":45,"./$.wks":64}],66:[function(require,module,exports){
 'use strict';
 var ctx         = require('./$.ctx')
   , $def        = require('./$.def')
@@ -787,7 +821,7 @@ $def($def.S + $def.F * !require('./$.iter-detect')(function(iter){ Array.from(it
     return result;
   }
 });
-},{"./$.ctx":23,"./$.def":24,"./$.is-array-iter":34,"./$.iter-call":37,"./$.iter-detect":40,"./$.to-length":56,"./$.to-object":57,"./core.get-iterator-method":61}],63:[function(require,module,exports){
+},{"./$.ctx":26,"./$.def":27,"./$.is-array-iter":37,"./$.iter-call":40,"./$.iter-detect":43,"./$.to-length":60,"./$.to-object":61,"./core.get-iterator-method":65}],67:[function(require,module,exports){
 'use strict';
 var setUnscope = require('./$.unscope')
   , step       = require('./$.iter-step')
@@ -822,7 +856,7 @@ Iterators.Arguments = Iterators.Array;
 setUnscope('keys');
 setUnscope('values');
 setUnscope('entries');
-},{"./$.iter-define":39,"./$.iter-step":41,"./$.iterators":42,"./$.to-iobject":55,"./$.unscope":59}],64:[function(require,module,exports){
+},{"./$.iter-define":42,"./$.iter-step":44,"./$.iterators":45,"./$.to-iobject":59,"./$.unscope":63}],68:[function(require,module,exports){
 // 20.2.2.33 Math.tanh(x)
 var $def  = require('./$.def')
   , expm1 = require('./$.expm1')
@@ -835,13 +869,22 @@ $def($def.S, 'Math', {
     return a == Infinity ? 1 : b == Infinity ? -1 : (a - b) / (exp(x) + exp(-x));
   }
 });
-},{"./$.def":24,"./$.expm1":27}],65:[function(require,module,exports){
+},{"./$.def":27,"./$.expm1":30}],69:[function(require,module,exports){
 // 19.1.3.1 Object.assign(target, source)
 var $def = require('./$.def');
 $def($def.S, 'Object', {assign: require('./$.assign')});
-},{"./$.assign":16,"./$.def":24}],66:[function(require,module,exports){
+},{"./$.assign":19,"./$.def":27}],70:[function(require,module,exports){
+// 19.1.2.14 Object.keys(O)
+var toObject = require('./$.to-object');
 
-},{}],67:[function(require,module,exports){
+require('./$.object-sap')('keys', function($keys){
+  return function keys(it){
+    return $keys(toObject(it));
+  };
+});
+},{"./$.object-sap":49,"./$.to-object":61}],71:[function(require,module,exports){
+
+},{}],72:[function(require,module,exports){
 'use strict';
 var strong = require('./$.collection-strong');
 
@@ -854,7 +897,7 @@ require('./$.collection')('Set', function(get){
     return strong.def(this, value = value === 0 ? 0 : value, value);
   }
 }, strong);
-},{"./$.collection":21,"./$.collection-strong":19}],68:[function(require,module,exports){
+},{"./$.collection":24,"./$.collection-strong":22}],73:[function(require,module,exports){
 'use strict';
 var $at  = require('./$.string-at')(true);
 
@@ -872,19 +915,19 @@ require('./$.iter-define')(String, 'String', function(iterated){
   this._i += point.length;
   return {value: point, done: false};
 });
-},{"./$.iter-define":39,"./$.string-at":51}],69:[function(require,module,exports){
+},{"./$.iter-define":42,"./$.string-at":55}],74:[function(require,module,exports){
 // https://github.com/DavidBruant/Map-Set.prototype.toJSON
 var $def  = require('./$.def');
 
 $def($def.P, 'Set', {toJSON: require('./$.collection-to-json')('Set')});
-},{"./$.collection-to-json":20,"./$.def":24}],70:[function(require,module,exports){
+},{"./$.collection-to-json":23,"./$.def":27}],75:[function(require,module,exports){
 require('./es6.array.iterator');
 var Iterators = require('./$.iterators');
 Iterators.NodeList = Iterators.HTMLCollection = Iterators.Array;
-},{"./$.iterators":42,"./es6.array.iterator":63}],71:[function(require,module,exports){
+},{"./$.iterators":45,"./es6.array.iterator":67}],76:[function(require,module,exports){
 module.exports={
   "name": "gak",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "description": "Graph Analysis Kit for NodeJS",
   "main": "./dist/node/index.js",
   "scripts": {
@@ -918,12 +961,16 @@ module.exports={
     "babelify": "^6.2.0",
     "browserify": "^11.0.1",
     "chai": "^3.2.0",
+    "esdoc": "^0.2.5",
+    "esdoc-es7-plugin": "0.0.2",
     "fast-csv": "^0.6.0",
     "gulp": "^3.9.0",
     "gulp-babel": "^5.2.1",
     "gulp-concat": "^2.6.0",
     "gulp-eslint": "^1.0.0",
+    "gulp-gh-pages": "^0.5.2",
     "gulp-mocha": "^2.1.3",
+    "gulp-run": "^1.6.10",
     "gulp-sourcemaps": "^1.5.2",
     "gulp-uglify": "^1.3.0",
     "gulp-watch": "^4.3.5",
@@ -937,8 +984,7 @@ module.exports={
     "yargs": "^3.21.0"
   }
 }
-
-},{}],72:[function(require,module,exports){
+},{}],77:[function(require,module,exports){
 /**
  * EventRank implementation
  *
@@ -947,24 +993,13 @@ module.exports={
  *
  * PDF: http://www.datalab.uci.edu/papers/linkkdd05-02.pdf
  */
-
-/* TODO:
-
-  1. Get working model from array of formatted events
-
-  2. Enhancements
-    - Formatting method
-    - allow progressive adding of events
-    - collapse array of events in time range into single time period
-    - keep track of time conversion
-
-*/
-
 'use strict';
 
 var _createClass = require('babel-runtime/helpers/create-class')['default'];
 
 var _classCallCheck = require('babel-runtime/helpers/class-call-check')['default'];
+
+var _extends = require('babel-runtime/helpers/extends')['default'];
 
 var _Math$tanh = require('babel-runtime/core-js/math/tanh')['default'];
 
@@ -972,18 +1007,19 @@ var _Set = require('babel-runtime/core-js/set')['default'];
 
 var _Array$from = require('babel-runtime/core-js/array/from')['default'];
 
+var _Object$keys = require('babel-runtime/core-js/object/keys')['default'];
+
 var _Object$assign = require('babel-runtime/core-js/object/assign')['default'];
 
 exports.__esModule = true;
 
 var _util = require('../util/');
 
-// local references for math utils
 var π = Math.PI;
 var tanh = _Math$tanh;
 var pow = Math.pow;
 
-var oneDay = 24 * 60 * 60 * 1000;
+var oneDay = 24 * 60 * 60; // one day in seconds
 var modelTypes = new _Set(['baseline', 'reply']);
 
 /**
@@ -1017,6 +1053,14 @@ function h(Δtr, H) {
  */
 
 var EventRank = (function () {
+
+  /**
+   * Create set of unique correspondents involved in all events
+   *
+   * @static
+   * @return {Array<String>} array of correspondent ids
+   */
+
   EventRank.getCorrespondents = function getCorrespondents(data) {
     var outSet = new _Set();
     data.forEach(function (event) {
@@ -1025,6 +1069,16 @@ var EventRank = (function () {
     });
     return _Array$from(outSet);
   };
+
+  /**
+   * Compute starting ranks of given correspondents
+   * @example
+   * const ranks = EventRank.startRanks(['a', 'b', 'c'])
+   * // => {a: {value: 0.3333333333, time: 0}, ...}
+   *
+   * @static
+   * @return {Array<Object>} starting ranks = 1 / |C|
+   */
 
   EventRank.startRanks = function startRanks(correspondents) {
     var value = 1 / correspondents.length,
@@ -1035,9 +1089,42 @@ var EventRank = (function () {
   };
 
   /**
+   * Collapse times into buckets
+   *
+   * @static
+   * @param {Array<Object>} Array of events to bucket
+   * @return {Array<Object>} Array of objects with properties "events" and "time"
+   */
+
+  EventRank.bucket = function bucket(events) {
+    var hash = {};
+    var bucket = undefined;
+    events.forEach(function (event) {
+      if (bucket = hash[event.time]) {
+        bucket.push(event);
+      } else {
+        hash[event.time] = [event];
+      }
+    });
+    var times = _Object$keys(hash);
+    times.sort();
+    return times.map(function (time) {
+      return { time: parseInt(time, 10), events: hash[time] };
+    });
+  };
+
+  /**
    * Construct EventRank object
    *
-   * @param  {Object} opts : weight parameters, correspondent set,
+   * @property {Object} ranks computed ranks so far
+   * @property {Array} correspondents list of ids invoved in events
+   * @property {Array} events list events associated with ranking algorithm
+   * @property {Object} correspondanceMatrix tracks send/recive times
+   * @property {String} model model type = 'baseline' || 'reply'
+   * @property {Number} G sender recharge parameter (reply model)
+   * @property {Number} H reply halflife parameter (reply model)
+   * @property {Number} f potential flow fraction
+   * @param  {Object} opts weight parameters, correspondent set,
    *                         events (expected to be sorted by time)
    * @return {EventRank}
    */
@@ -1125,8 +1212,9 @@ var EventRank = (function () {
   };
 
   /**
-   * Return json string of serialized EventRank
+   * Json string of serialized EventRank
    *
+   * @param {Boolean} pretty print formatted Json
    * @return {String} JSON representation of EventRank
    */
 
@@ -1138,34 +1226,76 @@ var EventRank = (function () {
     return JSON.stringify.apply(JSON, args);
   };
 
-  EventRank.prototype.toMatrix = function toMatrix() {
-    var ranks = this.ranks;
-    var correspondents = this.correspondents;
-
-    var out = [];
-    correspondents.forEach(function (name) {
-      var record = { name: name };
-      ranks[name].forEach(function (rank) {
-        record[rank.time] = rank.value;
-      });
-      out.push(record);
-    });
-    return out;
-  };
+  /**
+   * Log current ranks to console
+   *
+   * @return {EventRank} this : return self for chaining
+   */
 
   EventRank.prototype.log = function log() {
     console.log(this.ranks);
     return this;
   };
 
+  /**
+   * Reset model to starting ranks
+   *
+   * @return {EventRank} this : return self for chaining
+   */
+
   EventRank.prototype.reset = function reset() {
     this.ranks = EventRank.startRanks(this.correspondents);
     return this;
   };
 
+  /**
+   * Reset model to starting ranks and compute ranks over all events
+   *
+   * @return {EventRank} this : return self for chaining
+   */
+
   EventRank.prototype.compute = function compute() {
-    this.reset().events.map(this.step.bind(this));
-    return this;
+    return this.reset().step(this.events).done();
+  };
+
+  /**
+   * Get ranks of top n individuals
+   *
+   * @param {Number} number of ranks to report (from top)
+   * @return {Array<Object>} top n ranks
+   */
+
+  EventRank.prototype.top = function top(n) {
+    var ranks = [];
+    for (var id in this.ranks) {
+      ranks.push(_extends({ id: id }, this.ranks[id]));
+    }
+    ranks.sort(function (a, b) {
+      return b.value - a.value;
+    });
+    return ranks.slice(0, n);
+  };
+
+  /**
+   * Get ranks of given ids at current period
+   *
+   * @param {Array<String> | String} combination of str and array<str> of ids
+   * @return {Array<Object>} ranks of (ids) at current period
+   */
+
+  EventRank.prototype.get = function get() {
+    var _ref,
+        _this = this;
+
+    for (var _len = arguments.length, ids = Array(_len), _key = 0; _key < _len; _key++) {
+      ids[_key] = arguments[_key];
+    }
+
+    // catchup these individuals
+    this.catchUp(ids = (_ref = []).concat.apply(_ref, ids));
+    return ids.map(function (id) {
+      return _extends({ id: id }, _this.ranks[id]);
+    });
   };
 
   /**
@@ -1173,9 +1303,23 @@ var EventRank = (function () {
    * need to be updated, apply a non-participant rank adjustment
    * for each period:
    *      d ∉ P_i :    R_i(d) = R_i-1(d) * (1 - (α_i / Tn_i))
+   *
+   * @example
+   * const R = new EventRank({correspondents: ['a', 'b', 'c']});
+   * R.step({from: 'a', to: 'b', time: 1});
+   * R.catchUp('c') // catch c ranks to period 1
+   *
+   * @param  {String | Array<String>} id(s) of participant to "catch up"
+   * @return {EventRank} this : return self for chaining
    */
 
   EventRank.prototype.catchUp = function catchUp(participant) {
+
+    if (Array.isArray(participant)) {
+      participant.forEach(this.catchUp.bind(this));
+      return this;
+    }
+
     var CM = this.correspondanceMatrix;
     var ranks = this.ranks;
     var Vα = this.Vα;
@@ -1193,17 +1337,55 @@ var EventRank = (function () {
 
     // update index of last update
     CM[participant].lastUpdate = iα;
+    return this;
+  };
+
+  /**
+   * "Catch up" all correspondents to current period
+   *
+   * @return {EventRank} this : return self for chaining
+   */
+
+  EventRank.prototype.done = function done() {
+    return this.catchUp(this.correspondents);
   };
 
   /**
    * Calculate new ranks given an additional event
    *
-   * @param  {Object | Array<Object>} event : { to, from, time }
-   * @param  {Number} time (optional)
-   * @return {EventRank} this : return self for chaining
+   * @param  {Object | Array<Object>} event to add
+   * @param  {String} (optional) bucketMode option (capture | apply)
+   * @return {EventRank} return self for chaining
    */
 
-  EventRank.prototype.step = function step(event) {
+  EventRank.prototype.step = function step(event, bucket) {
+    var _this2 = this;
+
+    // if event is acutally an array of events, step through all
+    if (Array.isArray(event)) {
+      event.forEach(this.step.bind(this));
+      return this;
+    }
+
+    // if event is an event bucket run through time bucket
+    if (event.events) {
+      var _ret = (function () {
+        var n = event.events.length - 1;
+        event.events.forEach(function (e, index) {
+          _this2.step(e, index !== n ? 'capture' : 'apply');
+        });
+        return {
+          v: _this2
+        };
+      })();
+
+      if (typeof _ret === 'object') return _ret.v;
+    }
+
+    // capture or apply time updates for bucket
+    var capture = bucket === 'capture';
+    var apply = bucket === 'apply';
+    var isBucket = capture || apply;
 
     // unpack model weight parameters + ranks + correspondents
     var G = this.G;
@@ -1214,13 +1396,25 @@ var EventRank = (function () {
     var model = this.model;
     var Vα = this.Vα;
 
+    var timeUpdates = undefined;
+    if (isBucket) {
+      timeUpdates = this.timeUpdates = this.timeUpdates || {};
+      timeUpdates[sender] = timeUpdates[sender] || { recieved: {} };
+    } else {
+      delete this.timeUpdates;
+    }
+
     // unpack event, create set of participants
     var to = event.to;
     var sender = event.from;
     var time = event.time;
 
     var recipients = new _Set(_util.ensureArray(to));
-    recipients['delete'](sender); // if the sender sends themself an email...
+
+    // if the sender sends themself an email...
+    recipients['delete'](sender);
+
+    // get array from recipient set
     var recipientArray = _Array$from(recipients);
 
     // counts of participants + total correspondents
@@ -1228,7 +1422,7 @@ var EventRank = (function () {
 
     // catch up recipients with lazy ranks
     this.catchUp(sender);
-    recipientArray.forEach(this.catchUp.bind(this));
+    this.catchUp(recipientArray);
 
     // time differentials (for reply model)
     var Δts = undefined,
@@ -1237,42 +1431,65 @@ var EventRank = (function () {
       (function () {
 
         // Last time an email was sent by this sender
+        // default to infinite time if no recorded emails sent by sender
         var lagSender = CM[sender];
-        Δts = time - (lagSender.sent || 0);
-        lagSender.sent = time;
+        Δts = time - (lagSender.sent || -Infinity);
 
-        // Most recent time any of the recipients recieved an email from the sender
-        var trMin = 0,
-            trSender = undefined;
+        // record current time as most recent send event by sender
+        if (isBucket) {
+          timeUpdates[sender].sent = time;
+        } else {
+          lagSender.sent = time;
+        }
+
+        // Find the most recent time a message was recieved by the sender
+        // from any of P_i, start at infinity (if no messages
+        // recieved by sender from any of P_i)
+        var trMin = -Infinity,
+            trRecipient = undefined;
+
         recipientArray.forEach(function (recipient) {
-          var correspondence = CM[recipient];
-          var tr = correspondence.recieved = correspondence.recieved || {};
-          if ((trSender = tr[sender]) && trSender > trMin) {
-            trMin = trSender;
+          var tr = lagSender.recieved = lagSender.recieved || {};
+
+          if ((trRecipient = tr[recipient]) && trRecipient > trMin) {
+            trMin = trRecipient;
           }
-          // update most recient recieved time
-          tr[sender] = time;
+
+          // if processing bucket, don't apply time updates
+          // until all events in bucket have been processed
+          if (isBucket) {
+            timeUpdates[sender].recieved[recipient] = time;
+          } else {
+            tr[recipient] = time;
+          }
         });
+
+        // time difference (recipient) is
+        // between now and minimum determined time above
         Δtr = time - trMin;
 
-        _util.assert(Δts >= 0, 'Δts must not be negative: Δts = ' + Δts);
-        _util.assert(Δtr >= 0, 'Δtr must not be negative: Δtr = ' + Δtr);
+        // assert that time differentials are not negative
+        // (can't send/recieve messages in the future!)
+        _util.assert(Δts >= 0, 'Δts must not be negative: Δts = ' + Δts, event);
+        _util.assert(Δtr >= 0, 'Δtr must not be negative: Δtr = ' + Δtr, event);
       })();
     }
 
+    // time of last rank compuation of sender
+    var lastTimeSender = ranks[sender].time;
+
     // start sum with sender rank
     var ΣR = ranks[sender].value;
-    var lastTimeSender = ranks[sender].time;
+
+    // build up sum of all participant ranks
     recipientArray.forEach(function (recipient) {
       ΣR += ranks[recipient].value;
-      _util.assert(ranks[recipient].time === lastTimeSender, 'Last event time should be equal for all participants');
+      // safety check to ensure that all of P_i is on same time period
+      _util.assert(ranks[recipient].time === lastTimeSender, 'Last event time should be equal for all participants', event);
     });
 
-    if (ΣR > 1) {
-      console.log('\n', ranks);
-    }
-
-    _util.assert(ΣR <= 1 && ΣR >= 0, 'ΣR must be in (0, 1): ΣR = ' + ΣR);
+    // Safety check to ensure that the sum should be within (0, 1)
+    _util.assert(ΣR <= 1 && ΣR >= 0, 'ΣR must be in (0, 1): ΣR = ' + ΣR, event);
 
     // current total of non participants is one minus participent potential
     var Tn = 1 - ΣR;
@@ -1280,12 +1497,18 @@ var EventRank = (function () {
     // potential transfer weight
     var α = undefined;
     if (model === 'reply') {
-      Vα.push({ value: (α = f * Tn * g(Δts, G) * h(Δtr, H)) / Tn, time: time });
+      // reply model includes time weighting functions
+      Vα.push({
+        value: (α = f * Tn * g(Δts, G) * h(Δtr, H)) // calculate α for below
+         / Tn, // save α / Tn for non-participants
+        time: time // save time of α calculation
+      });
     } else {
-      Vα.push({ value: (α = f * Tn) / Tn, time: time });
-    }
+        Vα.push({ value: (α = f * Tn) / Tn, time: time });
+      }
 
-    _util.assert(α <= 1 && α >= 0, 'α must be in (0, 1): α = ' + α);
+    // safety check for bounds of α
+    _util.assert(α <= 1 && α >= 0, 'α must be in (0, 1): α = ' + α, event);
 
     // sum of additive inverse of ranks of participants
     var ΣRbar = nP - ΣR;
@@ -1312,13 +1535,19 @@ var EventRank = (function () {
     updateParticipant(sender);
     recipientArray.forEach(updateParticipant);
 
-    return this;
-  };
+    // apply time updates for bucket of events
+    if (apply && timeUpdates) {
+      for (var id in timeUpdates) {
+        var up = timeUpdates[id];
+        var cmS = CM[id];
+        cmS.sent = up.sent;
+        for (var rid in up.recieved) {
+          cmS.recieved[rid] = up.recieved[rid];
+        }
+      }
+      delete this.timeUpdates;
+    }
 
-  // compute lazily evaluated ranks for non participants
-
-  EventRank.prototype.done = function done() {
-    this.correspondents.forEach(this.catchUp.bind(this));
     return this;
   };
 
@@ -1328,7 +1557,11 @@ var EventRank = (function () {
 exports['default'] = EventRank;
 module.exports = exports['default'];
 
-},{"../util/":73,"babel-runtime/core-js/array/from":1,"babel-runtime/core-js/math/tanh":2,"babel-runtime/core-js/object/assign":3,"babel-runtime/core-js/set":5,"babel-runtime/helpers/class-call-check":6,"babel-runtime/helpers/create-class":7}],73:[function(require,module,exports){
+},{"../util/":78,"babel-runtime/core-js/array/from":1,"babel-runtime/core-js/math/tanh":2,"babel-runtime/core-js/object/assign":3,"babel-runtime/core-js/object/keys":5,"babel-runtime/core-js/set":6,"babel-runtime/helpers/class-call-check":7,"babel-runtime/helpers/create-class":8,"babel-runtime/helpers/extends":9}],78:[function(require,module,exports){
+/**
+ * Utility helper functions
+ */
+
 /**
  * Throw error if bool is not satisfied
  *
@@ -1341,22 +1574,54 @@ exports.__esModule = true;
 exports.assert = assert;
 exports.ensureArray = ensureArray;
 exports.last = last;
+exports.gakError = gakError;
 
-function assert(bool, message) {
+function assert(bool, message, event) {
   if (!bool) {
-    throw new Error('Assertion failed: ' + message);
+    gakError('Assertion failed: ' + message, event);
   }
 }
+
+/**
+ * Wrap an item in an array if it is not already one
+ *
+ * @param  {Any} Object to be wrapped
+ * @return {Array<Any>} array of object
+ */
 
 function ensureArray(value) {
   return Array.isArray(value) ? value : [value];
 }
 
+/**
+ * Get the last element from an array
+ *
+ * @param  {Array<Any>} Array of items
+ * @return {Any} Last element of given array
+ */
+
 function last(arr) {
   return arr[arr.length - 1];
 }
 
-},{}],74:[function(require,module,exports){
+/**
+ * Throw a library specific error
+ *
+ * @param  {String} Error message
+ * @param  {Object} (optional) Event object
+ * @return {undefined}
+ */
+
+function gakError(message, event) {
+  message = 'gak.js | ' + message;
+  if (event) {
+    var pretty = JSON.stringify(event, null, 2);
+    message = message + ' | Last Processed Event: \n ' + pretty;
+  }
+  throw new Error(message);
+}
+
+},{}],79:[function(require,module,exports){
 'use strict';
 
 var _interopRequireDefault = require('babel-runtime/helpers/interop-require-default')['default'];
@@ -1380,7 +1645,7 @@ exports['default'] = {
 };
 module.exports = exports['default'];
 
-},{"../package.json":71,"./classes/EventRank":72,"babel-runtime/helpers/interop-require-default":8}]},{},[74])(74)
+},{"../package.json":76,"./classes/EventRank":77,"babel-runtime/helpers/interop-require-default":10}]},{},[79])(79)
 });
 
 
