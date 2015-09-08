@@ -24,6 +24,7 @@ const prun = cmd => {
     run(cmd).exec(undefined, err => { err ? rej(err) : res() });
   });
   fn.then = next => fn().then(next);
+  return fn;
 };
 
 /*
