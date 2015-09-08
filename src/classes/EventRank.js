@@ -10,10 +10,9 @@ import { assert, ensureArray } from '../util/';
 
 
 
-const { PI: π, tanh, pow } = Math;
+const { PI: π, tanh, pow, abs } = Math;
 const oneDay = 24*60*60; // one day in seconds
 const modelTypes = new Set(['baseline', 'reply']);
-
 
 
 /**
@@ -66,7 +65,7 @@ export default class EventRank {
     const outSet = new Set();
     data.forEach(event => {
       outSet.add(event.from);
-      ensureArray(event.to).forEach(::outSet.add)
+      ensureArray(event.to).forEach(id => outSet.add(id))
     });
     return Array.from(outSet);
   }
@@ -377,6 +376,10 @@ export default class EventRank {
     const { to, from : sender, time } = event;
     const recipients = new Set(ensureArray(to));
 
+    assert(sender, 'no event in sender!', event);
+    assert(to.length, 'no recipients of event!', event);
+    assert(time, 'No recorded time (or time === 0)!', event);
+
     // if the sender sends themself an email...
     recipients.delete(sender);
 
@@ -445,6 +448,8 @@ export default class EventRank {
     // start sum with sender rank
     let ΣR = ranks[sender].value;
 
+    assert(!isNaN(ΣR), 'Sender rank (starting value of ΣR) is NaN!', event);
+
     // build up sum of all participant ranks
     recipientArray.forEach(recipient => {
       ΣR += ranks[recipient].value;
@@ -457,7 +462,12 @@ export default class EventRank {
     });
 
     // Safety check to ensure that the sum should be within (0, 1)
-    assert(ΣR <= 1 && ΣR >= 0, 'ΣR must be in (0, 1): ΣR = ' + ΣR, event);
+    // not exact due to floating point issues...
+    assert(ΣR <= 1.000000000000009 && ΣR >= 0, 'ΣR must be in (0, 1): ΣR = ' + ΣR, event);
+
+    if (ΣR > 1) {
+      ΣR = 1;
+    }
 
     // current total of non participants is one minus participent potential
     const Tn = 1 - ΣR;
@@ -467,14 +477,14 @@ export default class EventRank {
     if (model === 'reply') {
       // reply model includes time weighting functions
       Vα.push({
-        value : (
-          α = f * Tn * g(Δts, G) * h(Δtr, H) // calculate α for below
-        ) / Tn, // save α / Tn for non-participants
+        value : (α = f * g(Δts, G) * h(Δtr, H)), // calculate α for below
         time // save time of α calculation
       });
     } else {
-      Vα.push({ value: (α = f * Tn) / Tn, time });
+      Vα.push({ value: (α = f), time });
     }
+    α *= Tn;
+
 
     // safety check for bounds of α
     assert(α <= 1 && α >= 0, 'α must be in (0, 1): α = ' + α, event);
@@ -500,7 +510,7 @@ export default class EventRank {
       rank.time = time;
     }
 
-    // update all participants
+    // update all participantsc
     updateParticipant(sender);
     recipientArray.forEach(updateParticipant);
 

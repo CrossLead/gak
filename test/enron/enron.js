@@ -1,8 +1,9 @@
-var EventRank = require('../../dist/node/index').EventRank,
+var gak = require('../../dist/node/index'),
+    EventRank = gak.EventRank,
+    util = gak.util,
     fs = require('fs'),
     ProgressBar = require('progress'),
-    _ = require('lodash'),
-    data = require('./mongo-enron.json');
+    _ = require('lodash');
 
 var args = process.argv.slice(2).reduce(function(o, x) {
   var bits = x.split('=');
@@ -10,16 +11,20 @@ var args = process.argv.slice(2).reduce(function(o, x) {
   return o;
 }, {});
 
-
-
-
 _.defaults(args, {
   m : 'baseline',
   n : 20,
-  f : 0.2
+  f : 0.2,
+  file: './mongo-enron.json'
 })
 
-rank(data);
+var events = require(args.file)
+  .map(function(event) {
+    event.time = parseInt(event.time, 10);
+    return event;
+  });
+
+rank(_.sortBy(events, 'time'));
 
 function rank(events) {
   var R = new EventRank({
@@ -36,7 +41,10 @@ function rank(events) {
   );
 
   console.log('computing ranks...')
+  var lagTime = 0;
   for (var i=0, l=events.length; i<l; i++) {
+    util.assert(lagTime <= events[i].time, 'time should be increasing');
+    lagTime = events[i].time;
     bar.tick();
     R.step(events[i]);
   }

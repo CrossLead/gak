@@ -1018,6 +1018,7 @@ var _util = require('../util/');
 var π = Math.PI;
 var tanh = _Math$tanh;
 var pow = Math.pow;
+var abs = Math.abs;
 
 var oneDay = 24 * 60 * 60; // one day in seconds
 var modelTypes = new _Set(['baseline', 'reply']);
@@ -1489,7 +1490,11 @@ var EventRank = (function () {
     });
 
     // Safety check to ensure that the sum should be within (0, 1)
-    _util.assert(ΣR <= 1 && ΣR >= 0, 'ΣR must be in (0, 1): ΣR = ' + ΣR, event);
+    // not exact due to floating point issues...
+    _util.assert(ΣR < 1.00000007 && ΣR >= 0, 'ΣR must be in (0, 1): ΣR = ' + ΣR, event);
+    if (ΣR > 1) {
+      return; // if the sum is 1, no potential will be transfered, so return
+    }
 
     // current total of non participants is one minus participent potential
     var Tn = 1 - ΣR;

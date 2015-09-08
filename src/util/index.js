@@ -10,7 +10,7 @@
  */
 export function assert(bool, message, event) {
   if (!bool) {
-    gakError('Assertion failed: ' + message, event);
+    gakError(`Assertion failed${message ? (': ' + message) : ''}`, event);
   }
 }
 
@@ -40,7 +40,7 @@ export function last(arr) {
 /**
  * Throw a library specific error
  *
- * @param  {String} Error message
+ * @param  {String} Error messagec
  * @param  {Object} (optional) Event object
  * @return {undefined}
  */
@@ -48,7 +48,15 @@ export function gakError(message, event) {
   message = `gak.js | ${message}`;
   if (event) {
     const pretty = JSON.stringify(event, null, 2);
-    message = `${message} | Last Processed Event: \n ${pretty}`;
+    message = `${message} | Last Processed Event: \n${pretty}`;
   }
   throw new Error(message);
+}
+
+
+export default {
+  assert,
+  gakError,
+  last,
+  ensureArray
 }
