@@ -65,7 +65,7 @@ export default class EventRank {
     const outSet = new Set();
     each(events, event => {
       outSet.add(event.from);
-      ensureArray(event.to).forEach(id => outSet.add(id))
+      each(ensureArray(event.to), id => outSet.add(id))
     });
     return Array.from(outSet);
   }
@@ -137,6 +137,7 @@ export default class EventRank {
       model='baseline',
       time=0,
       events=[],
+      include
     } = opts;
 
 
@@ -168,8 +169,28 @@ export default class EventRank {
       ranks,
       Vα : []
     });
+
+    this.setInclude(include);
+    this.correspondents = this.correspondents.filter(::this.include.has);
   }
 
+
+
+  /**
+   * Create the inclusion set for ranking
+   *
+   * @param {Set | Array} include (optional)
+   * @return {EventRank} this : return self for chaining
+   */
+  setInclude(include) {
+    include = include || this.correspondents;
+    assert(
+      Array.isArray(include) || (include instanceof Set),
+      'include needs to be a Set or an Array, but got: ' + include
+    );
+    this.include = new Set(include);
+    return this;
+  }
 
 
   /**
@@ -218,13 +239,23 @@ export default class EventRank {
   }
 
 
-
   /**
    * Reset model to starting ranks
    *
    * @return {EventRank} this : return self for chaining
    */
   reset() {
+    this.setInclude(
+      this.include.length || this.include.size ?
+        this.include :
+        this.correspondents
+    );
+
+    this.correspondents = this.correspondents.filter(::this.include.has);
+
+    this.correspondanceMatrix = this.correspondents
+      .reduce((o, c) => (o[c] = {}, o), {});
+
     this.ranks = EventRank.startRanks(this.correspondents);
     return this;
   }
@@ -353,6 +384,7 @@ export default class EventRank {
     const capture  = bucket === 'capture';
     const apply    = bucket === 'apply';
     const isBucket = capture || apply;
+    const watching = ::this.include.has;
 
     // unpack model weight parameters + ranks + correspondents
     const {
@@ -365,7 +397,12 @@ export default class EventRank {
 
     // unpack event, create set of participants
     const { to, from : sender, time } = event;
-    const recipients = new Set(ensureArray(to));
+
+    if (!watching(sender)) {
+      return;
+    }
+
+    const recipients = new Set(ensureArray(to).filter(watching));
 
     assert(sender,    'no event in sender!',                event);
     assert(to.length, 'no recipients of event!',            event);
