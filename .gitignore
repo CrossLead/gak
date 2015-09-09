@@ -6,7 +6,7 @@ dist/*
 !dist/browser/gak.min.js
 !dist/browser/gak.js.map
 test/enron/*
-!test/enron/enron.js
+!test/enron/run.js
 !test/enron/enron.py
 !test/enron/export-mongo-enron.sh
 esdoc/*

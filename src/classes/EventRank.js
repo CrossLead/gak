@@ -10,7 +10,7 @@ import { assert, ensureArray } from '../util/';
 
 
 
-const { PI: π, tanh, pow, abs } = Math;
+const { PI: π, tanh, pow } = Math;
 const oneDay = 24*60*60; // one day in seconds
 const modelTypes = new Set(['baseline', 'reply']);
 
@@ -363,6 +363,22 @@ export default class EventRank {
       Vα
     } = this;
 
+    // unpack event, create set of participants
+    const { to, from : sender, time } = event;
+    const recipients = new Set(ensureArray(to));
+
+    assert(sender,    'no event in sender!',                event);
+    assert(to.length, 'no recipients of event!',            event);
+    assert(time,      'no recorded time (or time === 0)!',  event);
+
+    // if the sender sends themself an email...
+    recipients.delete(sender);
+
+    // if the message was from A -> A, skip
+    if (recipients.size === 0) {
+      return;
+    }
+
     let timeUpdates;
     if (isBucket) {
       timeUpdates = this.timeUpdates = this.timeUpdates || {};
@@ -370,18 +386,6 @@ export default class EventRank {
     } else {
       delete this.timeUpdates;
     }
-
-
-    // unpack event, create set of participants
-    const { to, from : sender, time } = event;
-    const recipients = new Set(ensureArray(to));
-
-    assert(sender, 'no event in sender!', event);
-    assert(to.length, 'no recipients of event!', event);
-    assert(time, 'No recorded time (or time === 0)!', event);
-
-    // if the sender sends themself an email...
-    recipients.delete(sender);
 
     // get array from recipient set
     const recipientArray = Array.from(recipients);
@@ -448,8 +452,6 @@ export default class EventRank {
     // start sum with sender rank
     let ΣR = ranks[sender].value;
 
-    assert(!isNaN(ΣR), 'Sender rank (starting value of ΣR) is NaN!', event);
-
     // build up sum of all participant ranks
     recipientArray.forEach(recipient => {
       ΣR += ranks[recipient].value;
@@ -472,7 +474,7 @@ export default class EventRank {
     // current total of non participants is one minus participent potential
     const Tn = 1 - ΣR;
 
-    // potential transfer weight
+    // potential transfer weight (with Tn factored out)
     let α;
     if (model === 'reply') {
       // reply model includes time weighting functions
@@ -483,6 +485,8 @@ export default class EventRank {
     } else {
       Vα.push({ value: (α = f), time });
     }
+    // Tn is factored out from α above, as cases when Tn == 0
+    // cause division by 0 issues, so we need to multiply it back in here
     α *= Tn;
 
 
@@ -529,7 +533,5 @@ export default class EventRank {
 
     return this;
   }
-
-
 
 }
