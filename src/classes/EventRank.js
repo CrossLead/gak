@@ -6,7 +6,7 @@
  *
  * PDF: http://www.datalab.uci.edu/papers/linkkdd05-02.pdf
  */
-import { assert, ensureArray } from '../util/';
+import { assert, ensureArray, each } from '../util/';
 
 
 
@@ -61,9 +61,9 @@ export default class EventRank {
    * @static
    * @return {Array<String>} array of correspondent ids
    */
-  static getCorrespondents(data) {
+  static getCorrespondents(events) {
     const outSet = new Set();
-    data.forEach(event => {
+    each(events, event => {
       outSet.add(event.from);
       ensureArray(event.to).forEach(id => outSet.add(id))
     });
@@ -98,7 +98,7 @@ export default class EventRank {
    static bucket(events) {
      const hash = {};
      let bucket;
-     events.forEach(event => {
+     each(events, event => {
        if (bucket = hash[event.time]) {
          bucket.push(event);
        } else {
@@ -291,7 +291,7 @@ export default class EventRank {
   catchUp(participant) {
 
     if (Array.isArray(participant)) {
-      participant.forEach(::this.catchUp);
+      each(participant, ::this.catchUp);
       return this;
     }
 
@@ -336,14 +336,14 @@ export default class EventRank {
 
     // if event is acutally an array of events, step through all
     if (Array.isArray(event)) {
-      event.forEach(::this.step);
+      each(event, ::this.step);
       return this;
     }
 
     // if event is an event bucket run through time bucket
     if (event.events) {
       const n = event.events.length - 1;
-      event.events.forEach((e, index) => {
+      each(event.events, (e, index) => {
         this.step(e, index !== n ? 'capture' : 'apply');
       });
       return this;
@@ -419,7 +419,7 @@ export default class EventRank {
       let trMin = -Infinity,
           trRecipient;
 
-      recipientArray.forEach(recipient => {
+      each(recipientArray, recipient => {
         const tr = lagSender.recieved = lagSender.recieved || {};
 
         if ((trRecipient = tr[recipient]) && trRecipient > trMin) {
@@ -453,7 +453,7 @@ export default class EventRank {
     let ΣR = ranks[sender].value;
 
     // build up sum of all participant ranks
-    recipientArray.forEach(recipient => {
+    each(recipientArray, recipient => {
       ΣR += ranks[recipient].value;
       // safety check to ensure that all of P_i is on same time period
       assert(
@@ -516,7 +516,7 @@ export default class EventRank {
 
     // update all participantsc
     updateParticipant(sender);
-    recipientArray.forEach(updateParticipant);
+    each(recipientArray, updateParticipant);
 
     // apply time updates for bucket of events
     if (apply && timeUpdates) {
