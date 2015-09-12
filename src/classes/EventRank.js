@@ -398,10 +398,12 @@ export default class EventRank {
     // unpack event, create set of participants
     const { to, from : sender, time } = event;
 
+    // if the sender is not in the include set, skip
     if (!watching(sender)) {
-      return;
+      return this;
     }
 
+    // set of participants (only include those in "include")
     const recipients = new Set(ensureArray(to).filter(watching));
 
     assert(sender,    'no event in sender!',                event);
@@ -413,7 +415,7 @@ export default class EventRank {
 
     // if the message was from A -> A, skip
     if (recipients.size === 0) {
-      return;
+      return this;
     }
 
     let timeUpdates;
