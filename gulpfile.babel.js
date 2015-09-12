@@ -179,6 +179,8 @@ gulp.task('publish', ['test', 'build'], cb => {
   prun(`git tag -a v${version} -m "Release version ${version}"`)
     .then(prun('git push origin master --tags'))
     .then(prun('npm publish ./'))
+    .then(prun('git add dist/'))
+    .then(prun(`git commit -m "update bower dist to version ${version}"`))
     .then(cb);
 });
 
