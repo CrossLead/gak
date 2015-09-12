@@ -8,6 +8,15 @@ import csv
 import json
 from dateutil.parser import parse
 
+def employees(filename='./employees.txt'):
+  with open(filename, 'r') as intext:
+    with open(filename.replace('txt', 'json'), 'w') as outjson:
+      out = []
+      for line in intext:
+        out.append(line.split("\t")[0].strip() + "@enron.com")
+      json.dump(out, outjson)
+
+
 def mongoClean(filename='./mongo-enron.csv'):
   with open(filename, "r") as csv_file:
     csv_iterator = csv.DictReader(csv_file)
@@ -25,4 +34,5 @@ def mongoClean(filename='./mongo-enron.csv'):
 
 
 if __name__ == '__main__':
-  mongoClean()
+  #mongoClean()
+  employees()
