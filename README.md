@@ -1,4 +1,4 @@
-## _gak_ (Graph Analysis ToolKit for NodeJS)
+## _gak_ (JavaScript Graph Analysis Kit for Event-Based Network Data)
 
 [![npm version](https://badge.fury.io/js/gak.svg)](http://badge.fury.io/js/gak)
 [![Bower version](https://badge.fury.io/bo/gak.svg)](http://badge.fury.io/bo/gak)
@@ -6,6 +6,11 @@
 [![Dependency Status](https://david-dm.org/crosslead/gak.svg)](https://david-dm.org/crosslead/gak)
 
 ### *Very Very Alpha, beware!*
+
+### Overview
+
+`gak.EventRank` provides an implementation of the EventRank algorithm put forth by (O’Madadhain & Smyth, 2005), see http://www.datalab.uci.edu/papers/linkkdd05-02.pdf. Further development goals include adding ECODE for event based clustering, as well as other static graph analysis algorithms.
+
 
 ### Installation
 
@@ -44,25 +49,8 @@ import { EventRank } from 'gak';
 
  const R = new EventRank({ events });
 
- for (const event of events) {
-   // add event information to ranks
-   R.step(event);
- }
-
- // finish rank calculation by computing lazy ranks
- R.done();
+ // compute EventRank values
+ R.compute();
 
  console.log(R.ranks); // => { ranks... }
 ```
-
-
-
-### Notes
-
-Alorithm TODO:
-  - EventRank (in progress...)
-  - ECODE (Event based COmmunity DEtection)
-
-Testing on enron email data:
-  - run `node test/enron/enron.js` to run a reply model on `test/enron/enron_emails.csv`
-  - *Reproducing the Enron email corpus*: Download the full dataset from https://www.cs.cmu.edu/~./enron/ (I got the May 7, 2015 Version of dataset). Move the tarball into `test/enron/`, unzip, and run `enron.py` to create a test csv dataset.
