@@ -3,12 +3,21 @@ import { expect } from 'chai';
 import pkg from '../package.json';
 import { EventRank, version } from '../src/';
 import util from '../src/util/';
+import moment from 'moment';
 
 const { abs } = Math;
+
 const expectVeryClose = (x, message) => {
   return y => expect(abs(x - y), message).to.be.below(10e-8)
 };
+
 const sum = (args) => args.reduce(((a, b) => a + b), 0);
+
+const modelTypes = ['baseline', 'reply'];
+
+const startTime = moment().unix();
+
+const oneDay = 24*60*60*1000;
 
 // helper functions / variables for making test data
 const a = 'a',
@@ -16,25 +25,26 @@ const a = 'a',
       c = 'c',
       d = 'd',
       e = 'e',
-      event = (from, to, time) => ({to, from, time});
+      event = (from, to, time) => ({to, from, time: startTime + time*oneDay});
 
+// example graph from http://www.datalab.uci.edu/papers/linkkdd05-02.pdf
 const makeTestEvents = () => [
   event(b, c, 1),
   event(b, c, 2),
   event(b, c, 3),
   event(b, c, 4),
   event(d, b, 5),
+  event(e, b, 5),
+  event(b, a, 6),
+  event(d, b, 6),
   event(e, b, 6),
   event(b, a, 7),
+  event(d, b, 7),
+  event(e, b, 7),
+  event(b, a, 8),
   event(d, b, 8),
-  event(e, b, 9),
-  event(b, a, 10),
-  event(d, b, 11),
-  event(e, b, 12),
-  event(b, a, 13),
-  event(d, b, 14),
-  event(e, b, 15),
-  event(b, a, 16)
+  event(e, b, 8),
+  event(b, a, 9)
 ];
 
 
@@ -144,67 +154,72 @@ describe('Graph Analysis Kit', () => {
       done();
     });
 
+    it('Calculates expected ranks (using buckets) for test data', done => {
 
-    it('Calculates expected ranks for test data', done => {
+      for (const model of modelTypes) {
 
-      const G = 1; // recharge time
-      const H = 0.3; // message half life
-      const f = 0.02;
-      const model = 'baseline';
-      const events = makeTestEvents();
-      const correspondents = EventRank.getCorrespondents(events);
-      const getRankValues = er => _(er.ranks)
-        .values()
-        .pluck('value')
-        .value();
+        const G = oneDay; // recharge time
+        const H = oneDay; // message half life
+        const f = 0.8;
+        const events = makeTestEvents();
+        const correspondents = EventRank.getCorrespondents(events);
+        const bucketed = EventRank.bucket(events);
+        const getRankValues = er => _(er.ranks)
+          .values()
+          .pluck('value')
+          .value();
 
-      // initialize EventRank Object
-      const R = new EventRank({ G, H, f, correspondents, model });
+        // initialize EventRank Object
+        const R = new EventRank({ G, H, f, correspondents, model });
 
-      // starting ranks should automatically be calculated for t=0
-      const startRanks = getRankValues(R);
-      const [first, ...rest] = startRanks;
-      expectVeryClose(sum(startRanks), 'start ranks should sum to one')(1);
-      rest.forEach(value => expect(value, 'start ranks should all be equal')
-        .to.equal(first));
+        // starting ranks should automatically be calculated for t=0
+        const startRanks = getRankValues(R);
+        const [first, ...rest] = startRanks;
+        expectVeryClose(sum(startRanks), `(${model} model) start ranks should sum to one`)(1);
+        rest.forEach(value => expect(value, `(${model} model) start ranks should all be equal`)
+          .to.equal(first));
 
-      // test one iteration of events
-      const firstEvent = events.shift();
-      expect(firstEvent.from).to.equal(b);
-      expect(firstEvent.to).to.equal(c);
-      R.step(firstEvent);
-      R.done();
-      const stepOneRanks = getRankValues(R);
+        // test one iteration of events
+        const firstBucket = bucketed.shift();
+        expect(firstBucket.events[0].from).to.equal(b);
+        expect(firstBucket.events[0].to).to.equal(c);
+        R.step(firstBucket);
+        R.done();
+        const stepOneRanks = getRankValues(R);
 
-      expectVeryClose(
-        sum(stepOneRanks),
-        'After one iteration, ranks should still sum to one'
-      )(1);
+        expectVeryClose(
+          sum(stepOneRanks),
+          `(${model} model) After one iteration, ranks should still sum to one`
+        )(1);
 
-      const lastRanks = [a, b, c, d, e]
-        .reduce((o, x) => (o[x] = R.ranks[x], o), {});
+        R.step(bucketed.shift()).done();
 
-      const { value : bValue } = lastRanks.b;
-      const { value : cValue } = lastRanks.c;
+        const lastRanks = [a, b, c, d, e]
+          .reduce((o, x) => (o[x] = R.ranks[x], o), {});
 
-      expect(bValue, 'd ∈ P_i should have same rank on first round')
-        .to.equal(cValue);
+        const { value : bValue } = lastRanks.b;
+        const { value : cValue } = lastRanks.c;
 
-      [a, d, e].forEach(x => {
-        const { value } = lastRanks[x];
-        expect(value, 'R(d ∉ P_i) should be lower than R(d ∈ P_i)')
-          .to.be.below(bValue);
-      });
+        expect(bValue, `(${model} model) d ∈ P_i should have same rank on first round`)
+          .to.equal(cValue);
 
-      events.map(::R.step);
-      R.done();
+        [a, d, e].forEach(x => {
+          const { value } = lastRanks[x];
+          expect(value, `(${model} model) R(d ∉ P_i) < R(d ∈ P_i)`)
+            .to.be.below(bValue);
+        });
 
-      expect(R.ranks.a.value, 'R(a) > R(c)')
-        .to.be.above(R.ranks.c.value);
+        R.step(bucketed).done();
+
+        expect(R.ranks.a.value, `(${model} model) R(a) > R(c)`)
+          .to.be.above(R.ranks.c.value);
+
+      }
 
       done();
     });
 
   });
+
 
 });

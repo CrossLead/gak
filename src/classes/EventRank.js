@@ -11,7 +11,7 @@ import { assert, ensureArray, each } from '../util/';
 
 
 const { PI: π, tanh, pow } = Math;
-const oneDay = 24*60*60; // one day in seconds
+const oneDay = 24*60*60*1000; // one day in milliseconds
 const modelTypes = new Set(['baseline', 'reply']);
 
 
@@ -105,9 +105,9 @@ export default class EventRank {
          hash[event.time] = [event];
        }
      });
-     const times = Object.keys(hash);
+     const times = Object.keys(hash).map(time => parseInt(time, 10));
      times.sort();
-     return times.map(time => ({time: parseInt(time, 10), events: hash[time]}))
+     return times.map(time => ({time, events: hash[time]}))
    }
 
 
@@ -133,9 +133,8 @@ export default class EventRank {
     const {
       G=oneDay,
       H=oneDay,
-      f=0.3,
-      model='baseline',
-      time=0,
+      f=0.8,
+      model='reply',
       events=[],
       include
     } = opts;
@@ -162,7 +161,6 @@ export default class EventRank {
     // add properties
     Object.assign(this, {
       G, H, f, model,
-      time,
       correspondents,
       correspondanceMatrix,
       events,
@@ -529,6 +527,8 @@ export default class EventRank {
     α *= Tn;
 
 
+
+
     // safety check for bounds of α
     assert(α <= 1 && α >= 0, 'α must be in (0, 1): α = ' + α, event);
 
@@ -560,9 +560,11 @@ export default class EventRank {
     // apply time updates for bucket of events
     if (apply && timeUpdates) {
       for (const id in timeUpdates) {
-        const up = timeUpdates[id];
-        const cmS = CM[id];
+        const up = timeUpdates[id],
+              cmS = CM[id];
+
         cmS.sent = up.sent;
+
         for (const rid in up.recieved) {
           cmS.recieved[rid] = up.recieved[rid];
         }

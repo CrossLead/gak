@@ -13,7 +13,6 @@ import buffer       from 'vinyl-buffer';
 import asyncHelpers from 'async';
 import eslint       from 'gulp-eslint';
 import fs           from 'fs';
-import _            from 'lodash';
 
 
 const src = './src/**/*.js',
