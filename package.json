@@ -1,6 +1,6 @@
 {
   "name": "gak",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Graph Analysis Kit for NodeJS",
   "main": "./dist/node/index.js",
   "scripts": {
