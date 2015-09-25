@@ -39,75 +39,75 @@ To calculate EventRanks of `correspondents` involved in a series of `events` sor
 import { EventRank } from 'gak';
 
 /**
- * Events should be an Array of objects of the form...
- *    { time: <Number>, to: <String|Array<String>>, from: <String> }
- * sorted by the time property.
- *
- * NOTE: default parameters assume time is in milliseconds since the epoch
- */
- const events = [ /* Add events here... */ ];
+  * Events should be an Array of objects of the form...
+  *    { time: <Number>, to: <String|Array<String>>, from: <String> }
+  * sorted by the time property.
+  *
+  * NOTE: default parameters assume time is in milliseconds since the epoch
+  */
+const events = [ /* Add events here... */ ];
 
- const R = new EventRank({ events });
+const R = new EventRank({ events });
 
- // compute EventRank values
- R.compute();
+// compute EventRank values
+R.compute();
 
- console.log(R.ranks); // => { ranks... }
+console.log(R.ranks); // => { ranks... }
 
 
- /**
+/**
   * To lazily compute a stream of events, call step()...
   *
   * Note, the model will need to be initially fed a set of
   * correspondents to track
   */
 
-  const correspondents = [
-    // email address (or whatever is in the to/from properties of the events) 1...
-    // email address 2...
-  ];
+const correspondents = [
+  // email address (or whatever is in the to/from properties of the events) 1...
+  // email address 2...
+];
 
-  const R = new EventRank({ correspondents });
+const R = new EventRank({ correspondents });
 
-  eventStream.on('event', event => {
-    R.step(event);
-  });
+eventStream.on('event', event => {
+  R.step(event);
+});
 
-  // if lazily computing, the ranks need to be finished by calling done();
-  R.done();
+// if lazily computing, the ranks need to be finished by calling done();
+R.done();
 
-  console.log(R.ranks); // => { ranks... }
+console.log(R.ranks); // => { ranks... }
 
 
-  /**
-   * If 2 (or more) events can occur at the exact same time,
-   * EventRank can process "bucketed" events...
-   */
+/**
+ * If 2 (or more) events can occur at the exact same time,
+ * EventRank can process "bucketed" events...
+ */
 
-   const correspondents = [
-     // email address 1...
-     // email address 2...
-   ];
+const correspondents = [
+  // email address 1...
+  // email address 2...
+];
 
-   const R = new EventRank({ correspondents });
+const R = new EventRank({ correspondents });
 
-   let bucket;
-   eventStream.on('event', event => {
-     if (bucket && bucket.time !== event.time) {
-       R.step(bucket);
-       bucket = { events: [ event ], time: event.time };
-     } else if (!bucket) {
-       bucket = { events: [ event ], time: event.time };
-     } else {
-       bucket.events.push(event);
-     }
-   });
+let bucket;
+eventStream.on('event', event => {
+  if (bucket && bucket.time !== event.time) {
+    R.step(bucket);
+    bucket = { events: [ event ], time: event.time };
+  } else if (!bucket) {
+    bucket = { events: [ event ], time: event.time };
+  } else {
+    bucket.events.push(event);
+  }
+});
 
-   // include last bucket...
-   R.step(bucket);
+// include last bucket...
+R.step(bucket);
 
-   // if lazily computing, the ranks need to be finished by calling done();
-   R.done();
+// if lazily computing, the ranks need to be finished by calling done();
+R.done();
 
-   console.log(R.ranks); // => { ranks... }   
+console.log(R.ranks); // => { ranks... }   
 ```
