@@ -978,6 +978,7 @@ module.exports={
     "lodash": "^3.10.1",
     "mkdirp": "^0.5.1",
     "mocha": "^2.2.5",
+    "moment": "^2.10.6",
     "progress": "^1.1.8",
     "promised-mongo": "^1.2.0",
     "vinyl-buffer": "^1.0.0",
@@ -985,6 +986,7 @@ module.exports={
     "yargs": "^3.21.0"
   }
 }
+
 },{}],76:[function(require,module,exports){
 /**
  * EventRank implementation
@@ -1020,7 +1022,7 @@ var π = Math.PI;
 var tanh = _Math$tanh;
 var pow = Math.pow;
 
-var oneDay = 24 * 60 * 60; // one day in seconds
+var oneDay = 24 * 60 * 60 * 1000; // one day in milliseconds
 var modelTypes = new _Set(['baseline', 'reply']);
 
 /**
@@ -1109,10 +1111,12 @@ var EventRank = (function () {
         hash[event.time] = [event];
       }
     });
-    var times = _Object$keys(hash);
+    var times = _Object$keys(hash).map(function (time) {
+      return parseInt(time, 10);
+    });
     times.sort();
     return times.map(function (time) {
-      return { time: parseInt(time, 10), events: hash[time] };
+      return { time: time, events: hash[time] };
     });
   };
 
@@ -1155,11 +1159,9 @@ var EventRank = (function () {
     var _opts$H = opts.H;
     var H = _opts$H === undefined ? oneDay : _opts$H;
     var _opts$f = opts.f;
-    var f = _opts$f === undefined ? 0.3 : _opts$f;
+    var f = _opts$f === undefined ? 0.8 : _opts$f;
     var _opts$model = opts.model;
-    var model = _opts$model === undefined ? 'baseline' : _opts$model;
-    var _opts$time = opts.time;
-    var time = _opts$time === undefined ? 0 : _opts$time;
+    var model = _opts$model === undefined ? 'reply' : _opts$model;
     var _opts$events = opts.events;
     var events = _opts$events === undefined ? [] : _opts$events;
     var include = opts.include;
@@ -1189,7 +1191,6 @@ var EventRank = (function () {
     // add properties
     _Object$assign(this, {
       G: G, H: H, f: f, model: model,
-      time: time,
       correspondents: correspondents,
       correspondanceMatrix: correspondanceMatrix,
       events: events,
@@ -1436,10 +1437,12 @@ var EventRank = (function () {
     var sender = event.from;
     var time = event.time;
 
+    // if the sender is not in the include set, skip
     if (!watching(sender)) {
-      return;
+      return this;
     }
 
+    // set of participants (only include those in "include")
     var recipients = new _Set(_util.ensureArray(to).filter(watching));
 
     _util.assert(sender, 'no event in sender!', event);
@@ -1451,7 +1454,7 @@ var EventRank = (function () {
 
     // if the message was from A -> A, skip
     if (recipients.size === 0) {
-      return;
+      return this;
     }
 
     var timeUpdates = undefined;
@@ -1593,9 +1596,11 @@ var EventRank = (function () {
     // apply time updates for bucket of events
     if (apply && timeUpdates) {
       for (var id in timeUpdates) {
-        var up = timeUpdates[id];
-        var cmS = CM[id];
+        var up = timeUpdates[id],
+            cmS = CM[id];
+
         cmS.sent = up.sent;
+
         for (var rid in up.recieved) {
           cmS.recieved[rid] = up.recieved[rid];
         }
