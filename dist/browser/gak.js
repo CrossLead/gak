@@ -927,7 +927,7 @@ Iterators.NodeList = Iterators.HTMLCollection = Iterators.Array;
 },{"./$.iterators":44,"./es6.array.iterator":66}],75:[function(require,module,exports){
 module.exports={
   "name": "gak",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Graph Analysis Kit for NodeJS",
   "main": "./dist/node/index.js",
   "scripts": {
@@ -986,7 +986,6 @@ module.exports={
     "yargs": "^3.21.0"
   }
 }
-
 },{}],76:[function(require,module,exports){
 /**
  * EventRank implementation
