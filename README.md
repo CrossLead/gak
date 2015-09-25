@@ -43,7 +43,7 @@ import { EventRank } from 'gak';
  *    { time: <Number>, to: <String|Array<String>>, from: <String> }
  * sorted by the time property.
  *
- * NOTE: default parameters assume time is in unix timestamp format
+ * NOTE: default parameters assume time is in milliseconds since the epoch
  */
  const events = [ /* Add events here... */ ];
 
@@ -53,4 +53,61 @@ import { EventRank } from 'gak';
  R.compute();
 
  console.log(R.ranks); // => { ranks... }
+
+
+ /**
+  * To lazily compute a stream of events, call step()...
+  *
+  * Note, the model will need to be initially fed a set of
+  * correspondents to track
+  */
+
+  const correspondents = [
+    // email address (or whatever is in the to/from properties of the events) 1...
+    // email address 2...
+  ];
+
+  const R = new EventRank({ correspondents });
+
+  eventStream.on('event', event => {
+    R.step(event);
+  });
+
+  // if lazily computing, the ranks need to be finished by calling done();
+  R.done();
+
+  console.log(R.ranks); // => { ranks... }
+
+
+  /**
+   * If 2 (or more) events can occur at the exact same time,
+   * EventRank can process "bucketed" events...
+   */
+
+   const correspondents = [
+     // email address 1...
+     // email address 2...
+   ];
+
+   const R = new EventRank({ correspondents });
+
+   let bucket;
+   eventStream.on('event', event => {
+     if (bucket && bucket.time !== event.time) {
+       R.step(bucket);
+       bucket = { events: [ event ], time: event.time };
+     } else if (!bucket) {
+       bucket = { events: [ event ], time: event.time };
+     } else {
+       bucket.events.push(event);
+     }
+   });
+
+   // include last bucket...
+   R.step(bucket);
+
+   // if lazily computing, the ranks need to be finished by calling done();
+   R.done();
+
+   console.log(R.ranks); // => { ranks... }   
 ```
