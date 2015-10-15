@@ -25,7 +25,6 @@
   },
   "homepage": "https://github.com/CrossLead/gak",
   "dependencies": {
-    "babel-core": "^5.8.22",
     "babel-runtime": "^5.8.20"
   },
   "devDependencies": {

@@ -115,10 +115,19 @@ module.exports = function(it){
 // 19.1.2.1 Object.assign(target, source, ...)
 var toObject = require('./$.to-object')
   , IObject  = require('./$.iobject')
-  , enumKeys = require('./$.enum-keys');
+  , enumKeys = require('./$.enum-keys')
+  , has      = require('./$.has');
 
+// should work with symbols and should have deterministic property order (V8 bug)
 module.exports = require('./$.fails')(function(){
-  return Symbol() in Object.assign({}); // Object.assign available and Symbol is native
+  var a = Object.assign
+    , A = {}
+    , B = {}
+    , S = Symbol()
+    , K = 'abcdefghijklmnopqrst';
+  A[S] = 7;
+  K.split('').forEach(function(k){ B[k] = k; });
+  return a({}, A)[S] != 7 || Object.keys(a({}, B)).join('') != K;
 }) ? function assign(target, source){   // eslint-disable-line no-unused-vars
   var T = toObject(target)
     , l = arguments.length
@@ -129,11 +138,11 @@ module.exports = require('./$.fails')(function(){
       , length = keys.length
       , j      = 0
       , key;
-    while(length > j)T[key = keys[j++]] = S[key];
+    while(length > j)if(has(S, key = keys[j++]))T[key] = S[key];
   }
   return T;
 } : Object.assign;
-},{"./$.enum-keys":29,"./$.fails":31,"./$.iobject":36,"./$.to-object":60}],20:[function(require,module,exports){
+},{"./$.enum-keys":29,"./$.fails":31,"./$.has":34,"./$.iobject":36,"./$.to-object":60}],20:[function(require,module,exports){
 // getting tag from 19.1.3.6 Object.prototype.toString()
 var cof = require('./$.cof')
   , TAG = require('./$.wks')('toStringTag')
@@ -377,7 +386,7 @@ module.exports = function(NAME, wrapper, methods, common, IS_MAP, IS_WEAK){
   return C;
 };
 },{"./$":45,"./$.def":27,"./$.fails":31,"./$.for-of":32,"./$.global":33,"./$.hide":35,"./$.mix":47,"./$.strict-new":53,"./$.support-desc":55,"./$.tag":56}],25:[function(require,module,exports){
-var core = module.exports = {};
+var core = module.exports = {version: '1.2.1'};
 if(typeof __e == 'number')__e = core; // eslint-disable-line no-undef
 },{}],26:[function(require,module,exports){
 // optional / simple context binding
@@ -395,9 +404,10 @@ module.exports = function(fn, that, length){
     case 3: return function(a, b, c){
       return fn.call(that, a, b, c);
     };
-  } return function(/* ...args */){
-      return fn.apply(that, arguments);
-    };
+  }
+  return function(/* ...args */){
+    return fn.apply(that, arguments);
+  };
 };
 },{"./$.a-function":17}],27:[function(require,module,exports){
 var global    = require('./$.global')
@@ -535,9 +545,8 @@ module.exports = function(it){
   return (Iterators.Array || Array.prototype[ITERATOR]) === it;
 };
 },{"./$.iterators":44,"./$.wks":63}],38:[function(require,module,exports){
-// http://jsperf.com/core-js-isobject
 module.exports = function(it){
-  return it !== null && (typeof it == 'object' || typeof it == 'function');
+  return typeof it === 'object' ? it !== null : typeof it === 'function';
 };
 },{}],39:[function(require,module,exports){
 // call something on iterator step with safe closing on error
@@ -812,7 +821,8 @@ $def($def.S + $def.F * !require('./$.iter-detect')(function(iter){ Array.from(it
         result[index] = mapping ? call(iterator, mapfn, [step.value, index], true) : step.value;
       }
     } else {
-      for(result = new C(length = toLength(O.length)); length > index; index++){
+      length = toLength(O.length);
+      for(result = new C(length); length > index; index++){
         result[index] = mapping ? mapfn(O[index], index) : O[index];
       }
     }
@@ -820,6 +830,7 @@ $def($def.S + $def.F * !require('./$.iter-detect')(function(iter){ Array.from(it
     return result;
   }
 });
+
 },{"./$.ctx":26,"./$.def":27,"./$.is-array-iter":37,"./$.iter-call":39,"./$.iter-detect":42,"./$.to-length":59,"./$.to-object":60,"./core.get-iterator-method":64}],66:[function(require,module,exports){
 'use strict';
 var setUnscope = require('./$.unscope')
@@ -952,7 +963,6 @@ module.exports={
   },
   "homepage": "https://github.com/CrossLead/gak",
   "dependencies": {
-    "babel-core": "^5.8.22",
     "babel-runtime": "^5.8.20"
   },
   "devDependencies": {
@@ -986,6 +996,7 @@ module.exports={
     "yargs": "^3.21.0"
   }
 }
+
 },{}],76:[function(require,module,exports){
 /**
  * EventRank implementation
