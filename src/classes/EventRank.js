@@ -6,7 +6,7 @@
  *
  * PDF: http://www.datalab.uci.edu/papers/linkkdd05-02.pdf
  */
-import { assert, ensureArray, each } from '../util/';
+import { assert, ensureArray } from '../util/';
 
 
 
@@ -63,10 +63,18 @@ export default class EventRank {
    */
   static getCorrespondents(events) {
     const outSet = new Set();
-    each(events, event => {
+
+    for (let i=0, l=events.length; i<l; i++) {
+      const event = events[i],
+            to = event.to;
+
       outSet.add(event.from);
-      each(ensureArray(event.to), id => outSet.add(id))
-    });
+
+      for (let t=0, lt=to.length; t<lt; t++) {
+        outSet.add(to[t]);
+      }
+    }
+
     return Array.from(outSet);
   }
 
@@ -97,14 +105,18 @@ export default class EventRank {
    */
    static bucket(events) {
      const hash = {};
+
      let bucket;
-     each(events, event => {
+
+     for (let i=0, l=events.length; i<l; i++) {
+       const event = events[i];
        if (bucket = hash[event.time]) {
          bucket.push(event);
        } else {
          hash[event.time] = [event];
        }
-     });
+     }
+
      const times = Object.keys(hash).map(time => parseInt(time, 10));
      times.sort();
      return times.map(time => ({time, events: hash[time]}))
@@ -320,7 +332,9 @@ export default class EventRank {
   catchUp(participant) {
 
     if (Array.isArray(participant)) {
-      each(participant, ::this.catchUp);
+      for (let i=0, l=participant.length; i<l; i++) {
+        this.catchUp(participant[i])
+      }
       return this;
     }
 
@@ -365,16 +379,20 @@ export default class EventRank {
 
     // if event is acutally an array of events, step through all
     if (Array.isArray(event)) {
-      each(event, ::this.step);
+      for (let i=0, l=event.length; i<l; i++) {
+        this.step(event[i])
+      }
       return this;
     }
 
     // if event is an event bucket run through time bucket
     if (event.events) {
-      const n = event.events.length - 1;
-      each(event.events, (e, index) => {
-        this.step(e, index !== n ? 'capture' : 'apply');
-      });
+      const events = event.events,
+            n = event.events.length - 1;
+
+      for (let i=0, l=events.length; i<l; i++) {
+        this.step(events[i], i !== n ? 'capture' : 'apply')
+      }
       return this;
     }
 
@@ -456,8 +474,9 @@ export default class EventRank {
       let trMin = -Infinity,
           trRecipient;
 
-      each(recipientArray, recipient => {
-        const tr = lagSender.recieved = lagSender.recieved || {};
+      for (let i=0, l=recipientArray.length; i<l; i++) {
+        const recipient = recipientArray[i],
+              tr = lagSender.recieved = lagSender.recieved || {};
 
         if ((trRecipient = tr[recipient]) && trRecipient > trMin) {
           trMin = trRecipient;
@@ -470,8 +489,7 @@ export default class EventRank {
         } else {
           tr[recipient] = time;
         }
-
-      });
+      }
 
       // time difference (recipient) is
       // between now and minimum determined time above
@@ -483,22 +501,13 @@ export default class EventRank {
       assert(Δtr >= 0, 'Δtr must not be negative: Δtr = ' + Δtr, event);
     }
 
-    // time of last rank compuation of sender
-    const lastTimeSender = ranks[sender].time;
-
     // start sum with sender rank
     let ΣR = ranks[sender].value;
 
     // build up sum of all participant ranks
-    each(recipientArray, recipient => {
-      ΣR += ranks[recipient].value;
-      // safety check to ensure that all of P_i is on same time period
-      assert(
-        ranks[recipient].time === lastTimeSender,
-        'Last event time should be equal for all participants',
-        event
-      );
-    });
+    for (let i=0, l=recipientArray.length; i<l; i++) {
+      ΣR += ranks[recipientArray[i]].value;
+    }
 
     // Safety check to ensure that the sum should be within (0, 1)
     // not exact due to floating point issues...
@@ -526,9 +535,6 @@ export default class EventRank {
     // cause division by 0 issues, so we need to multiply it back in here
     α *= Tn;
 
-
-
-
     // safety check for bounds of α
     assert(α <= 1 && α >= 0, 'α must be in (0, 1): α = ' + α, event);
 
@@ -538,8 +544,11 @@ export default class EventRank {
     // store last index of alpha
     const iαNew = Vα.length;
 
-    const updateParticipant = participant => {
-      const rank = ranks[participant];
+    recipientArray.push(sender);
+    for (let i=0, l=recipientArray.length; i<l; i++) {
+      const participant = recipientArray[i],
+            rank = ranks[participant];
+
       let value = rank.value;
 
       // update participant rank for this period
@@ -552,10 +561,6 @@ export default class EventRank {
       rank.value = value;
       rank.time = time;
     }
-
-    // update all participantsc
-    updateParticipant(sender);
-    each(recipientArray, updateParticipant);
 
     // apply time updates for bucket of events
     if (apply && timeUpdates) {

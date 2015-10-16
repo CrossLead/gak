@@ -38,23 +38,6 @@ export function last(arr) {
 
 
 /**
- * Faster forEach function
- *
- * @param  {Array<Any>} arr Array of items
- * @param  {Function} fn Function to call on each item
- * @return {undefined}
- */
-export function each(arr, fn) {
-  if (!(arr instanceof Array)) {
-    gakError(`Non array object passed to each! (${arr})`);
-  }
-  for (var i=0, l=arr.length; i<l; i++) {
-    fn(arr[i], i);
-  }
-}
-
-
-/**
  * Throw a library specific error
  *
  * @param  {String} Error messagec
@@ -75,6 +58,5 @@ export default {
   assert,
   gakError,
   last,
-  each,
   ensureArray
 }

@@ -87,14 +87,6 @@ describe('Graph Analysis Kit', () => {
       expect(util.ensureArray([1]), 'passing array should succeed').to.be.an.instanceof(Array);
       expect(util.ensureArray([1])[0], 'should not wrap if already array').to.equal(1);
       done();
-    })
-
-    it('each function should properly operate on arrays', done => {
-      let str = '';
-      util.each(['a', 'b', 'c'], l => str += l);
-      expect(str).to.equal('abc');
-      expect(() => util.each({})).to.throw(Error);
-      done();
     });
 
   });
