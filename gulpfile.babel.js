@@ -180,6 +180,7 @@ gulp.task('publish', ['test', 'build'], cb => {
     .then(prun('npm publish ./'))
     .then(prun('git add dist/'))
     .then(prun(`git commit -m "update bower dist to version ${version}"`))
+    .then(prun(`git push`))
     .then(cb);
 });
 
