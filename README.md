@@ -5,11 +5,12 @@
 [![Build Status](https://travis-ci.org/CrossLead/gak.svg?branch=master)](https://travis-ci.org/CrossLead/gak)
 [![Dependency Status](https://david-dm.org/crosslead/gak.svg)](https://david-dm.org/crosslead/gak)
 
-### *Very Very Alpha, beware!*
-
 ### Overview
 
-`gak.EventRank` provides an implementation of the EventRank algorithm put forth by (O’Madadhain & Smyth, 2005), see http://www.datalab.uci.edu/papers/linkkdd05-02.pdf. Further development goals include adding ECODE for event based clustering, as well as other static graph analysis algorithms.
+#### Algorithms
+
+- `gak.EventRank` provides an implementation of the EventRank algorithm put forth by [O’Madadhain & Smyth, 2005](http://www.datalab.uci.edu/papers/linkkdd05-02.pdf).
+- Further development goals include adding ECODE for event based clustering, as well as other static graph analysis algorithms.
 
 
 ### Installation
