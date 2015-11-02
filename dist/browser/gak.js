@@ -967,19 +967,19 @@ module.exports={
   },
   "devDependencies": {
     "async": "^1.4.2",
-    "babel": "^5.8.23",
+    "babel-core": "^5.8.25",
     "babel-eslint": "^4.1.0",
     "babelify": "^6.2.0",
     "browserify": "^11.0.1",
     "chai": "^3.2.0",
-    "esdoc": "^0.2.5",
+    "esdoc": "^0.4.0",
     "esdoc-es7-plugin": "0.0.2",
     "fast-csv": "^0.6.0",
     "gulp": "^3.9.0",
     "gulp-babel": "^5.2.1",
     "gulp-concat": "^2.6.0",
     "gulp-eslint": "^1.0.0",
-    "gulp-gh-pages": "^0.5.2",
+    "gulp-gh-pages": "^0.5.3",
     "gulp-mocha": "^2.1.3",
     "gulp-run": "^1.6.10",
     "gulp-sourcemaps": "^1.5.2",
@@ -1076,12 +1076,18 @@ var EventRank = (function () {
 
   EventRank.getCorrespondents = function getCorrespondents(events) {
     var outSet = new _Set();
-    _util.each(events, function (event) {
-      outSet.add(event.from);
-      _util.each(_util.ensureArray(event.to), function (id) {
-        return outSet.add(id);
-      });
-    });
+
+    for (var i = 0, l = events.length; i < l; i++) {
+      var _event = events[i],
+          to = _event.to;
+
+      outSet.add(_event.from);
+
+      for (var t = 0, lt = to.length; t < lt; t++) {
+        outSet.add(to[t]);
+      }
+    }
+
     return _Array$from(outSet);
   };
 
@@ -1113,14 +1119,18 @@ var EventRank = (function () {
 
   EventRank.bucket = function bucket(events) {
     var hash = {};
+
     var bucket = undefined;
-    _util.each(events, function (event) {
-      if (bucket = hash[event.time]) {
-        bucket.push(event);
+
+    for (var i = 0, l = events.length; i < l; i++) {
+      var _event2 = events[i];
+      if (bucket = hash[_event2.time]) {
+        bucket.push(_event2);
       } else {
-        hash[event.time] = [event];
+        hash[_event2.time] = [_event2];
       }
-    });
+    }
+
     var times = _Object$keys(hash).map(function (time) {
       return parseInt(time, 10);
     });
@@ -1360,7 +1370,9 @@ var EventRank = (function () {
   EventRank.prototype.catchUp = function catchUp(participant) {
 
     if (Array.isArray(participant)) {
-      _util.each(participant, this.catchUp.bind(this));
+      for (var _i = 0, l = participant.length; _i < l; _i++) {
+        this.catchUp(participant[_i]);
+      }
       return this;
     }
 
@@ -1403,28 +1415,25 @@ var EventRank = (function () {
    */
 
   EventRank.prototype.step = function step(event, bucket) {
-    var _context3,
-        _this2 = this;
+    var _context3;
 
     // if event is acutally an array of events, step through all
     if (Array.isArray(event)) {
-      _util.each(event, this.step.bind(this));
+      for (var i = 0, l = event.length; i < l; i++) {
+        this.step(event[i]);
+      }
       return this;
     }
 
     // if event is an event bucket run through time bucket
     if (event.events) {
-      var _ret = (function () {
-        var n = event.events.length - 1;
-        _util.each(event.events, function (e, index) {
-          _this2.step(e, index !== n ? 'capture' : 'apply');
-        });
-        return {
-          v: _this2
-        };
-      })();
+      var events = event.events,
+          n = event.events.length - 1;
 
-      if (typeof _ret === 'object') return _ret.v;
+      for (var i = 0, l = events.length; i < l; i++) {
+        this.step(events[i], i !== n ? 'capture' : 'apply');
+      }
+      return this;
     }
 
     // capture or apply time updates for bucket
@@ -1489,65 +1498,59 @@ var EventRank = (function () {
     var Δts = undefined,
         Δtr = undefined;
     if (model === 'reply') {
-      (function () {
 
-        // Last time an email was sent by this sender
-        // default to infinite time if no recorded emails sent by sender
-        var lagSender = CM[sender];
-        Δts = time - (lagSender.sent || -Infinity);
+      // Last time an email was sent by this sender
+      // default to infinite time if no recorded emails sent by sender
+      var lagSender = CM[sender];
+      Δts = time - (lagSender.sent || -Infinity);
 
-        // record current time as most recent send event by sender
-        if (isBucket) {
-          timeUpdates[sender].sent = time;
-        } else {
-          lagSender.sent = time;
+      // record current time as most recent send event by sender
+      if (isBucket) {
+        timeUpdates[sender].sent = time;
+      } else {
+        lagSender.sent = time;
+      }
+
+      // Find the most recent time a message was recieved by the sender
+      // from any of P_i, start at infinity (if no messages
+      // recieved by sender from any of P_i)
+      var trMin = -Infinity,
+          trRecipient = undefined;
+
+      for (var i = 0, l = recipientArray.length; i < l; i++) {
+        var recipient = recipientArray[i],
+            tr = lagSender.recieved = lagSender.recieved || {};
+
+        if ((trRecipient = tr[recipient]) && trRecipient > trMin) {
+          trMin = trRecipient;
         }
 
-        // Find the most recent time a message was recieved by the sender
-        // from any of P_i, start at infinity (if no messages
-        // recieved by sender from any of P_i)
-        var trMin = -Infinity,
-            trRecipient = undefined;
+        // if processing bucket, don't apply time updates
+        // until all events in bucket have been processed
+        if (isBucket) {
+          timeUpdates[sender].recieved[recipient] = time;
+        } else {
+          tr[recipient] = time;
+        }
+      }
 
-        _util.each(recipientArray, function (recipient) {
-          var tr = lagSender.recieved = lagSender.recieved || {};
+      // time difference (recipient) is
+      // between now and minimum determined time above
+      Δtr = time - trMin;
 
-          if ((trRecipient = tr[recipient]) && trRecipient > trMin) {
-            trMin = trRecipient;
-          }
-
-          // if processing bucket, don't apply time updates
-          // until all events in bucket have been processed
-          if (isBucket) {
-            timeUpdates[sender].recieved[recipient] = time;
-          } else {
-            tr[recipient] = time;
-          }
-        });
-
-        // time difference (recipient) is
-        // between now and minimum determined time above
-        Δtr = time - trMin;
-
-        // assert that time differentials are not negative
-        // (can't send/recieve messages in the future!)
-        _util.assert(Δts >= 0, 'Δts must not be negative: Δts = ' + Δts, event);
-        _util.assert(Δtr >= 0, 'Δtr must not be negative: Δtr = ' + Δtr, event);
-      })();
+      // assert that time differentials are not negative
+      // (can't send/recieve messages in the future!)
+      _util.assert(Δts >= 0, 'Δts must not be negative: Δts = ' + Δts, event);
+      _util.assert(Δtr >= 0, 'Δtr must not be negative: Δtr = ' + Δtr, event);
     }
-
-    // time of last rank compuation of sender
-    var lastTimeSender = ranks[sender].time;
 
     // start sum with sender rank
     var ΣR = ranks[sender].value;
 
     // build up sum of all participant ranks
-    _util.each(recipientArray, function (recipient) {
-      ΣR += ranks[recipient].value;
-      // safety check to ensure that all of P_i is on same time period
-      _util.assert(ranks[recipient].time === lastTimeSender, 'Last event time should be equal for all participants', event);
-    });
+    for (var i = 0, l = recipientArray.length; i < l; i++) {
+      ΣR += ranks[recipientArray[i]].value;
+    }
 
     // Safety check to ensure that the sum should be within (0, 1)
     // not exact due to floating point issues...
@@ -1584,8 +1587,11 @@ var EventRank = (function () {
     // store last index of alpha
     var iαNew = Vα.length;
 
-    var updateParticipant = function updateParticipant(participant) {
-      var rank = ranks[participant];
+    recipientArray.push(sender);
+    for (var i = 0, l = recipientArray.length; i < l; i++) {
+      var participant = recipientArray[i],
+          rank = ranks[participant];
+
       var value = rank.value;
 
       // update participant rank for this period
@@ -1597,11 +1603,7 @@ var EventRank = (function () {
       // push new rank with given time
       rank.value = value;
       rank.time = time;
-    };
-
-    // update all participantsc
-    updateParticipant(sender);
-    _util.each(recipientArray, updateParticipant);
+    }
 
     // apply time updates for bucket of events
     if (apply && timeUpdates) {
@@ -1609,6 +1611,7 @@ var EventRank = (function () {
         var up = timeUpdates[id],
             cmS = CM[id];
 
+        cmS.recieved = cmS.recieved || {};
         cmS.sent = up.sent;
 
         for (var rid in up.recieved) {
@@ -1644,7 +1647,6 @@ exports.__esModule = true;
 exports.assert = assert;
 exports.ensureArray = ensureArray;
 exports.last = last;
-exports.each = each;
 exports.gakError = gakError;
 
 function assert(bool, message, event) {
@@ -1676,23 +1678,6 @@ function last(arr) {
 }
 
 /**
- * Faster forEach function
- *
- * @param  {Array<Any>} arr Array of items
- * @param  {Function} fn Function to call on each item
- * @return {undefined}
- */
-
-function each(arr, fn) {
-  if (!(arr instanceof Array)) {
-    gakError('Non array object passed to each! (' + arr + ')');
-  }
-  for (var i = 0, l = arr.length; i < l; i++) {
-    fn(arr[i], i);
-  }
-}
-
-/**
  * Throw a library specific error
  *
  * @param  {String} Error messagec
@@ -1713,7 +1698,6 @@ exports['default'] = {
   assert: assert,
   gakError: gakError,
   last: last,
-  each: each,
   ensureArray: ensureArray
 };
 
