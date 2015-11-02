@@ -568,6 +568,7 @@ export default class EventRank {
         const up = timeUpdates[id],
               cmS = CM[id];
 
+        cmS.recieved = cmS.recieved || {};
         cmS.sent = up.sent;
 
         for (const rid in up.recieved) {
