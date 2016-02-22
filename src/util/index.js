@@ -5,7 +5,9 @@
 /**
  * Throw error if bool is not satisfied
  *
- * @param  {Boolean} bool: Bool that must be true
+ * @param  {Boolean} [bool] Bool that must be true
+ * @param  {String} [message] additional message for error
+ * @param  {Event} [event] error event
  * @return {undefined}
  */
 export function assert(bool, message, event) {
@@ -18,8 +20,8 @@ export function assert(bool, message, event) {
 /**
  * Wrap an item in an array if it is not already one
  *
- * @param  {Any} Object to be wrapped
- * @return {Array<Any>} array of object
+ * @param  {any} [value]  Object to be wrapped
+ * @return {Array<any>} array of object
  */
 export function ensureArray(value) {
   return Array.isArray(value) ? value : [value];
@@ -29,8 +31,8 @@ export function ensureArray(value) {
 /**
  * Get the last element from an array
  *
- * @param  {Array<Any>} Array of items
- * @return {Any} Last element of given array
+ * @param  {Array<any>} [arr]  Array of items
+ * @return {any} Last element of given array
  */
 export function last(arr) {
   return arr[arr.length - 1];
@@ -40,8 +42,8 @@ export function last(arr) {
 /**
  * Throw a library specific error
  *
- * @param  {String} Error messagec
- * @param  {Object} (optional) Event object
+ * @param  {String} [message] Error messagec
+ * @param  {Object} [event] (optional) Event object
  * @return {undefined}
  */
 export function gakError(message, event) {

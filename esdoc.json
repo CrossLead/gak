@@ -6,6 +6,6 @@
     "source": "./test"
   },
   "plugins": [
-    {"name": "esdoc-es7-plugin"}
+    { "name": "esdoc-es7-plugin" }
   ]
 }

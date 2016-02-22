@@ -155,7 +155,11 @@ gulp.task('test', () => {
  * Generate Documentation
  */
 gulp.task('docs', cb => {
-  prun('./node_modules/.bin/esdoc -c ./esdoc.json').then(cb)
+  prun('./node_modules/.bin/esdoc -c ./esdoc.json && touch ./esdoc/.nojekyll')
+    .then(cb)
+    .catch(err => {
+      throw err;
+    })
 });
 
 
@@ -163,8 +167,7 @@ gulp.task('docs', cb => {
  * Deploy to github pages
  */
 gulp.task('deploy-docs', ['docs'], () => {
-  return gulp.src('./esdoc/**/*')
-      .pipe(ghPages())
+  return prun(`./node_modules/gh-pages/bin/gh-pages --dotfiles true -d ./esdoc/`);
 })
 
 

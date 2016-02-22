@@ -19,8 +19,8 @@ const modelTypes = new Set(['baseline', 'reply']);
  * Decay function for influence on potential of event sent by sender s ∈ P_i
  *  using time since event sent from s
  *
- * @param  {Number} Δts : Change in time since last last event sent by s
- * @param  {Number} G : Decay constant to weight sensitivity of new events
+ * @param  {Number} [Δts] Change in time since last last event sent by s
+ * @param  {Number} [G] Decay constant to weight sensitivity of new events
  * @return {Number}
  */
 function g(Δts, G) {
@@ -33,8 +33,8 @@ function g(Δts, G) {
  * Decay function for influence on potential of event sent by sender s ∈ P_i
  *  using time since last event recieved by r ∈ P_i from s
  *
- * @param  {Number} Δtr : time since last event recieved by r ∈ P_i from s
- * @param  {Number} H : Decay constant to weight sensitivity of new events
+ * @param  {Number} [Δtr] time since last event recieved by r ∈ P_i from s
+ * @param  {Number} [H] Decay constant to weight sensitivity of new events
  * @return {Number}
  */
 function h(Δtr, H) {
@@ -100,7 +100,7 @@ export default class EventRank {
    * Collapse times into buckets
    *
    * @static
-   * @param {Array<Object>} Array of events to bucket
+   * @param {Array<Object>} [events] Array of events to bucket
    * @return {Array<Object>} Array of objects with properties "events" and "time"
    */
    static bucket(events) {
@@ -135,7 +135,7 @@ export default class EventRank {
    * @property {Number} G sender recharge parameter (reply model)
    * @property {Number} H reply halflife parameter (reply model)
    * @property {Number} f potential flow fraction
-   * @param  {Object} opts weight parameters, correspondent set,
+   * @param  {Object} [opts] weight parameters, correspondent set,
    *                         events (expected to be sorted by time)
    * @return {EventRank}
    */
@@ -189,7 +189,7 @@ export default class EventRank {
   /**
    * Create the inclusion set for ranking
    *
-   * @param {Set | Array} include (optional)
+   * @param {Set | Array} [include] (optional)
    * @return {EventRank} this : return self for chaining
    */
   setInclude(include) {
@@ -226,7 +226,7 @@ export default class EventRank {
   /**
    * Json string of serialized EventRank
    *
-   * @param {Boolean} pretty print formatted Json
+   * @param {Boolean} [pretty] print formatted Json
    * @return {String} JSON representation of EventRank
    */
   toJson(pretty) {
@@ -287,7 +287,7 @@ export default class EventRank {
   /**
    * Get ranks of top n individuals
    *
-   * @param {Number} number of ranks to report (from top)
+   * @param {Number} [n] number of ranks to report (from top)
    * @return {Array<Object>} top n ranks
    */
   top(n) {
@@ -304,7 +304,7 @@ export default class EventRank {
   /**
    * Get ranks of given ids at current period
    *
-   * @param {Array<String> | String} combination of str and array<str> of ids
+   * @param {Array<String> | String} [ids] combination of str and array<str> of ids
    * @return {Array<Object>} ranks of (ids) at current period
    */
   get(...ids) {
@@ -326,7 +326,7 @@ export default class EventRank {
    * R.step({from: 'a', to: 'b', time: 1});
    * R.catchUp('c') // catch c ranks to period 1
    *
-   * @param  {String | Array<String>} id(s) of participant to "catch up"
+   * @param  {String | Array<String>} [participant] id(s) of participant to "catch up"
    * @return {EventRank} this : return self for chaining
    */
   catchUp(participant) {
@@ -371,8 +371,8 @@ export default class EventRank {
   /**
    * Calculate new ranks given an additional event
    *
-   * @param  {Object | Array<Object>} event to add
-   * @param  {String} (optional) bucketMode option (capture | apply)
+   * @param  {Object | Array<Object>} [event] to add
+   * @param  {String} [bucket] (optional) bucketMode option (capture | apply)
    * @return {EventRank} return self for chaining
    */
   step(event, bucket) {
