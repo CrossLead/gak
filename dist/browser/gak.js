@@ -1389,7 +1389,7 @@ exports.default = {
 },{"babel-runtime/core-js/json/stringify":2}],77:[function(require,module,exports){
 module.exports={
   "name": "gak",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "Graph Analysis Kit for NodeJS",
   "main": "./dist/node/index.js",
   "scripts": {
