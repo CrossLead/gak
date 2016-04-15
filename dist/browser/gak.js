@@ -1,39 +1,46 @@
 (function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.gak = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 module.exports = { "default": require("core-js/library/fn/array/from"), __esModule: true };
-},{"core-js/library/fn/array/from":11}],2:[function(require,module,exports){
+},{"core-js/library/fn/array/from":10}],2:[function(require,module,exports){
+module.exports = { "default": require("core-js/library/fn/json/stringify"), __esModule: true };
+},{"core-js/library/fn/json/stringify":11}],3:[function(require,module,exports){
 module.exports = { "default": require("core-js/library/fn/math/tanh"), __esModule: true };
-},{"core-js/library/fn/math/tanh":12}],3:[function(require,module,exports){
+},{"core-js/library/fn/math/tanh":12}],4:[function(require,module,exports){
 module.exports = { "default": require("core-js/library/fn/object/assign"), __esModule: true };
-},{"core-js/library/fn/object/assign":13}],4:[function(require,module,exports){
+},{"core-js/library/fn/object/assign":13}],5:[function(require,module,exports){
 module.exports = { "default": require("core-js/library/fn/object/define-property"), __esModule: true };
-},{"core-js/library/fn/object/define-property":14}],5:[function(require,module,exports){
+},{"core-js/library/fn/object/define-property":14}],6:[function(require,module,exports){
 module.exports = { "default": require("core-js/library/fn/object/keys"), __esModule: true };
-},{"core-js/library/fn/object/keys":15}],6:[function(require,module,exports){
+},{"core-js/library/fn/object/keys":15}],7:[function(require,module,exports){
 module.exports = { "default": require("core-js/library/fn/set"), __esModule: true };
-},{"core-js/library/fn/set":16}],7:[function(require,module,exports){
+},{"core-js/library/fn/set":16}],8:[function(require,module,exports){
 "use strict";
 
-exports["default"] = function (instance, Constructor) {
+exports.__esModule = true;
+
+exports.default = function (instance, Constructor) {
   if (!(instance instanceof Constructor)) {
     throw new TypeError("Cannot call a class as a function");
   }
 };
-
-exports.__esModule = true;
-},{}],8:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 "use strict";
 
-var _Object$defineProperty = require("babel-runtime/core-js/object/define-property")["default"];
+exports.__esModule = true;
 
-exports["default"] = (function () {
+var _defineProperty = require("../core-js/object/define-property");
+
+var _defineProperty2 = _interopRequireDefault(_defineProperty);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+exports.default = function () {
   function defineProperties(target, props) {
     for (var i = 0; i < props.length; i++) {
       var descriptor = props[i];
       descriptor.enumerable = descriptor.enumerable || false;
       descriptor.configurable = true;
       if ("value" in descriptor) descriptor.writable = true;
-
-      _Object$defineProperty(target, descriptor.key, descriptor);
+      (0, _defineProperty2.default)(target, descriptor.key, descriptor);
     }
   }
 
@@ -42,107 +49,51 @@ exports["default"] = (function () {
     if (staticProps) defineProperties(Constructor, staticProps);
     return Constructor;
   };
-})();
-
-exports.__esModule = true;
-},{"babel-runtime/core-js/object/define-property":4}],9:[function(require,module,exports){
-"use strict";
-
-var _Object$assign = require("babel-runtime/core-js/object/assign")["default"];
-
-exports["default"] = _Object$assign || function (target) {
-  for (var i = 1; i < arguments.length; i++) {
-    var source = arguments[i];
-
-    for (var key in source) {
-      if (Object.prototype.hasOwnProperty.call(source, key)) {
-        target[key] = source[key];
-      }
-    }
-  }
-
-  return target;
-};
-
-exports.__esModule = true;
-},{"babel-runtime/core-js/object/assign":3}],10:[function(require,module,exports){
-"use strict";
-
-exports["default"] = function (obj) {
-  return obj && obj.__esModule ? obj : {
-    "default": obj
-  };
-};
-
-exports.__esModule = true;
-},{}],11:[function(require,module,exports){
+}();
+},{"../core-js/object/define-property":5}],10:[function(require,module,exports){
 require('../../modules/es6.string.iterator');
 require('../../modules/es6.array.from');
 module.exports = require('../../modules/$.core').Array.from;
-},{"../../modules/$.core":25,"../../modules/es6.array.from":65,"../../modules/es6.string.iterator":72}],12:[function(require,module,exports){
+},{"../../modules/$.core":25,"../../modules/es6.array.from":64,"../../modules/es6.string.iterator":71}],11:[function(require,module,exports){
+var core = require('../../modules/$.core');
+module.exports = function stringify(it){ // eslint-disable-line no-unused-vars
+  return (core.JSON && core.JSON.stringify || JSON.stringify).apply(JSON, arguments);
+};
+},{"../../modules/$.core":25}],12:[function(require,module,exports){
 require('../../modules/es6.math.tanh');
 module.exports = require('../../modules/$.core').Math.tanh;
-},{"../../modules/$.core":25,"../../modules/es6.math.tanh":67}],13:[function(require,module,exports){
+},{"../../modules/$.core":25,"../../modules/es6.math.tanh":66}],13:[function(require,module,exports){
 require('../../modules/es6.object.assign');
 module.exports = require('../../modules/$.core').Object.assign;
-},{"../../modules/$.core":25,"../../modules/es6.object.assign":68}],14:[function(require,module,exports){
+},{"../../modules/$.core":25,"../../modules/es6.object.assign":67}],14:[function(require,module,exports){
 var $ = require('../../modules/$');
 module.exports = function defineProperty(it, key, desc){
   return $.setDesc(it, key, desc);
 };
-},{"../../modules/$":45}],15:[function(require,module,exports){
+},{"../../modules/$":44}],15:[function(require,module,exports){
 require('../../modules/es6.object.keys');
 module.exports = require('../../modules/$.core').Object.keys;
-},{"../../modules/$.core":25,"../../modules/es6.object.keys":69}],16:[function(require,module,exports){
+},{"../../modules/$.core":25,"../../modules/es6.object.keys":68}],16:[function(require,module,exports){
 require('../modules/es6.object.to-string');
 require('../modules/es6.string.iterator');
 require('../modules/web.dom.iterable');
 require('../modules/es6.set');
 require('../modules/es7.set.to-json');
 module.exports = require('../modules/$.core').Set;
-},{"../modules/$.core":25,"../modules/es6.object.to-string":70,"../modules/es6.set":71,"../modules/es6.string.iterator":72,"../modules/es7.set.to-json":73,"../modules/web.dom.iterable":74}],17:[function(require,module,exports){
+},{"../modules/$.core":25,"../modules/es6.object.to-string":69,"../modules/es6.set":70,"../modules/es6.string.iterator":71,"../modules/es7.set.to-json":72,"../modules/web.dom.iterable":73}],17:[function(require,module,exports){
 module.exports = function(it){
   if(typeof it != 'function')throw TypeError(it + ' is not a function!');
   return it;
 };
 },{}],18:[function(require,module,exports){
+module.exports = function(){ /* empty */ };
+},{}],19:[function(require,module,exports){
 var isObject = require('./$.is-object');
 module.exports = function(it){
   if(!isObject(it))throw TypeError(it + ' is not an object!');
   return it;
 };
-},{"./$.is-object":38}],19:[function(require,module,exports){
-// 19.1.2.1 Object.assign(target, source, ...)
-var toObject = require('./$.to-object')
-  , IObject  = require('./$.iobject')
-  , enumKeys = require('./$.enum-keys')
-  , has      = require('./$.has');
-
-// should work with symbols and should have deterministic property order (V8 bug)
-module.exports = require('./$.fails')(function(){
-  var a = Object.assign
-    , A = {}
-    , B = {}
-    , S = Symbol()
-    , K = 'abcdefghijklmnopqrst';
-  A[S] = 7;
-  K.split('').forEach(function(k){ B[k] = k; });
-  return a({}, A)[S] != 7 || Object.keys(a({}, B)).join('') != K;
-}) ? function assign(target, source){   // eslint-disable-line no-unused-vars
-  var T = toObject(target)
-    , l = arguments.length
-    , i = 1;
-  while(l > i){
-    var S      = IObject(arguments[i++])
-      , keys   = enumKeys(S)
-      , length = keys.length
-      , j      = 0
-      , key;
-    while(length > j)if(has(S, key = keys[j++]))T[key] = S[key];
-  }
-  return T;
-} : Object.assign;
-},{"./$.enum-keys":29,"./$.fails":31,"./$.has":34,"./$.iobject":36,"./$.to-object":60}],20:[function(require,module,exports){
+},{"./$.is-object":37}],20:[function(require,module,exports){
 // getting tag from 19.1.3.6 Object.prototype.toString()
 var cof = require('./$.cof')
   , TAG = require('./$.wks')('toStringTag')
@@ -159,7 +110,7 @@ module.exports = function(it){
     // ES3 arguments fallback
     : (B = cof(O)) == 'Object' && typeof O.callee == 'function' ? 'Arguments' : B;
 };
-},{"./$.cof":21,"./$.wks":63}],21:[function(require,module,exports){
+},{"./$.cof":21,"./$.wks":62}],21:[function(require,module,exports){
 var toString = {}.toString;
 
 module.exports = function(it){
@@ -169,18 +120,20 @@ module.exports = function(it){
 'use strict';
 var $            = require('./$')
   , hide         = require('./$.hide')
+  , redefineAll  = require('./$.redefine-all')
   , ctx          = require('./$.ctx')
-  , species      = require('./$.species')
   , strictNew    = require('./$.strict-new')
   , defined      = require('./$.defined')
   , forOf        = require('./$.for-of')
+  , $iterDefine  = require('./$.iter-define')
   , step         = require('./$.iter-step')
   , ID           = require('./$.uid')('id')
   , $has         = require('./$.has')
   , isObject     = require('./$.is-object')
+  , setSpecies   = require('./$.set-species')
+  , DESCRIPTORS  = require('./$.descriptors')
   , isExtensible = Object.isExtensible || isObject
-  , SUPPORT_DESC = require('./$.support-desc')
-  , SIZE         = SUPPORT_DESC ? '_s' : 'size'
+  , SIZE         = DESCRIPTORS ? '_s' : 'size'
   , id           = 0;
 
 var fastKey = function(it, create){
@@ -217,7 +170,7 @@ module.exports = {
       that[SIZE] = 0;           // size
       if(iterable != undefined)forOf(iterable, IS_MAP, that[ADDER], that);
     });
-    require('./$.mix')(C.prototype, {
+    redefineAll(C.prototype, {
       // 23.1.3.1 Map.prototype.clear()
       // 23.2.3.2 Set.prototype.clear()
       clear: function clear(){
@@ -249,7 +202,7 @@ module.exports = {
       // 23.2.3.6 Set.prototype.forEach(callbackfn, thisArg = undefined)
       // 23.1.3.5 Map.prototype.forEach(callbackfn, thisArg = undefined)
       forEach: function forEach(callbackfn /*, that = undefined */){
-        var f = ctx(callbackfn, arguments[1], 3)
+        var f = ctx(callbackfn, arguments.length > 1 ? arguments[1] : undefined, 3)
           , entry;
         while(entry = entry ? entry.n : this._f){
           f(entry.v, entry.k, this);
@@ -263,7 +216,7 @@ module.exports = {
         return !!getEntry(this, key);
       }
     });
-    if(SUPPORT_DESC)$.setDesc(C.prototype, 'size', {
+    if(DESCRIPTORS)$.setDesc(C.prototype, 'size', {
       get: function(){
         return defined(this[SIZE]);
       }
@@ -297,7 +250,7 @@ module.exports = {
   setStrong: function(C, NAME, IS_MAP){
     // add .keys, .values, .entries, [@@iterator]
     // 23.1.3.4, 23.1.3.8, 23.1.3.11, 23.1.3.12, 23.2.3.5, 23.2.3.8, 23.2.3.10, 23.2.3.11
-    require('./$.iter-define')(C, NAME, function(iterated, kind){
+    $iterDefine(C, NAME, function(iterated, kind){
       this._t = iterated;  // target
       this._k = kind;      // kind
       this._l = undefined; // previous
@@ -320,11 +273,10 @@ module.exports = {
     }, IS_MAP ? 'entries' : 'values' , !IS_MAP, true);
 
     // add [@@species], 23.1.2.2, 23.2.2.2
-    species(C);
-    species(require('./$.core')[NAME]); // for wrapper
+    setSpecies(NAME);
   }
 };
-},{"./$":45,"./$.core":25,"./$.ctx":26,"./$.defined":28,"./$.for-of":32,"./$.has":34,"./$.hide":35,"./$.is-object":38,"./$.iter-define":41,"./$.iter-step":43,"./$.mix":47,"./$.species":52,"./$.strict-new":53,"./$.support-desc":55,"./$.uid":61}],23:[function(require,module,exports){
+},{"./$":44,"./$.ctx":26,"./$.defined":27,"./$.descriptors":28,"./$.for-of":31,"./$.has":33,"./$.hide":34,"./$.is-object":37,"./$.iter-define":40,"./$.iter-step":42,"./$.redefine-all":50,"./$.set-species":52,"./$.strict-new":55,"./$.uid":61}],23:[function(require,module,exports){
 // https://github.com/DavidBruant/Map-Set.prototype.toJSON
 var forOf   = require('./$.for-of')
   , classof = require('./$.classof');
@@ -336,26 +288,32 @@ module.exports = function(NAME){
     return arr;
   };
 };
-},{"./$.classof":20,"./$.for-of":32}],24:[function(require,module,exports){
+},{"./$.classof":20,"./$.for-of":31}],24:[function(require,module,exports){
 'use strict';
-var $          = require('./$')
-  , $def       = require('./$.def')
-  , hide       = require('./$.hide')
-  , forOf      = require('./$.for-of')
-  , strictNew  = require('./$.strict-new');
+var $              = require('./$')
+  , global         = require('./$.global')
+  , $export        = require('./$.export')
+  , fails          = require('./$.fails')
+  , hide           = require('./$.hide')
+  , redefineAll    = require('./$.redefine-all')
+  , forOf          = require('./$.for-of')
+  , strictNew      = require('./$.strict-new')
+  , isObject       = require('./$.is-object')
+  , setToStringTag = require('./$.set-to-string-tag')
+  , DESCRIPTORS    = require('./$.descriptors');
 
 module.exports = function(NAME, wrapper, methods, common, IS_MAP, IS_WEAK){
-  var Base  = require('./$.global')[NAME]
+  var Base  = global[NAME]
     , C     = Base
     , ADDER = IS_MAP ? 'set' : 'add'
     , proto = C && C.prototype
     , O     = {};
-  if(!require('./$.support-desc') || typeof C != 'function'
-    || !(IS_WEAK || proto.forEach && !require('./$.fails')(function(){ new C().entries().next(); }))
-  ){
+  if(!DESCRIPTORS || typeof C != 'function' || !(IS_WEAK || proto.forEach && !fails(function(){
+    new C().entries().next();
+  }))){
     // create collection constructor
     C = common.getConstructor(wrapper, NAME, IS_MAP, ADDER);
-    require('./$.mix')(C.prototype, methods);
+    redefineAll(C.prototype, methods);
   } else {
     C = wrapper(function(target, iterable){
       strictNew(target, C, NAME);
@@ -363,10 +321,11 @@ module.exports = function(NAME, wrapper, methods, common, IS_MAP, IS_WEAK){
       if(iterable != undefined)forOf(iterable, IS_MAP, target[ADDER], target);
     });
     $.each.call('add,clear,delete,forEach,get,has,set,keys,values,entries'.split(','),function(KEY){
-      var chain = KEY == 'add' || KEY == 'set';
+      var IS_ADDER = KEY == 'add' || KEY == 'set';
       if(KEY in proto && !(IS_WEAK && KEY == 'clear'))hide(C.prototype, KEY, function(a, b){
+        if(!IS_ADDER && IS_WEAK && !isObject(a))return KEY == 'get' ? undefined : false;
         var result = this._c[KEY](a === 0 ? 0 : a, b);
-        return chain ? this : result;
+        return IS_ADDER ? this : result;
       });
     });
     if('size' in proto)$.setDesc(C.prototype, 'size', {
@@ -376,17 +335,17 @@ module.exports = function(NAME, wrapper, methods, common, IS_MAP, IS_WEAK){
     });
   }
 
-  require('./$.tag')(C, NAME);
+  setToStringTag(C, NAME);
 
   O[NAME] = C;
-  $def($def.G + $def.W + $def.F, O);
+  $export($export.G + $export.W + $export.F, O);
 
   if(!IS_WEAK)common.setStrong(C, NAME, IS_MAP);
 
   return C;
 };
-},{"./$":45,"./$.def":27,"./$.fails":31,"./$.for-of":32,"./$.global":33,"./$.hide":35,"./$.mix":47,"./$.strict-new":53,"./$.support-desc":55,"./$.tag":56}],25:[function(require,module,exports){
-var core = module.exports = {version: '1.2.1'};
+},{"./$":44,"./$.descriptors":28,"./$.export":29,"./$.fails":30,"./$.for-of":31,"./$.global":32,"./$.hide":34,"./$.is-object":37,"./$.redefine-all":50,"./$.set-to-string-tag":53,"./$.strict-new":55}],25:[function(require,module,exports){
+var core = module.exports = {version: '1.2.6'};
 if(typeof __e == 'number')__e = core; // eslint-disable-line no-undef
 },{}],26:[function(require,module,exports){
 // optional / simple context binding
@@ -410,80 +369,64 @@ module.exports = function(fn, that, length){
   };
 };
 },{"./$.a-function":17}],27:[function(require,module,exports){
-var global    = require('./$.global')
-  , core      = require('./$.core')
-  , PROTOTYPE = 'prototype';
-var ctx = function(fn, that){
-  return function(){
-    return fn.apply(that, arguments);
-  };
-};
-var $def = function(type, name, source){
-  var key, own, out, exp
-    , isGlobal = type & $def.G
-    , isProto  = type & $def.P
-    , target   = isGlobal ? global : type & $def.S
-        ? global[name] : (global[name] || {})[PROTOTYPE]
-    , exports  = isGlobal ? core : core[name] || (core[name] = {});
-  if(isGlobal)source = name;
-  for(key in source){
-    // contains in native
-    own = !(type & $def.F) && target && key in target;
-    if(own && key in exports)continue;
-    // export native or passed
-    out = own ? target[key] : source[key];
-    // prevent global pollution for namespaces
-    if(isGlobal && typeof target[key] != 'function')exp = source[key];
-    // bind timers to global for call from export context
-    else if(type & $def.B && own)exp = ctx(out, global);
-    // wrap global constructors for prevent change them in library
-    else if(type & $def.W && target[key] == out)!function(C){
-      exp = function(param){
-        return this instanceof C ? new C(param) : C(param);
-      };
-      exp[PROTOTYPE] = C[PROTOTYPE];
-    }(out);
-    else exp = isProto && typeof out == 'function' ? ctx(Function.call, out) : out;
-    // export
-    exports[key] = exp;
-    if(isProto)(exports[PROTOTYPE] || (exports[PROTOTYPE] = {}))[key] = out;
-  }
-};
-// type bitmap
-$def.F = 1;  // forced
-$def.G = 2;  // global
-$def.S = 4;  // static
-$def.P = 8;  // proto
-$def.B = 16; // bind
-$def.W = 32; // wrap
-module.exports = $def;
-},{"./$.core":25,"./$.global":33}],28:[function(require,module,exports){
 // 7.2.1 RequireObjectCoercible(argument)
 module.exports = function(it){
   if(it == undefined)throw TypeError("Can't call method on  " + it);
   return it;
 };
-},{}],29:[function(require,module,exports){
-// all enumerable object keys, includes symbols
-var $ = require('./$');
-module.exports = function(it){
-  var keys       = $.getKeys(it)
-    , getSymbols = $.getSymbols;
-  if(getSymbols){
-    var symbols = getSymbols(it)
-      , isEnum  = $.isEnum
-      , i       = 0
-      , key;
-    while(symbols.length > i)if(isEnum.call(it, key = symbols[i++]))keys.push(key);
+},{}],28:[function(require,module,exports){
+// Thank's IE8 for his funny defineProperty
+module.exports = !require('./$.fails')(function(){
+  return Object.defineProperty({}, 'a', {get: function(){ return 7; }}).a != 7;
+});
+},{"./$.fails":30}],29:[function(require,module,exports){
+var global    = require('./$.global')
+  , core      = require('./$.core')
+  , ctx       = require('./$.ctx')
+  , PROTOTYPE = 'prototype';
+
+var $export = function(type, name, source){
+  var IS_FORCED = type & $export.F
+    , IS_GLOBAL = type & $export.G
+    , IS_STATIC = type & $export.S
+    , IS_PROTO  = type & $export.P
+    , IS_BIND   = type & $export.B
+    , IS_WRAP   = type & $export.W
+    , exports   = IS_GLOBAL ? core : core[name] || (core[name] = {})
+    , target    = IS_GLOBAL ? global : IS_STATIC ? global[name] : (global[name] || {})[PROTOTYPE]
+    , key, own, out;
+  if(IS_GLOBAL)source = name;
+  for(key in source){
+    // contains in native
+    own = !IS_FORCED && target && key in target;
+    if(own && key in exports)continue;
+    // export native or passed
+    out = own ? target[key] : source[key];
+    // prevent global pollution for namespaces
+    exports[key] = IS_GLOBAL && typeof target[key] != 'function' ? source[key]
+    // bind timers to global for call from export context
+    : IS_BIND && own ? ctx(out, global)
+    // wrap global constructors for prevent change them in library
+    : IS_WRAP && target[key] == out ? (function(C){
+      var F = function(param){
+        return this instanceof C ? new C(param) : C(param);
+      };
+      F[PROTOTYPE] = C[PROTOTYPE];
+      return F;
+    // make static versions for prototype methods
+    })(out) : IS_PROTO && typeof out == 'function' ? ctx(Function.call, out) : out;
+    if(IS_PROTO)(exports[PROTOTYPE] || (exports[PROTOTYPE] = {}))[key] = out;
   }
-  return keys;
 };
-},{"./$":45}],30:[function(require,module,exports){
-// 20.2.2.14 Math.expm1(x)
-module.exports = Math.expm1 || function expm1(x){
-  return (x = +x) == 0 ? x : x > -1e-6 && x < 1e-6 ? x + x * x / 2 : Math.exp(x) - 1;
-};
-},{}],31:[function(require,module,exports){
+// type bitmap
+$export.F = 1;  // forced
+$export.G = 2;  // global
+$export.S = 4;  // static
+$export.P = 8;  // proto
+$export.B = 16; // bind
+$export.W = 32; // wrap
+module.exports = $export;
+},{"./$.core":25,"./$.ctx":26,"./$.global":32}],30:[function(require,module,exports){
 module.exports = function(exec){
   try {
     return !!exec();
@@ -491,7 +434,7 @@ module.exports = function(exec){
     return true;
   }
 };
-},{}],32:[function(require,module,exports){
+},{}],31:[function(require,module,exports){
 var ctx         = require('./$.ctx')
   , call        = require('./$.iter-call')
   , isArrayIter = require('./$.is-array-iter')
@@ -511,44 +454,45 @@ module.exports = function(iterable, entries, fn, that){
     call(iterator, f, step.value, entries);
   }
 };
-},{"./$.an-object":18,"./$.ctx":26,"./$.is-array-iter":37,"./$.iter-call":39,"./$.to-length":59,"./core.get-iterator-method":64}],33:[function(require,module,exports){
+},{"./$.an-object":19,"./$.ctx":26,"./$.is-array-iter":36,"./$.iter-call":38,"./$.to-length":59,"./core.get-iterator-method":63}],32:[function(require,module,exports){
 // https://github.com/zloirock/core-js/issues/86#issuecomment-115759028
-var UNDEFINED = 'undefined';
-var global = module.exports = typeof window != UNDEFINED && window.Math == Math
-  ? window : typeof self != UNDEFINED && self.Math == Math ? self : Function('return this')();
+var global = module.exports = typeof window != 'undefined' && window.Math == Math
+  ? window : typeof self != 'undefined' && self.Math == Math ? self : Function('return this')();
 if(typeof __g == 'number')__g = global; // eslint-disable-line no-undef
-},{}],34:[function(require,module,exports){
+},{}],33:[function(require,module,exports){
 var hasOwnProperty = {}.hasOwnProperty;
 module.exports = function(it, key){
   return hasOwnProperty.call(it, key);
 };
-},{}],35:[function(require,module,exports){
+},{}],34:[function(require,module,exports){
 var $          = require('./$')
   , createDesc = require('./$.property-desc');
-module.exports = require('./$.support-desc') ? function(object, key, value){
+module.exports = require('./$.descriptors') ? function(object, key, value){
   return $.setDesc(object, key, createDesc(1, value));
 } : function(object, key, value){
   object[key] = value;
   return object;
 };
-},{"./$":45,"./$.property-desc":49,"./$.support-desc":55}],36:[function(require,module,exports){
-// indexed object, fallback for non-array-like ES3 strings
+},{"./$":44,"./$.descriptors":28,"./$.property-desc":49}],35:[function(require,module,exports){
+// fallback for non-array-like ES3 and non-enumerable old V8 strings
 var cof = require('./$.cof');
-module.exports = 0 in Object('z') ? Object : function(it){
+module.exports = Object('z').propertyIsEnumerable(0) ? Object : function(it){
   return cof(it) == 'String' ? it.split('') : Object(it);
 };
-},{"./$.cof":21}],37:[function(require,module,exports){
+},{"./$.cof":21}],36:[function(require,module,exports){
 // check on default Array iterator
-var Iterators = require('./$.iterators')
-  , ITERATOR  = require('./$.wks')('iterator');
+var Iterators  = require('./$.iterators')
+  , ITERATOR   = require('./$.wks')('iterator')
+  , ArrayProto = Array.prototype;
+
 module.exports = function(it){
-  return (Iterators.Array || Array.prototype[ITERATOR]) === it;
+  return it !== undefined && (Iterators.Array === it || ArrayProto[ITERATOR] === it);
 };
-},{"./$.iterators":44,"./$.wks":63}],38:[function(require,module,exports){
+},{"./$.iterators":43,"./$.wks":62}],37:[function(require,module,exports){
 module.exports = function(it){
   return typeof it === 'object' ? it !== null : typeof it === 'function';
 };
-},{}],39:[function(require,module,exports){
+},{}],38:[function(require,module,exports){
 // call something on iterator step with safe closing on error
 var anObject = require('./$.an-object');
 module.exports = function(iterator, fn, value, entries){
@@ -561,96 +505,116 @@ module.exports = function(iterator, fn, value, entries){
     throw e;
   }
 };
-},{"./$.an-object":18}],40:[function(require,module,exports){
+},{"./$.an-object":19}],39:[function(require,module,exports){
 'use strict';
-var $ = require('./$')
+var $              = require('./$')
+  , descriptor     = require('./$.property-desc')
+  , setToStringTag = require('./$.set-to-string-tag')
   , IteratorPrototype = {};
 
 // 25.1.2.1.1 %IteratorPrototype%[@@iterator]()
 require('./$.hide')(IteratorPrototype, require('./$.wks')('iterator'), function(){ return this; });
 
 module.exports = function(Constructor, NAME, next){
-  Constructor.prototype = $.create(IteratorPrototype, {next: require('./$.property-desc')(1,next)});
-  require('./$.tag')(Constructor, NAME + ' Iterator');
+  Constructor.prototype = $.create(IteratorPrototype, {next: descriptor(1, next)});
+  setToStringTag(Constructor, NAME + ' Iterator');
 };
-},{"./$":45,"./$.hide":35,"./$.property-desc":49,"./$.tag":56,"./$.wks":63}],41:[function(require,module,exports){
+},{"./$":44,"./$.hide":34,"./$.property-desc":49,"./$.set-to-string-tag":53,"./$.wks":62}],40:[function(require,module,exports){
 'use strict';
-var LIBRARY         = require('./$.library')
-  , $def            = require('./$.def')
-  , $redef          = require('./$.redef')
-  , hide            = require('./$.hide')
-  , has             = require('./$.has')
-  , SYMBOL_ITERATOR = require('./$.wks')('iterator')
-  , Iterators       = require('./$.iterators')
-  , BUGGY           = !([].keys && 'next' in [].keys()) // Safari has buggy iterators w/o `next`
-  , FF_ITERATOR     = '@@iterator'
-  , KEYS            = 'keys'
-  , VALUES          = 'values';
+var LIBRARY        = require('./$.library')
+  , $export        = require('./$.export')
+  , redefine       = require('./$.redefine')
+  , hide           = require('./$.hide')
+  , has            = require('./$.has')
+  , Iterators      = require('./$.iterators')
+  , $iterCreate    = require('./$.iter-create')
+  , setToStringTag = require('./$.set-to-string-tag')
+  , getProto       = require('./$').getProto
+  , ITERATOR       = require('./$.wks')('iterator')
+  , BUGGY          = !([].keys && 'next' in [].keys()) // Safari has buggy iterators w/o `next`
+  , FF_ITERATOR    = '@@iterator'
+  , KEYS           = 'keys'
+  , VALUES         = 'values';
+
 var returnThis = function(){ return this; };
-module.exports = function(Base, NAME, Constructor, next, DEFAULT, IS_SET, FORCE){
-  require('./$.iter-create')(Constructor, NAME, next);
-  var createMethod = function(kind){
+
+module.exports = function(Base, NAME, Constructor, next, DEFAULT, IS_SET, FORCED){
+  $iterCreate(Constructor, NAME, next);
+  var getMethod = function(kind){
+    if(!BUGGY && kind in proto)return proto[kind];
     switch(kind){
       case KEYS: return function keys(){ return new Constructor(this, kind); };
       case VALUES: return function values(){ return new Constructor(this, kind); };
     } return function entries(){ return new Constructor(this, kind); };
   };
-  var TAG      = NAME + ' Iterator'
-    , proto    = Base.prototype
-    , _native  = proto[SYMBOL_ITERATOR] || proto[FF_ITERATOR] || DEFAULT && proto[DEFAULT]
-    , _default = _native || createMethod(DEFAULT)
+  var TAG        = NAME + ' Iterator'
+    , DEF_VALUES = DEFAULT == VALUES
+    , VALUES_BUG = false
+    , proto      = Base.prototype
+    , $native    = proto[ITERATOR] || proto[FF_ITERATOR] || DEFAULT && proto[DEFAULT]
+    , $default   = $native || getMethod(DEFAULT)
     , methods, key;
   // Fix native
-  if(_native){
-    var IteratorPrototype = require('./$').getProto(_default.call(new Base));
+  if($native){
+    var IteratorPrototype = getProto($default.call(new Base));
     // Set @@toStringTag to native iterators
-    require('./$.tag')(IteratorPrototype, TAG, true);
+    setToStringTag(IteratorPrototype, TAG, true);
     // FF fix
-    if(!LIBRARY && has(proto, FF_ITERATOR))hide(IteratorPrototype, SYMBOL_ITERATOR, returnThis);
+    if(!LIBRARY && has(proto, FF_ITERATOR))hide(IteratorPrototype, ITERATOR, returnThis);
+    // fix Array#{values, @@iterator}.name in V8 / FF
+    if(DEF_VALUES && $native.name !== VALUES){
+      VALUES_BUG = true;
+      $default = function values(){ return $native.call(this); };
+    }
   }
   // Define iterator
-  if(!LIBRARY || FORCE)hide(proto, SYMBOL_ITERATOR, _default);
+  if((!LIBRARY || FORCED) && (BUGGY || VALUES_BUG || !proto[ITERATOR])){
+    hide(proto, ITERATOR, $default);
+  }
   // Plug for library
-  Iterators[NAME] = _default;
+  Iterators[NAME] = $default;
   Iterators[TAG]  = returnThis;
   if(DEFAULT){
     methods = {
-      keys:    IS_SET            ? _default : createMethod(KEYS),
-      values:  DEFAULT == VALUES ? _default : createMethod(VALUES),
-      entries: DEFAULT != VALUES ? _default : createMethod('entries')
+      values:  DEF_VALUES  ? $default : getMethod(VALUES),
+      keys:    IS_SET      ? $default : getMethod(KEYS),
+      entries: !DEF_VALUES ? $default : getMethod('entries')
     };
-    if(FORCE)for(key in methods){
-      if(!(key in proto))$redef(proto, key, methods[key]);
-    } else $def($def.P + $def.F * BUGGY, NAME, methods);
+    if(FORCED)for(key in methods){
+      if(!(key in proto))redefine(proto, key, methods[key]);
+    } else $export($export.P + $export.F * (BUGGY || VALUES_BUG), NAME, methods);
   }
+  return methods;
 };
-},{"./$":45,"./$.def":27,"./$.has":34,"./$.hide":35,"./$.iter-create":40,"./$.iterators":44,"./$.library":46,"./$.redef":50,"./$.tag":56,"./$.wks":63}],42:[function(require,module,exports){
-var SYMBOL_ITERATOR = require('./$.wks')('iterator')
-  , SAFE_CLOSING    = false;
+},{"./$":44,"./$.export":29,"./$.has":33,"./$.hide":34,"./$.iter-create":39,"./$.iterators":43,"./$.library":45,"./$.redefine":51,"./$.set-to-string-tag":53,"./$.wks":62}],41:[function(require,module,exports){
+var ITERATOR     = require('./$.wks')('iterator')
+  , SAFE_CLOSING = false;
+
 try {
-  var riter = [7][SYMBOL_ITERATOR]();
+  var riter = [7][ITERATOR]();
   riter['return'] = function(){ SAFE_CLOSING = true; };
   Array.from(riter, function(){ throw 2; });
 } catch(e){ /* empty */ }
-module.exports = function(exec){
-  if(!SAFE_CLOSING)return false;
+
+module.exports = function(exec, skipClosing){
+  if(!skipClosing && !SAFE_CLOSING)return false;
   var safe = false;
   try {
     var arr  = [7]
-      , iter = arr[SYMBOL_ITERATOR]();
+      , iter = arr[ITERATOR]();
     iter.next = function(){ safe = true; };
-    arr[SYMBOL_ITERATOR] = function(){ return iter; };
+    arr[ITERATOR] = function(){ return iter; };
     exec(arr);
   } catch(e){ /* empty */ }
   return safe;
 };
-},{"./$.wks":63}],43:[function(require,module,exports){
+},{"./$.wks":62}],42:[function(require,module,exports){
 module.exports = function(done, value){
   return {value: value, done: !!done};
 };
-},{}],44:[function(require,module,exports){
+},{}],43:[function(require,module,exports){
 module.exports = {};
-},{}],45:[function(require,module,exports){
+},{}],44:[function(require,module,exports){
 var $Object = Object;
 module.exports = {
   create:     $Object.create,
@@ -664,24 +628,59 @@ module.exports = {
   getSymbols: $Object.getOwnPropertySymbols,
   each:       [].forEach
 };
-},{}],46:[function(require,module,exports){
+},{}],45:[function(require,module,exports){
 module.exports = true;
+},{}],46:[function(require,module,exports){
+// 20.2.2.14 Math.expm1(x)
+module.exports = Math.expm1 || function expm1(x){
+  return (x = +x) == 0 ? x : x > -1e-6 && x < 1e-6 ? x + x * x / 2 : Math.exp(x) - 1;
+};
 },{}],47:[function(require,module,exports){
-var $redef = require('./$.redef');
-module.exports = function(target, src){
-  for(var key in src)$redef(target, key, src[key]);
-  return target;
-};
-},{"./$.redef":50}],48:[function(require,module,exports){
+// 19.1.2.1 Object.assign(target, source, ...)
+var $        = require('./$')
+  , toObject = require('./$.to-object')
+  , IObject  = require('./$.iobject');
+
+// should work with symbols and should have deterministic property order (V8 bug)
+module.exports = require('./$.fails')(function(){
+  var a = Object.assign
+    , A = {}
+    , B = {}
+    , S = Symbol()
+    , K = 'abcdefghijklmnopqrst';
+  A[S] = 7;
+  K.split('').forEach(function(k){ B[k] = k; });
+  return a({}, A)[S] != 7 || Object.keys(a({}, B)).join('') != K;
+}) ? function assign(target, source){ // eslint-disable-line no-unused-vars
+  var T     = toObject(target)
+    , $$    = arguments
+    , $$len = $$.length
+    , index = 1
+    , getKeys    = $.getKeys
+    , getSymbols = $.getSymbols
+    , isEnum     = $.isEnum;
+  while($$len > index){
+    var S      = IObject($$[index++])
+      , keys   = getSymbols ? getKeys(S).concat(getSymbols(S)) : getKeys(S)
+      , length = keys.length
+      , j      = 0
+      , key;
+    while(length > j)if(isEnum.call(S, key = keys[j++]))T[key] = S[key];
+  }
+  return T;
+} : Object.assign;
+},{"./$":44,"./$.fails":30,"./$.iobject":35,"./$.to-object":60}],48:[function(require,module,exports){
 // most Object methods by ES6 should accept primitives
+var $export = require('./$.export')
+  , core    = require('./$.core')
+  , fails   = require('./$.fails');
 module.exports = function(KEY, exec){
-  var $def = require('./$.def')
-    , fn   = (require('./$.core').Object || {})[KEY] || Object[KEY]
-    , exp  = {};
+  var fn  = (core.Object || {})[KEY] || Object[KEY]
+    , exp = {};
   exp[KEY] = exec(fn);
-  $def($def.S + $def.F * require('./$.fails')(function(){ fn(1); }), 'Object', exp);
+  $export($export.S + $export.F * fails(function(){ fn(1); }), 'Object', exp);
 };
-},{"./$.core":25,"./$.def":27,"./$.fails":31}],49:[function(require,module,exports){
+},{"./$.core":25,"./$.export":29,"./$.fails":30}],49:[function(require,module,exports){
 module.exports = function(bitmap, value){
   return {
     enumerable  : !(bitmap & 1),
@@ -691,34 +690,52 @@ module.exports = function(bitmap, value){
   };
 };
 },{}],50:[function(require,module,exports){
+var redefine = require('./$.redefine');
+module.exports = function(target, src){
+  for(var key in src)redefine(target, key, src[key]);
+  return target;
+};
+},{"./$.redefine":51}],51:[function(require,module,exports){
 module.exports = require('./$.hide');
-},{"./$.hide":35}],51:[function(require,module,exports){
+},{"./$.hide":34}],52:[function(require,module,exports){
+'use strict';
+var core        = require('./$.core')
+  , $           = require('./$')
+  , DESCRIPTORS = require('./$.descriptors')
+  , SPECIES     = require('./$.wks')('species');
+
+module.exports = function(KEY){
+  var C = core[KEY];
+  if(DESCRIPTORS && C && !C[SPECIES])$.setDesc(C, SPECIES, {
+    configurable: true,
+    get: function(){ return this; }
+  });
+};
+},{"./$":44,"./$.core":25,"./$.descriptors":28,"./$.wks":62}],53:[function(require,module,exports){
+var def = require('./$').setDesc
+  , has = require('./$.has')
+  , TAG = require('./$.wks')('toStringTag');
+
+module.exports = function(it, tag, stat){
+  if(it && !has(it = stat ? it : it.prototype, TAG))def(it, TAG, {configurable: true, value: tag});
+};
+},{"./$":44,"./$.has":33,"./$.wks":62}],54:[function(require,module,exports){
 var global = require('./$.global')
   , SHARED = '__core-js_shared__'
   , store  = global[SHARED] || (global[SHARED] = {});
 module.exports = function(key){
   return store[key] || (store[key] = {});
 };
-},{"./$.global":33}],52:[function(require,module,exports){
-'use strict';
-var $       = require('./$')
-  , SPECIES = require('./$.wks')('species');
-module.exports = function(C){
-  if(require('./$.support-desc') && !(SPECIES in C))$.setDesc(C, SPECIES, {
-    configurable: true,
-    get: function(){ return this; }
-  });
-};
-},{"./$":45,"./$.support-desc":55,"./$.wks":63}],53:[function(require,module,exports){
+},{"./$.global":32}],55:[function(require,module,exports){
 module.exports = function(it, Constructor, name){
   if(!(it instanceof Constructor))throw TypeError(name + ": use the 'new' operator!");
   return it;
 };
-},{}],54:[function(require,module,exports){
-// true  -> String#at
-// false -> String#codePointAt
+},{}],56:[function(require,module,exports){
 var toInteger = require('./$.to-integer')
   , defined   = require('./$.defined');
+// true  -> String#at
+// false -> String#codePointAt
 module.exports = function(TO_STRING){
   return function(that, pos){
     var s = String(defined(that))
@@ -727,26 +744,12 @@ module.exports = function(TO_STRING){
       , a, b;
     if(i < 0 || i >= l)return TO_STRING ? '' : undefined;
     a = s.charCodeAt(i);
-    return a < 0xd800 || a > 0xdbff || i + 1 === l
-      || (b = s.charCodeAt(i + 1)) < 0xdc00 || b > 0xdfff
-        ? TO_STRING ? s.charAt(i) : a
-        : TO_STRING ? s.slice(i, i + 2) : (a - 0xd800 << 10) + (b - 0xdc00) + 0x10000;
+    return a < 0xd800 || a > 0xdbff || i + 1 === l || (b = s.charCodeAt(i + 1)) < 0xdc00 || b > 0xdfff
+      ? TO_STRING ? s.charAt(i) : a
+      : TO_STRING ? s.slice(i, i + 2) : (a - 0xd800 << 10) + (b - 0xdc00) + 0x10000;
   };
 };
-},{"./$.defined":28,"./$.to-integer":57}],55:[function(require,module,exports){
-// Thank's IE8 for his funny defineProperty
-module.exports = !require('./$.fails')(function(){
-  return Object.defineProperty({}, 'a', {get: function(){ return 7; }}).a != 7;
-});
-},{"./$.fails":31}],56:[function(require,module,exports){
-var has  = require('./$.has')
-  , hide = require('./$.hide')
-  , TAG  = require('./$.wks')('toStringTag');
-
-module.exports = function(it, tag, stat){
-  if(it && !has(it = stat ? it : it.prototype, TAG))hide(it, TAG, tag);
-};
-},{"./$.has":34,"./$.hide":35,"./$.wks":63}],57:[function(require,module,exports){
+},{"./$.defined":27,"./$.to-integer":57}],57:[function(require,module,exports){
 // 7.1.4 ToInteger
 var ceil  = Math.ceil
   , floor = Math.floor;
@@ -760,7 +763,7 @@ var IObject = require('./$.iobject')
 module.exports = function(it){
   return IObject(defined(it));
 };
-},{"./$.defined":28,"./$.iobject":36}],59:[function(require,module,exports){
+},{"./$.defined":27,"./$.iobject":35}],59:[function(require,module,exports){
 // 7.1.15 ToLength
 var toInteger = require('./$.to-integer')
   , min       = Math.min;
@@ -773,48 +776,51 @@ var defined = require('./$.defined');
 module.exports = function(it){
   return Object(defined(it));
 };
-},{"./$.defined":28}],61:[function(require,module,exports){
+},{"./$.defined":27}],61:[function(require,module,exports){
 var id = 0
   , px = Math.random();
 module.exports = function(key){
   return 'Symbol('.concat(key === undefined ? '' : key, ')_', (++id + px).toString(36));
 };
 },{}],62:[function(require,module,exports){
-module.exports = function(){ /* empty */ };
-},{}],63:[function(require,module,exports){
 var store  = require('./$.shared')('wks')
+  , uid    = require('./$.uid')
   , Symbol = require('./$.global').Symbol;
 module.exports = function(name){
   return store[name] || (store[name] =
-    Symbol && Symbol[name] || (Symbol || require('./$.uid'))('Symbol.' + name));
+    Symbol && Symbol[name] || (Symbol || uid)('Symbol.' + name));
 };
-},{"./$.global":33,"./$.shared":51,"./$.uid":61}],64:[function(require,module,exports){
+},{"./$.global":32,"./$.shared":54,"./$.uid":61}],63:[function(require,module,exports){
 var classof   = require('./$.classof')
   , ITERATOR  = require('./$.wks')('iterator')
   , Iterators = require('./$.iterators');
 module.exports = require('./$.core').getIteratorMethod = function(it){
-  if(it != undefined)return it[ITERATOR] || it['@@iterator'] || Iterators[classof(it)];
+  if(it != undefined)return it[ITERATOR]
+    || it['@@iterator']
+    || Iterators[classof(it)];
 };
-},{"./$.classof":20,"./$.core":25,"./$.iterators":44,"./$.wks":63}],65:[function(require,module,exports){
+},{"./$.classof":20,"./$.core":25,"./$.iterators":43,"./$.wks":62}],64:[function(require,module,exports){
 'use strict';
 var ctx         = require('./$.ctx')
-  , $def        = require('./$.def')
+  , $export     = require('./$.export')
   , toObject    = require('./$.to-object')
   , call        = require('./$.iter-call')
   , isArrayIter = require('./$.is-array-iter')
   , toLength    = require('./$.to-length')
   , getIterFn   = require('./core.get-iterator-method');
-$def($def.S + $def.F * !require('./$.iter-detect')(function(iter){ Array.from(iter); }), 'Array', {
+$export($export.S + $export.F * !require('./$.iter-detect')(function(iter){ Array.from(iter); }), 'Array', {
   // 22.1.2.1 Array.from(arrayLike, mapfn = undefined, thisArg = undefined)
   from: function from(arrayLike/*, mapfn = undefined, thisArg = undefined*/){
     var O       = toObject(arrayLike)
       , C       = typeof this == 'function' ? this : Array
-      , mapfn   = arguments[1]
+      , $$      = arguments
+      , $$len   = $$.length
+      , mapfn   = $$len > 1 ? $$[1] : undefined
       , mapping = mapfn !== undefined
       , index   = 0
       , iterFn  = getIterFn(O)
       , length, result, step, iterator;
-    if(mapping)mapfn = ctx(mapfn, arguments[2], 2);
+    if(mapping)mapfn = ctx(mapfn, $$len > 2 ? $$[2] : undefined, 2);
     // if object isn't iterable or it's array with default iterator - use simple case
     if(iterFn != undefined && !(C == Array && isArrayIter(iterFn))){
       for(iterator = iterFn.call(O), result = new C; !(step = iterator.next()).done; index++){
@@ -831,18 +837,18 @@ $def($def.S + $def.F * !require('./$.iter-detect')(function(iter){ Array.from(it
   }
 });
 
-},{"./$.ctx":26,"./$.def":27,"./$.is-array-iter":37,"./$.iter-call":39,"./$.iter-detect":42,"./$.to-length":59,"./$.to-object":60,"./core.get-iterator-method":64}],66:[function(require,module,exports){
+},{"./$.ctx":26,"./$.export":29,"./$.is-array-iter":36,"./$.iter-call":38,"./$.iter-detect":41,"./$.to-length":59,"./$.to-object":60,"./core.get-iterator-method":63}],65:[function(require,module,exports){
 'use strict';
-var setUnscope = require('./$.unscope')
-  , step       = require('./$.iter-step')
-  , Iterators  = require('./$.iterators')
-  , toIObject  = require('./$.to-iobject');
+var addToUnscopables = require('./$.add-to-unscopables')
+  , step             = require('./$.iter-step')
+  , Iterators        = require('./$.iterators')
+  , toIObject        = require('./$.to-iobject');
 
 // 22.1.3.4 Array.prototype.entries()
 // 22.1.3.13 Array.prototype.keys()
 // 22.1.3.29 Array.prototype.values()
 // 22.1.3.30 Array.prototype[@@iterator]()
-require('./$.iter-define')(Array, 'Array', function(iterated, kind){
+module.exports = require('./$.iter-define')(Array, 'Array', function(iterated, kind){
   this._t = toIObject(iterated); // target
   this._i = 0;                   // next index
   this._k = kind;                // kind
@@ -863,28 +869,28 @@ require('./$.iter-define')(Array, 'Array', function(iterated, kind){
 // argumentsList[@@iterator] is %ArrayProto_values% (9.4.4.6, 9.4.4.7)
 Iterators.Arguments = Iterators.Array;
 
-setUnscope('keys');
-setUnscope('values');
-setUnscope('entries');
-},{"./$.iter-define":41,"./$.iter-step":43,"./$.iterators":44,"./$.to-iobject":58,"./$.unscope":62}],67:[function(require,module,exports){
+addToUnscopables('keys');
+addToUnscopables('values');
+addToUnscopables('entries');
+},{"./$.add-to-unscopables":18,"./$.iter-define":40,"./$.iter-step":42,"./$.iterators":43,"./$.to-iobject":58}],66:[function(require,module,exports){
 // 20.2.2.33 Math.tanh(x)
-var $def  = require('./$.def')
-  , expm1 = require('./$.expm1')
-  , exp   = Math.exp;
+var $export = require('./$.export')
+  , expm1   = require('./$.math-expm1')
+  , exp     = Math.exp;
 
-$def($def.S, 'Math', {
+$export($export.S, 'Math', {
   tanh: function tanh(x){
     var a = expm1(x = +x)
       , b = expm1(-x);
     return a == Infinity ? 1 : b == Infinity ? -1 : (a - b) / (exp(x) + exp(-x));
   }
 });
-},{"./$.def":27,"./$.expm1":30}],68:[function(require,module,exports){
+},{"./$.export":29,"./$.math-expm1":46}],67:[function(require,module,exports){
 // 19.1.3.1 Object.assign(target, source)
-var $def = require('./$.def');
+var $export = require('./$.export');
 
-$def($def.S + $def.F, 'Object', {assign: require('./$.assign')});
-},{"./$.assign":19,"./$.def":27}],69:[function(require,module,exports){
+$export($export.S + $export.F, 'Object', {assign: require('./$.object-assign')});
+},{"./$.export":29,"./$.object-assign":47}],68:[function(require,module,exports){
 // 19.1.2.14 Object.keys(O)
 var toObject = require('./$.to-object');
 
@@ -893,22 +899,22 @@ require('./$.object-sap')('keys', function($keys){
     return $keys(toObject(it));
   };
 });
-},{"./$.object-sap":48,"./$.to-object":60}],70:[function(require,module,exports){
+},{"./$.object-sap":48,"./$.to-object":60}],69:[function(require,module,exports){
 
-},{}],71:[function(require,module,exports){
+},{}],70:[function(require,module,exports){
 'use strict';
 var strong = require('./$.collection-strong');
 
 // 23.2 Set Objects
 require('./$.collection')('Set', function(get){
-  return function Set(){ return get(this, arguments[0]); };
+  return function Set(){ return get(this, arguments.length > 0 ? arguments[0] : undefined); };
 }, {
   // 23.2.3.1 Set.prototype.add(value)
   add: function add(value){
     return strong.def(this, value = value === 0 ? 0 : value, value);
   }
 }, strong);
-},{"./$.collection":24,"./$.collection-strong":22}],72:[function(require,module,exports){
+},{"./$.collection":24,"./$.collection-strong":22}],71:[function(require,module,exports){
 'use strict';
 var $at  = require('./$.string-at')(true);
 
@@ -926,16 +932,461 @@ require('./$.iter-define')(String, 'String', function(iterated){
   this._i += point.length;
   return {value: point, done: false};
 });
-},{"./$.iter-define":41,"./$.string-at":54}],73:[function(require,module,exports){
+},{"./$.iter-define":40,"./$.string-at":56}],72:[function(require,module,exports){
 // https://github.com/DavidBruant/Map-Set.prototype.toJSON
-var $def  = require('./$.def');
+var $export  = require('./$.export');
 
-$def($def.P, 'Set', {toJSON: require('./$.collection-to-json')('Set')});
-},{"./$.collection-to-json":23,"./$.def":27}],74:[function(require,module,exports){
+$export($export.P, 'Set', {toJSON: require('./$.collection-to-json')('Set')});
+},{"./$.collection-to-json":23,"./$.export":29}],73:[function(require,module,exports){
 require('./es6.array.iterator');
 var Iterators = require('./$.iterators');
 Iterators.NodeList = Iterators.HTMLCollection = Iterators.Array;
-},{"./$.iterators":44,"./es6.array.iterator":66}],75:[function(require,module,exports){
+},{"./$.iterators":43,"./es6.array.iterator":65}],74:[function(require,module,exports){
+"use strict";
+
+var _keys = require('babel-runtime/core-js/object/keys');
+
+var _keys2 = _interopRequireDefault(_keys);
+
+var _stringify = require('babel-runtime/core-js/json/stringify');
+
+var _stringify2 = _interopRequireDefault(_stringify);
+
+var _assign = require('babel-runtime/core-js/object/assign');
+
+var _assign2 = _interopRequireDefault(_assign);
+
+var _classCallCheck2 = require('babel-runtime/helpers/classCallCheck');
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+var _createClass2 = require('babel-runtime/helpers/createClass');
+
+var _createClass3 = _interopRequireDefault(_createClass2);
+
+var _set = require('babel-runtime/core-js/set');
+
+var _set2 = _interopRequireDefault(_set);
+
+var _tanh = require('babel-runtime/core-js/math/tanh');
+
+var _tanh2 = _interopRequireDefault(_tanh);
+
+var _from = require('babel-runtime/core-js/array/from');
+
+var _from2 = _interopRequireDefault(_from);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _toConsumableArray(arr) {
+    if (Array.isArray(arr)) {
+        for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) {
+            arr2[i] = arr[i];
+        }return arr2;
+    } else {
+        return (0, _from2.default)(arr);
+    }
+}
+
+var index_1 = require('../util/index');
+var π = Math.PI;
+var tanh = _tanh2.default;
+var pow = Math.pow;
+
+var oneDay = 24 * 60 * 60 * 1000;
+var modelTypes = new _set2.default(['baseline', 'reply']);
+function g(Δts, G) {
+    return (tanh(10 * Δts / (G * π) - π) + 1) / 2;
+}
+exports.g = g;
+function h(Δtr, H) {
+    return pow(2, -Δtr / H);
+}
+exports.h = h;
+
+var EventRank = function () {
+    function EventRank(opts) {
+        (0, _classCallCheck3.default)(this, EventRank);
+
+        this.correspondents = [];
+        var _opts$G = opts.G;
+        var G = _opts$G === undefined ? oneDay : _opts$G;
+        var _opts$H = opts.H;
+        var H = _opts$H === undefined ? oneDay : _opts$H;
+        var _opts$f = opts.f;
+        var f = _opts$f === undefined ? 0.8 : _opts$f;
+        var _opts$model = opts.model;
+        var model = _opts$model === undefined ? 'reply' : _opts$model;
+        var _opts$events = opts.events;
+        var events = _opts$events === undefined ? [] : _opts$events;
+        var include = opts.include;
+
+        index_1.assert(modelTypes.has(model), 'Unexpected model type: ' + model);
+        var ranks = opts.ranks;
+        var correspondents = opts.correspondents;
+        var correspondanceMatrix = opts.correspondanceMatrix;
+
+        if (!correspondents && events) {
+            correspondents = EventRank.getCorrespondents(events);
+        }
+        if (!ranks && correspondents) {
+            ranks = EventRank.startRanks(correspondents);
+        }
+        if (!correspondanceMatrix) {
+            correspondanceMatrix = correspondents.reduce(function (o, c) {
+                return o[c] = {}, o;
+            }, {});
+        }
+        (0, _assign2.default)(this, {
+            G: G, H: H, f: f, model: model,
+            correspondents: correspondents,
+            correspondanceMatrix: correspondanceMatrix,
+            events: events,
+            ranks: ranks,
+            Vα: []
+        });
+        this.setInclude(include);
+        this.correspondents = this.correspondents.filter(this.include.has.bind(this.include));
+    }
+
+    (0, _createClass3.default)(EventRank, [{
+        key: 'setInclude',
+        value: function setInclude(include) {
+            include = include || this.correspondents;
+            index_1.assert(Array.isArray(include) || include instanceof _set2.default, 'include needs to be a Set or an Array, but got: ' + include);
+            this.include = new _set2.default(include);
+            return this;
+        }
+    }, {
+        key: 'serialize',
+        value: function serialize() {
+            var out = {},
+                thisObject = this;
+            for (var prop in thisObject) {
+                var p = void 0;
+                if (!((p = thisObject[prop]) instanceof Function)) {
+                    out[prop] = p instanceof _set2.default ? [].concat(_toConsumableArray(p)) : p;
+                }
+            }
+            return out;
+        }
+    }, {
+        key: 'toJson',
+        value: function toJson(pretty) {
+            return pretty ? (0, _stringify2.default)(this.serialize(), null, 2) : (0, _stringify2.default)(this.serialize());
+        }
+    }, {
+        key: 'log',
+        value: function log() {
+            console.log(this.ranks);
+            return this;
+        }
+    }, {
+        key: 'reset',
+        value: function reset() {
+            this.setInclude(this.include && this.include.size ? this.include : this.correspondents);
+            this.correspondents = this.correspondents.filter(this.include.has.bind(this.include));
+            this.correspondanceMatrix = this.correspondents.reduce(function (o, c) {
+                return o[c] = {}, o;
+            }, {});
+            this.ranks = EventRank.startRanks(this.correspondents);
+            return this;
+        }
+    }, {
+        key: 'compute',
+        value: function compute() {
+            return this.reset().step(this.events).done();
+        }
+    }, {
+        key: 'top',
+        value: function top(n) {
+            var ranks = [];
+            for (var id in this.ranks) {
+                ranks.push((0, _assign2.default)({ id: id }, this.ranks[id]));
+            }
+            ranks.sort(function (a, b) {
+                return b.value - a.value;
+            });
+            return ranks.slice(0, n);
+        }
+    }, {
+        key: 'get',
+        value: function get() {
+            var _this = this;
+
+            var _ref;
+
+            for (var _len = arguments.length, ids = Array(_len), _key = 0; _key < _len; _key++) {
+                ids[_key] = arguments[_key];
+            }
+
+            this.catchUp(ids = (_ref = []).concat.apply(_ref, _toConsumableArray(ids)));
+            return ids.map(function (id) {
+                return (0, _assign2.default)({ id: id }, _this.ranks[id]);
+            });
+        }
+    }, {
+        key: 'catchUp',
+        value: function catchUp(participant) {
+            if (typeof participant === 'string') {
+                var CM = this.correspondanceMatrix;
+                var ranks = this.ranks;
+                var Vα = this.Vα;
+
+                var iα = Vα.length,
+                    rank = ranks[participant];
+                var i = CM[participant].lastUpdate || 0;
+                while (i < iα) {
+                    var αLag = Vα[i++];
+                    rank.value *= 1 - αLag.value;
+                    rank.time = αLag.time;
+                }
+                CM[participant].lastUpdate = iα;
+                return this;
+            } else {
+                for (var _i = 0, l = participant.length; _i < l; _i++) {
+                    this.catchUp(participant[_i]);
+                }
+                return this;
+            }
+        }
+    }, {
+        key: 'done',
+        value: function done() {
+            return this.catchUp(this.correspondents);
+        }
+    }, {
+        key: 'step',
+        value: function step(event, bucket) {
+            if (Array.isArray(event)) {
+                for (var i = 0, l = event.length; i < l; i++) {
+                    this.step(event[i]);
+                }
+                return this;
+            } else {
+                if (event.events) {
+                    var events = event.events,
+                        n = event.events.length - 1;
+                    for (var _i2 = 0, _l = events.length; _i2 < _l; _i2++) {
+                        this.step(events[_i2], _i2 !== n ? 'capture' : 'apply');
+                    }
+                    return this;
+                }
+                var capture = bucket === 'capture';
+                var apply = bucket === 'apply';
+                var isBucket = capture || apply;
+                var watching = this.include.has.bind(this.include);
+                var G = this.G;
+                var H = this.H;
+                var f = this.f;
+                var ranks = this.ranks;
+                var CM = this.correspondanceMatrix;
+                var model = this.model;
+                var Vα = this.Vα;
+                var to = event.to;
+                var sender = event.from;
+                var time = event.time;
+
+                if (!watching(sender)) {
+                    return this;
+                }
+                var recipients = new _set2.default(index_1.ensureArray(to).filter(watching));
+                index_1.assert(!!sender, 'no event in sender!', event);
+                index_1.assert(!!to.length, 'no recipients of event!', event);
+                index_1.assert(!!time, 'no recorded time (or time === 0)!', event);
+                recipients.delete(sender);
+                if (recipients.size === 0) {
+                    return this;
+                }
+                var timeUpdates = void 0;
+                if (isBucket) {
+                    timeUpdates = this.timeUpdates = this.timeUpdates || {};
+                    timeUpdates[sender] = timeUpdates[sender] || { recieved: {} };
+                } else {
+                    delete this.timeUpdates;
+                }
+                var recipientArray = (0, _from2.default)(recipients);
+                var nP = recipients.size + 1;
+                this.catchUp(sender);
+                this.catchUp(recipientArray);
+                var Δts = void 0,
+                    Δtr = void 0;
+                if (model === 'reply') {
+                    var lagSender = CM[sender];
+                    Δts = time - (lagSender.sent || -Infinity);
+                    if (isBucket) {
+                        timeUpdates[sender].sent = time;
+                    } else {
+                        lagSender.sent = time;
+                    }
+                    var trMin = -Infinity,
+                        trRecipient = void 0;
+                    for (var _i3 = 0, _l2 = recipientArray.length; _i3 < _l2; _i3++) {
+                        var recipient = recipientArray[_i3],
+                            tr = lagSender.recieved = lagSender.recieved || {};
+                        if ((trRecipient = tr[recipient]) && trRecipient > trMin) {
+                            trMin = trRecipient;
+                        }
+                        if (isBucket) {
+                            timeUpdates[sender].recieved[recipient] = time;
+                        } else {
+                            tr[recipient] = time;
+                        }
+                    }
+                    Δtr = time - trMin;
+                    index_1.assert(Δts >= 0, 'Δts must not be negative: Δts = ' + Δts, event);
+                    index_1.assert(Δtr >= 0, 'Δtr must not be negative: Δtr = ' + Δtr, event);
+                }
+                var ΣR = ranks[sender].value;
+                for (var _i4 = 0, _l3 = recipientArray.length; _i4 < _l3; _i4++) {
+                    ΣR += ranks[recipientArray[_i4]].value;
+                }
+                index_1.assert(ΣR <= 1.000000000000009 && ΣR >= 0, 'ΣR must be in (0, 1): ΣR = ' + ΣR, event);
+                if (ΣR > 1) {
+                    ΣR = 1;
+                }
+                var Tn = 1 - ΣR;
+                var α = void 0;
+                if (model === 'reply') {
+                    Vα.push({
+                        value: α = f * g(Δts, G) * h(Δtr, H),
+                        time: time
+                    });
+                } else {
+                    Vα.push({ value: α = f, time: time });
+                }
+                α *= Tn;
+                index_1.assert(α <= 1 && α >= 0, 'α must be in (0, 1): α = ' + α, event);
+                var ΣRbar = nP - ΣR;
+                var iαNew = Vα.length;
+                recipientArray.push(sender);
+                for (var _i5 = 0, _l4 = recipientArray.length; _i5 < _l4; _i5++) {
+                    var participant = recipientArray[_i5],
+                        rank = ranks[participant];
+                    var value = rank.value;
+                    value += α * ((1 - value) / ΣRbar);
+                    CM[participant].lastUpdate = iαNew;
+                    rank.value = value;
+                    rank.time = time;
+                }
+                if (apply && timeUpdates) {
+                    for (var id in timeUpdates) {
+                        var up = timeUpdates[id],
+                            cmS = CM[id];
+                        cmS.recieved = cmS.recieved || {};
+                        cmS.sent = up.sent;
+                        for (var rid in up.recieved) {
+                            cmS.recieved[rid] = up.recieved[rid];
+                        }
+                    }
+                    delete this.timeUpdates;
+                }
+                return this;
+            }
+        }
+    }], [{
+        key: 'getCorrespondents',
+        value: function getCorrespondents(events) {
+            var outSet = new _set2.default();
+            for (var i = 0, l = events.length; i < l; i++) {
+                var event = events[i],
+                    to = event.to;
+                outSet.add(event.from);
+                for (var t = 0, lt = to.length; t < lt; t++) {
+                    outSet.add(to[t]);
+                }
+            }
+            return (0, _from2.default)(outSet);
+        }
+    }, {
+        key: 'startRanks',
+        value: function startRanks(correspondents) {
+            var value = 1 / correspondents.length,
+                time = 0;
+            return correspondents.reduce(function (o, c) {
+                return o[c] = { value: value, time: time }, o;
+            }, {});
+        }
+    }, {
+        key: 'bucket',
+        value: function bucket(events) {
+            var hash = {};
+            var currentBucket = void 0;
+            for (var i = 0, l = events.length; i < l; i++) {
+                var event = events[i];
+                if (currentBucket = hash[event.time]) {
+                    currentBucket.push(event);
+                } else {
+                    hash[event.time] = [event];
+                }
+            }
+            var times = (0, _keys2.default)(hash).map(function (time) {
+                return parseInt(time, 10);
+            });
+            times.sort();
+            return times.map(function (time) {
+                return { time: time, events: hash[time] };
+            });
+        }
+    }]);
+    return EventRank;
+}();
+
+exports.EventRank = EventRank;
+
+},{"../util/index":76,"babel-runtime/core-js/array/from":1,"babel-runtime/core-js/json/stringify":2,"babel-runtime/core-js/math/tanh":3,"babel-runtime/core-js/object/assign":4,"babel-runtime/core-js/object/keys":6,"babel-runtime/core-js/set":7,"babel-runtime/helpers/classCallCheck":8,"babel-runtime/helpers/createClass":9}],75:[function(require,module,exports){
+"use strict";
+
+function __export(m) {
+    for (var p in m) {
+        if (!exports.hasOwnProperty(p)) exports[p] = m[p];
+    }
+}
+__export(require('./classes/EventRank'));
+var index_1 = require('./util/index');
+exports.util = index_1.default;
+
+},{"./classes/EventRank":74,"./util/index":76}],76:[function(require,module,exports){
+"use strict";
+
+var _stringify = require('babel-runtime/core-js/json/stringify');
+
+var _stringify2 = _interopRequireDefault(_stringify);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function assert(bool, message, event) {
+    if (!bool) {
+        gakError('Assertion failed' + (message ? ': ' + message : ''), event);
+    }
+}
+exports.assert = assert;
+function ensureArray(value) {
+    return Array.isArray(value) ? value : [value];
+}
+exports.ensureArray = ensureArray;
+function last(arr) {
+    return arr[arr.length - 1];
+}
+exports.last = last;
+function gakError(message, event) {
+    message = 'gak.js | ' + message;
+    if (event) {
+        var pretty = (0, _stringify2.default)(event, null, 2);
+        message = message + ' | Last Processed Event: \n' + pretty;
+    }
+    throw new Error(message);
+}
+exports.gakError = gakError;
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = {
+    assert: assert,
+    gakError: gakError,
+    last: last,
+    ensureArray: ensureArray
+};
+
+},{"babel-runtime/core-js/json/stringify":2}],77:[function(require,module,exports){
 module.exports={
   "name": "gak",
   "version": "0.0.6",
@@ -963,22 +1414,34 @@ module.exports={
   },
   "homepage": "https://github.com/CrossLead/gak",
   "dependencies": {
-    "babel-runtime": "^5.8.20"
+    "babel-runtime": "^5.8.20",
+    "event-rank": "0.0.3"
   },
   "devDependencies": {
     "async": "^1.4.2",
-    "babel-core": "^5.8.25",
-    "babel-eslint": "^4.1.0",
-    "babelify": "^6.2.0",
-    "browserify": "^11.0.1",
+    "babel-core": "6.7.2",
+    "babel-eslint": "6.0.2",
+    "babel-plugin-add-module-exports": "0.1.2",
+    "babel-plugin-transform-class-properties": "6.6.0",
+    "babel-plugin-transform-flow-strip-types": "6.7.0",
+    "babel-plugin-transform-runtime": "6.6.0",
+    "babel-polyfill": "^6.7.4",
+    "babel-preset-es2015": "6.6.0",
+    "babel-preset-es2015-node4": "2.0.3",
+    "babel-preset-stage-0": "6.5.0",
+    "babel-runtime": "6.6.1",
+    "babelify": "7.2.0",
+    "browserify": "13.0.0",
     "chai": "^3.2.0",
-    "esdoc": "^0.4.0",
-    "esdoc-es7-plugin": "0.0.2",
+    "esdoc": "^0.4.5",
+    "esdoc-es7-plugin": "0.0.3",
+    "eslint": "2.6.0",
     "fast-csv": "^0.6.0",
+    "gh-pages": "^0.10.0",
     "gulp": "^3.9.0",
-    "gulp-babel": "^5.2.1",
+    "gulp-babel": "^6.1.2",
     "gulp-concat": "^2.6.0",
-    "gulp-eslint": "^1.0.0",
+    "gulp-eslint": "^2.0.0",
     "gulp-gh-pages": "^0.5.3",
     "gulp-mocha": "^2.1.3",
     "gulp-run": "^1.6.10",
@@ -994,742 +1457,43 @@ module.exports={
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0",
     "yargs": "^3.21.0"
+  },
+  "babel": {
+    "sourceMaps": "both",
+    "presets": [
+      "stage-0",
+      "es2015"
+    ],
+    "plugins": [
+      "transform-runtime",
+      "transform-class-properties",
+      "transform-flow-strip-types"
+    ]
   }
 }
-},{}],76:[function(require,module,exports){
-/**
- * EventRank implementation
- *
- * Model adapted from "EventRank: A Framework for Ranking Time-Varying Networks"
- * (O’Madadhain & Smyth, 2005), utilizes 'Reply Model' of potential weights
- *
- * PDF: http://www.datalab.uci.edu/papers/linkkdd05-02.pdf
- */
-'use strict';
-
-var _createClass = require('babel-runtime/helpers/create-class')['default'];
-
-var _classCallCheck = require('babel-runtime/helpers/class-call-check')['default'];
-
-var _extends = require('babel-runtime/helpers/extends')['default'];
-
-var _Math$tanh = require('babel-runtime/core-js/math/tanh')['default'];
-
-var _Set = require('babel-runtime/core-js/set')['default'];
-
-var _Array$from = require('babel-runtime/core-js/array/from')['default'];
-
-var _Object$keys = require('babel-runtime/core-js/object/keys')['default'];
-
-var _Object$assign = require('babel-runtime/core-js/object/assign')['default'];
-
-exports.__esModule = true;
-
-var _util = require('../util/');
-
-var π = Math.PI;
-var tanh = _Math$tanh;
-var pow = Math.pow;
-
-var oneDay = 24 * 60 * 60 * 1000; // one day in milliseconds
-var modelTypes = new _Set(['baseline', 'reply']);
-
-/**
- * Decay function for influence on potential of event sent by sender s ∈ P_i
- *  using time since event sent from s
- *
- * @param  {Number} Δts : Change in time since last last event sent by s
- * @param  {Number} G : Decay constant to weight sensitivity of new events
- * @return {Number}
- */
-function g(Δts, G) {
-  return (tanh(10 * Δts / (G * π) - π) + 1) / 2;
-}
-
-/**
- * Decay function for influence on potential of event sent by sender s ∈ P_i
- *  using time since last event recieved by r ∈ P_i from s
- *
- * @param  {Number} Δtr : time since last event recieved by r ∈ P_i from s
- * @param  {Number} H : Decay constant to weight sensitivity of new events
- * @return {Number}
- */
-function h(Δtr, H) {
-  return pow(2, -Δtr / H);
-}
-
-/**
- * Event Rank instance
- *
- * @return {EventRank}
- */
-
-var EventRank = (function () {
-
-  /**
-   * Create set of unique correspondents involved in all events
-   *
-   * @static
-   * @return {Array<String>} array of correspondent ids
-   */
-
-  EventRank.getCorrespondents = function getCorrespondents(events) {
-    var outSet = new _Set();
-
-    for (var i = 0, l = events.length; i < l; i++) {
-      var _event = events[i],
-          to = _event.to;
-
-      outSet.add(_event.from);
-
-      for (var t = 0, lt = to.length; t < lt; t++) {
-        outSet.add(to[t]);
-      }
-    }
-
-    return _Array$from(outSet);
-  };
-
-  /**
-   * Compute starting ranks of given correspondents
-   * @example
-   * const ranks = EventRank.startRanks(['a', 'b', 'c'])
-   * // => {a: {value: 0.3333333333, time: 0}, ...}
-   *
-   * @static
-   * @return {Array<Object>} starting ranks = 1 / |C|
-   */
-
-  EventRank.startRanks = function startRanks(correspondents) {
-    var value = 1 / correspondents.length,
-        time = 0;
-    return correspondents.reduce(function (o, c) {
-      return (o[c] = { value: value, time: time }, o);
-    }, {});
-  };
-
-  /**
-   * Collapse times into buckets
-   *
-   * @static
-   * @param {Array<Object>} Array of events to bucket
-   * @return {Array<Object>} Array of objects with properties "events" and "time"
-   */
-
-  EventRank.bucket = function bucket(events) {
-    var hash = {};
-
-    var bucket = undefined;
-
-    for (var i = 0, l = events.length; i < l; i++) {
-      var _event2 = events[i];
-      if (bucket = hash[_event2.time]) {
-        bucket.push(_event2);
-      } else {
-        hash[_event2.time] = [_event2];
-      }
-    }
-
-    var times = _Object$keys(hash).map(function (time) {
-      return parseInt(time, 10);
-    });
-    times.sort();
-    return times.map(function (time) {
-      return { time: time, events: hash[time] };
-    });
-  };
-
-  /**
-   * Construct EventRank object
-   *
-   * @property {Object} ranks computed ranks so far
-   * @property {Array} correspondents list of ids invoved in events
-   * @property {Array} events list events associated with ranking algorithm
-   * @property {Object} correspondanceMatrix tracks send/recive times
-   * @property {String} model model type = 'baseline' || 'reply'
-   * @property {Number} G sender recharge parameter (reply model)
-   * @property {Number} H reply halflife parameter (reply model)
-   * @property {Number} f potential flow fraction
-   * @param  {Object} opts weight parameters, correspondent set,
-   *                         events (expected to be sorted by time)
-   * @return {EventRank}
-   */
-
-  _createClass(EventRank, null, [{
-    key: 'g',
-
-    // export helper functions with class
-    value: g,
-    enumerable: true
-  }, {
-    key: 'h',
-    value: h,
-    enumerable: true
-  }]);
-
-  function EventRank(opts) {
-    var _context;
-
-    _classCallCheck(this, EventRank);
-
-    // default options
-    var _opts$G = opts.G;
-    var G = _opts$G === undefined ? oneDay : _opts$G;
-    var _opts$H = opts.H;
-    var H = _opts$H === undefined ? oneDay : _opts$H;
-    var _opts$f = opts.f;
-    var f = _opts$f === undefined ? 0.8 : _opts$f;
-    var _opts$model = opts.model;
-    var model = _opts$model === undefined ? 'reply' : _opts$model;
-    var _opts$events = opts.events;
-    var events = _opts$events === undefined ? [] : _opts$events;
-    var include = opts.include;
-
-    _util.assert(modelTypes.has(model), 'Unexpected model type: ' + model);
-
-    // get ranks if passed
-    var ranks = opts.ranks;
-    var correspondents = opts.correspondents;
-    var correspondanceMatrix = opts.correspondanceMatrix;
-
-    if (!correspondents && events) {
-      correspondents = EventRank.getCorrespondents(events);
-    }
-
-    // start ranks for all = |C| if not present
-    if (!ranks && correspondents) {
-      ranks = EventRank.startRanks(correspondents);
-    }
-
-    if (!correspondanceMatrix) {
-      correspondanceMatrix = correspondents.reduce(function (o, c) {
-        return (o[c] = {}, o);
-      }, {});
-    }
-
-    // add properties
-    _Object$assign(this, {
-      G: G, H: H, f: f, model: model,
-      correspondents: correspondents,
-      correspondanceMatrix: correspondanceMatrix,
-      events: events,
-      ranks: ranks,
-      Vα: []
-    });
-
-    this.setInclude(include);
-    this.correspondents = this.correspondents.filter((_context = this.include).has.bind(_context));
-  }
-
-  /**
-   * Create the inclusion set for ranking
-   *
-   * @param {Set | Array} include (optional)
-   * @return {EventRank} this : return self for chaining
-   */
-
-  EventRank.prototype.setInclude = function setInclude(include) {
-    include = include || this.correspondents;
-    _util.assert(Array.isArray(include) || include instanceof _Set, 'include needs to be a Set or an Array, but got: ' + include);
-    this.include = new _Set(include);
-    return this;
-  };
-
-  /**
-   * Package EventRank in pojo for serializing / db storage
-   *
-   * @return {Object} plain object for serialization
-   */
-
-  EventRank.prototype.serialize = function serialize() {
-    var out = {};
-
-    for (var prop in this) {
-      var p = undefined;
-      if (!((p = this[prop]) instanceof Function)) {
-        out[prop] = p;
-      }
-    }
-
-    return out;
-  };
-
-  /**
-   * Json string of serialized EventRank
-   *
-   * @param {Boolean} pretty print formatted Json
-   * @return {String} JSON representation of EventRank
-   */
-
-  EventRank.prototype.toJson = function toJson(pretty) {
-    var args = [this.serialize()];
-    if (pretty) {
-      args.push.apply(args, [null, 2]);
-    }
-    return JSON.stringify.apply(JSON, args);
-  };
-
-  /**
-   * Log current ranks to console
-   *
-   * @return {EventRank} this : return self for chaining
-   */
-
-  EventRank.prototype.log = function log() {
-    console.log(this.ranks);
-    return this;
-  };
-
-  /**
-   * Reset model to starting ranks
-   *
-   * @return {EventRank} this : return self for chaining
-   */
-
-  EventRank.prototype.reset = function reset() {
-    var _context2;
-
-    this.setInclude(this.include.length || this.include.size ? this.include : this.correspondents);
-
-    this.correspondents = this.correspondents.filter((_context2 = this.include).has.bind(_context2));
-
-    this.correspondanceMatrix = this.correspondents.reduce(function (o, c) {
-      return (o[c] = {}, o);
-    }, {});
-
-    this.ranks = EventRank.startRanks(this.correspondents);
-    return this;
-  };
-
-  /**
-   * Reset model to starting ranks and compute ranks over all events
-   *
-   * @return {EventRank} this : return self for chaining
-   */
-
-  EventRank.prototype.compute = function compute() {
-    return this.reset().step(this.events).done();
-  };
-
-  /**
-   * Get ranks of top n individuals
-   *
-   * @param {Number} number of ranks to report (from top)
-   * @return {Array<Object>} top n ranks
-   */
-
-  EventRank.prototype.top = function top(n) {
-    var ranks = [];
-    for (var id in this.ranks) {
-      ranks.push(_extends({ id: id }, this.ranks[id]));
-    }
-    ranks.sort(function (a, b) {
-      return b.value - a.value;
-    });
-    return ranks.slice(0, n);
-  };
-
-  /**
-   * Get ranks of given ids at current period
-   *
-   * @param {Array<String> | String} combination of str and array<str> of ids
-   * @return {Array<Object>} ranks of (ids) at current period
-   */
-
-  EventRank.prototype.get = function get() {
-    var _ref,
-        _this = this;
-
-    for (var _len = arguments.length, ids = Array(_len), _key = 0; _key < _len; _key++) {
-      ids[_key] = arguments[_key];
-    }
-
-    // catchup these individuals
-    this.catchUp(ids = (_ref = []).concat.apply(_ref, ids));
-    return ids.map(function (id) {
-      return _extends({ id: id }, _this.ranks[id]);
-    });
-  };
-
-  /**
-   * Ranks of individuals who were not participants in the previous event
-   * need to be updated, apply a non-participant rank adjustment
-   * for each period:
-   *      d ∉ P_i :    R_i(d) = R_i-1(d) * (1 - (α_i / Tn_i))
-   *
-   * @example
-   * const R = new EventRank({correspondents: ['a', 'b', 'c']});
-   * R.step({from: 'a', to: 'b', time: 1});
-   * R.catchUp('c') // catch c ranks to period 1
-   *
-   * @param  {String | Array<String>} id(s) of participant to "catch up"
-   * @return {EventRank} this : return self for chaining
-   */
-
-  EventRank.prototype.catchUp = function catchUp(participant) {
-
-    if (Array.isArray(participant)) {
-      for (var _i = 0, l = participant.length; _i < l; _i++) {
-        this.catchUp(participant[_i]);
-      }
-      return this;
-    }
-
-    var CM = this.correspondanceMatrix;
-    var ranks = this.ranks;
-    var Vα = this.Vα;
-
-    var iα = Vα.length,
-        rank = ranks[participant];
-
-    var i = CM[participant].lastUpdate || 0;
-
-    while (i < iα) {
-      var αLag = Vα[i++];
-      rank.value *= 1 - αLag.value;
-      rank.time = αLag.time;
-    }
-
-    // update index of last update
-    CM[participant].lastUpdate = iα;
-    return this;
-  };
-
-  /**
-   * "Catch up" all correspondents to current period
-   *
-   * @return {EventRank} this : return self for chaining
-   */
-
-  EventRank.prototype.done = function done() {
-    return this.catchUp(this.correspondents);
-  };
-
-  /**
-   * Calculate new ranks given an additional event
-   *
-   * @param  {Object | Array<Object>} event to add
-   * @param  {String} (optional) bucketMode option (capture | apply)
-   * @return {EventRank} return self for chaining
-   */
-
-  EventRank.prototype.step = function step(event, bucket) {
-    var _context3;
-
-    // if event is acutally an array of events, step through all
-    if (Array.isArray(event)) {
-      for (var i = 0, l = event.length; i < l; i++) {
-        this.step(event[i]);
-      }
-      return this;
-    }
-
-    // if event is an event bucket run through time bucket
-    if (event.events) {
-      var events = event.events,
-          n = event.events.length - 1;
-
-      for (var i = 0, l = events.length; i < l; i++) {
-        this.step(events[i], i !== n ? 'capture' : 'apply');
-      }
-      return this;
-    }
-
-    // capture or apply time updates for bucket
-    var capture = bucket === 'capture';
-    var apply = bucket === 'apply';
-    var isBucket = capture || apply;
-    var watching = (_context3 = this.include).has.bind(_context3);
-
-    // unpack model weight parameters + ranks + correspondents
-    var G = this.G;
-    var H = this.H;
-    var f = this.f;
-    var ranks = this.ranks;
-    var CM = this.correspondanceMatrix;
-    var model = this.model;
-    var Vα = this.Vα;
-
-    // unpack event, create set of participants
-    var to = event.to;
-    var sender = event.from;
-    var time = event.time;
-
-    // if the sender is not in the include set, skip
-    if (!watching(sender)) {
-      return this;
-    }
-
-    // set of participants (only include those in "include")
-    var recipients = new _Set(_util.ensureArray(to).filter(watching));
-
-    _util.assert(sender, 'no event in sender!', event);
-    _util.assert(to.length, 'no recipients of event!', event);
-    _util.assert(time, 'no recorded time (or time === 0)!', event);
-
-    // if the sender sends themself an email...
-    recipients['delete'](sender);
-
-    // if the message was from A -> A, skip
-    if (recipients.size === 0) {
-      return this;
-    }
-
-    var timeUpdates = undefined;
-    if (isBucket) {
-      timeUpdates = this.timeUpdates = this.timeUpdates || {};
-      timeUpdates[sender] = timeUpdates[sender] || { recieved: {} };
-    } else {
-      delete this.timeUpdates;
-    }
-
-    // get array from recipient set
-    var recipientArray = _Array$from(recipients);
-
-    // counts of participants + total correspondents
-    var nP = recipients.size + 1;
-
-    // catch up recipients with lazy ranks
-    this.catchUp(sender);
-    this.catchUp(recipientArray);
-
-    // time differentials (for reply model)
-    var Δts = undefined,
-        Δtr = undefined;
-    if (model === 'reply') {
-
-      // Last time an email was sent by this sender
-      // default to infinite time if no recorded emails sent by sender
-      var lagSender = CM[sender];
-      Δts = time - (lagSender.sent || -Infinity);
-
-      // record current time as most recent send event by sender
-      if (isBucket) {
-        timeUpdates[sender].sent = time;
-      } else {
-        lagSender.sent = time;
-      }
-
-      // Find the most recent time a message was recieved by the sender
-      // from any of P_i, start at infinity (if no messages
-      // recieved by sender from any of P_i)
-      var trMin = -Infinity,
-          trRecipient = undefined;
-
-      for (var i = 0, l = recipientArray.length; i < l; i++) {
-        var recipient = recipientArray[i],
-            tr = lagSender.recieved = lagSender.recieved || {};
-
-        if ((trRecipient = tr[recipient]) && trRecipient > trMin) {
-          trMin = trRecipient;
-        }
-
-        // if processing bucket, don't apply time updates
-        // until all events in bucket have been processed
-        if (isBucket) {
-          timeUpdates[sender].recieved[recipient] = time;
-        } else {
-          tr[recipient] = time;
-        }
-      }
-
-      // time difference (recipient) is
-      // between now and minimum determined time above
-      Δtr = time - trMin;
-
-      // assert that time differentials are not negative
-      // (can't send/recieve messages in the future!)
-      _util.assert(Δts >= 0, 'Δts must not be negative: Δts = ' + Δts, event);
-      _util.assert(Δtr >= 0, 'Δtr must not be negative: Δtr = ' + Δtr, event);
-    }
-
-    // start sum with sender rank
-    var ΣR = ranks[sender].value;
-
-    // build up sum of all participant ranks
-    for (var i = 0, l = recipientArray.length; i < l; i++) {
-      ΣR += ranks[recipientArray[i]].value;
-    }
-
-    // Safety check to ensure that the sum should be within (0, 1)
-    // not exact due to floating point issues...
-    _util.assert(ΣR <= 1.000000000000009 && ΣR >= 0, 'ΣR must be in (0, 1): ΣR = ' + ΣR, event);
-
-    if (ΣR > 1) {
-      ΣR = 1;
-    }
-
-    // current total of non participants is one minus participent potential
-    var Tn = 1 - ΣR;
-
-    // potential transfer weight (with Tn factored out)
-    var α = undefined;
-    if (model === 'reply') {
-      // reply model includes time weighting functions
-      Vα.push({
-        value: α = f * g(Δts, G) * h(Δtr, H), // calculate α for below
-        time: time // save time of α calculation
-      });
-    } else {
-        Vα.push({ value: α = f, time: time });
-      }
-    // Tn is factored out from α above, as cases when Tn == 0
-    // cause division by 0 issues, so we need to multiply it back in here
-    α *= Tn;
-
-    // safety check for bounds of α
-    _util.assert(α <= 1 && α >= 0, 'α must be in (0, 1): α = ' + α, event);
-
-    // sum of additive inverse of ranks of participants
-    var ΣRbar = nP - ΣR;
-
-    // store last index of alpha
-    var iαNew = Vα.length;
-
-    recipientArray.push(sender);
-    for (var i = 0, l = recipientArray.length; i < l; i++) {
-      var participant = recipientArray[i],
-          rank = ranks[participant];
-
-      var value = rank.value;
-
-      // update participant rank for this period
-      value += α * ((1 - value) / ΣRbar);
-
-      // update index of last update
-      CM[participant].lastUpdate = iαNew;
-
-      // push new rank with given time
-      rank.value = value;
-      rank.time = time;
-    }
-
-    // apply time updates for bucket of events
-    if (apply && timeUpdates) {
-      for (var id in timeUpdates) {
-        var up = timeUpdates[id],
-            cmS = CM[id];
-
-        cmS.recieved = cmS.recieved || {};
-        cmS.sent = up.sent;
-
-        for (var rid in up.recieved) {
-          cmS.recieved[rid] = up.recieved[rid];
-        }
-      }
-      delete this.timeUpdates;
-    }
-
-    return this;
-  };
-
-  return EventRank;
-})();
-
-exports['default'] = EventRank;
-module.exports = exports['default'];
-
-},{"../util/":77,"babel-runtime/core-js/array/from":1,"babel-runtime/core-js/math/tanh":2,"babel-runtime/core-js/object/assign":3,"babel-runtime/core-js/object/keys":5,"babel-runtime/core-js/set":6,"babel-runtime/helpers/class-call-check":7,"babel-runtime/helpers/create-class":8,"babel-runtime/helpers/extends":9}],77:[function(require,module,exports){
-/**
- * Utility helper functions
- */
-
-/**
- * Throw error if bool is not satisfied
- *
- * @param  {Boolean} bool: Bool that must be true
- * @return {undefined}
- */
-'use strict';
-
-exports.__esModule = true;
-exports.assert = assert;
-exports.ensureArray = ensureArray;
-exports.last = last;
-exports.gakError = gakError;
-
-function assert(bool, message, event) {
-  if (!bool) {
-    gakError('Assertion failed' + (message ? ': ' + message : ''), event);
-  }
-}
-
-/**
- * Wrap an item in an array if it is not already one
- *
- * @param  {Any} Object to be wrapped
- * @return {Array<Any>} array of object
- */
-
-function ensureArray(value) {
-  return Array.isArray(value) ? value : [value];
-}
-
-/**
- * Get the last element from an array
- *
- * @param  {Array<Any>} Array of items
- * @return {Any} Last element of given array
- */
-
-function last(arr) {
-  return arr[arr.length - 1];
-}
-
-/**
- * Throw a library specific error
- *
- * @param  {String} Error messagec
- * @param  {Object} (optional) Event object
- * @return {undefined}
- */
-
-function gakError(message, event) {
-  message = 'gak.js | ' + message;
-  if (event) {
-    var pretty = JSON.stringify(event, null, 2);
-    message = message + ' | Last Processed Event: \n' + pretty;
-  }
-  throw new Error(message);
-}
-
-exports['default'] = {
-  assert: assert,
-  gakError: gakError,
-  last: last,
-  ensureArray: ensureArray
-};
 
 },{}],78:[function(require,module,exports){
 'use strict';
 
-var _interopRequireDefault = require('babel-runtime/helpers/interop-require-default')['default'];
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
 
-exports.__esModule = true;
+var _package = require('../package.json');
 
-var _packageJson = require('../package.json');
+var _eventRank = require('event-rank');
 
-var _classesEventRank = require('./classes/EventRank');
-
-var _classesEventRank2 = _interopRequireDefault(_classesEventRank);
-
-var _util = require('./util/');
-
-var _util2 = _interopRequireDefault(_util);
-
-exports['default'] = {
+exports.default = {
 
   // top level properties
-  version: _packageJson.version,
-  util: _util2['default'],
+  version: _package.version,
 
   // Classes
-  EventRank: _classesEventRank2['default']
+  EventRank: _eventRank.EventRank
 
 };
-module.exports = exports['default'];
 
-},{"../package.json":75,"./classes/EventRank":76,"./util/":77,"babel-runtime/helpers/interop-require-default":10}]},{},[78])(78)
+},{"../package.json":77,"event-rank":75}]},{},[78])(78)
 });
 
 

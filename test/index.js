@@ -1,8 +1,7 @@
 import _ from 'lodash';
 import { expect } from 'chai';
 import pkg from '../package.json';
-import { EventRank, version } from '../src/';
-import util from '../src/util/';
+import gak from '../src/';
 import moment from 'moment';
 
 const { abs } = Math;
@@ -54,74 +53,22 @@ describe('Graph Analysis Kit', () => {
   describe('Simple initial checks', () => {
 
     it('Should have the correct semantic version', done => {
-      expect(version).to.equal(pkg.version);
+      expect(gak.version).to.equal(pkg.version);
       done();
     });
 
   });
 
 
-  describe('Utility functions', () => {
-
-    it('Assert function should throw on false', done => {
-      expect(util.assert).to.exist;
-      expect(() => util.assert(false, 'throwing false')).to.throw(Error);
-      expect(() => util.assert(true, 'no error')).to.not.throw(Error);
-      done();
-    });
-
-    it('last function should produce last element of array', done => {
-      expect(util.last).to.exist;
-      expect(util.last([1,2,3]), 'should select util.last element').to.equal(3);
-      expect(util.last([]), 'should produce undefined for empty array').to.equal(undefined);
-      done();
-    });
-
-    it('gakError should throw error', done => {
-      expect(() => util.gakError('test')).to.throw(Error);
-      done();
-    });
-
-    it('ensureArray should wrap object with array if necessary', done => {
-      expect(util.ensureArray(1), 'should wrap with array').to.be.an.instanceof(Array);
-      expect(util.ensureArray([1]), 'passing array should succeed').to.be.an.instanceof(Array);
-      expect(util.ensureArray([1])[0], 'should not wrap if already array').to.equal(1);
-      done();
-    });
-
-  });
+  describe('gak.EventRank', () => {
 
 
-  describe('EventRank', () => {
-
-
-    it('Send decay function should return expected values given parameters', done => {
-      const Δts = 5,
-            G = 5,
-            expectedOutput = 0.5207411;
-
-      expect(EventRank.g).to.exist;
-      expectVeryClose(EventRank.g(Δts, G))(expectedOutput);
-      done();
-    });
-
-
-    it('Recieve decay function should return expected values given parameters', done => {
-      const Δtr = 5,
-            H = 3,
-            expectedOutput = 0.3149802;
-
-      expect(EventRank.h).to.exist;
-      expectVeryClose(EventRank.h(Δtr, H))(expectedOutput);
-      done();
-    });
-
-    it('Serializing event rank should produce pojo that can be loaded back into EventRank', done => {
+    it('Serializing event rank should produce pojo that can be loaded back into gak.EventRank', done => {
       const correspondents = ['a', 'b', 'c'];
-      const e = new EventRank({ correspondents });
+      const e = new gak.EventRank({ correspondents });
       const pojo = e.serialize();
       const json = JSON.stringify(pojo);
-      const alt = new EventRank(JSON.parse(json));
+      const alt = new gak.EventRank(JSON.parse(json));
       const altJson = JSON.stringify(alt.serialize());
       expect(json).to.equal(e.toJson());
       expect(altJson).to.equal(json);
@@ -131,7 +78,7 @@ describe('Graph Analysis Kit', () => {
 
     it('Starting with no ranks, and not iterating, should produce ranks = |C|', done => {
       const correspondents = ['a', 'b', 'c'];
-      const e = new EventRank({ correspondents });
+      const e = new gak.EventRank({ correspondents });
       const { ranks } = e.serialize();
 
       expect(ranks).to.exist;
@@ -154,15 +101,15 @@ describe('Graph Analysis Kit', () => {
         const H = oneDay; // message half life
         const f = 0.8;
         const events = makeTestEvents();
-        const correspondents = EventRank.getCorrespondents(events);
-        const bucketed = EventRank.bucket(events);
+        const correspondents = gak.EventRank.getCorrespondents(events);
+        const bucketed = gak.EventRank.bucket(events);
         const getRankValues = er => _(er.ranks)
           .values()
           .pluck('value')
           .value();
 
-        // initialize EventRank Object
-        const R = new EventRank({ G, H, f, correspondents, model });
+        // initialize gak.EventRank Object
+        const R = new gak.EventRank({ G, H, f, correspondents, model });
 
         // starting ranks should automatically be calculated for t=0
         const startRanks = getRankValues(R);

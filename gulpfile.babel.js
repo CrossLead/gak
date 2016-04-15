@@ -4,7 +4,6 @@ import sourcemaps   from 'gulp-sourcemaps';
 import mocha        from 'gulp-mocha';
 import babel        from 'gulp-babel';
 import run          from 'gulp-run';
-import ghPages      from 'gulp-gh-pages';
 import browserify   from 'browserify';
 import babelify     from 'babelify';
 import { argv }     from 'yargs';
@@ -72,7 +71,21 @@ gulp.task('compile', () => {
 gulp.task('browserify', () => {
 
   const gak = browserify('./src/', { debug: true, standalone : 'gak' })
-        .transform(babelify)
+        .transform(babelify, {
+          global: true,
+          ignore: /\/node_modules\/(?!event-rank\/)/,
+          'sourceMaps': 'both',
+          'presets': [
+            'stage-0',
+            'es2015'
+          ],
+          'plugins': [
+            'transform-runtime',
+            'transform-class-properties',
+            'transform-flow-strip-types'
+          ],
+          babelrc: false
+        })
         .bundle()
         .on('error', function(err) { console.error(err); this.emit('end'); });
 
